@@ -3,991 +3,195 @@ import { createServer } from 'http';
 import { Server } from 'socket.io';
 import path from 'path';
 import { fileURLToPath } from 'url';
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
 const app = express();
 const httpServer = createServer(app);
-const io = new Server(httpServer, {
-  cors: { origin: '*', methods: ['GET', 'POST'] },
-  transports: ['websocket'],
-  pingInterval: 25000,
-  pingTimeout: 60000
-});
+const io = new Server(httpServer, { cors: { origin: '*', methods: ['GET', 'POST'] } });
 const PORT = process.env.PORT || 3000;
+
 // ── WORD DATABASE ─────────────────────────────────────────────────────────────
 const WORDS = {
   "Hrana": [
-    [
-      "Kruh",
-      "Pecivo"
-    ],
-    [
-      "Maslac",
-      "Marmelada"
-    ],
-    [
-      "Mlijeko",
-      "Jogurt"
-    ],
-    [
-      "Sir",
-      "Vrhnje"
-    ],
-    [
-      "Jaje",
-      "Omlet"
-    ],
-    [
-      "Juha",
-      "Varivo"
-    ],
-    [
-      "Sendvič",
-      "Tost"
-    ],
-    [
-      "Pizza",
-      "Hamburger"
-    ],
-    [
-      "Pomfrit",
-      "Pire"
-    ],
-    [
-      "Riža",
-      "Tjestenina"
-    ],
-    [
-      "Piletina",
-      "Puretina"
-    ],
-    [
-      "Kobasica",
-      "Hrenovka"
-    ],
-    [
-      "Salata",
-      "Kupus"
-    ],
-    [
-      "Jabuka",
-      "Kruška"
-    ],
-    [
-      "Banana",
-      "Mandarina"
-    ],
-    [
-      "Limun",
-      "Naranča"
-    ],
-    [
-      "Čokolada",
-      "Keks"
-    ],
-    [
-      "Sladoled",
-      "Puding"
-    ],
-    [
-      "Kava",
-      "Čaj"
-    ],
-    [
-      "Sok",
-      "Voda"
-    ],
-    [
-      "Burek",
-      "Pita"
-    ],
-    [
-      "Palačinke",
-      "Vafli"
-    ],
-    [
-      "Gulaš",
-      "Paprikaš"
-    ],
-    [
-      "Sarma",
-      "Punjene paprike"
-    ],
-    [
-      "Krafna",
-      "Mafini"
-    ]
+    ["Kruh","Pecivo"],["Maslac","Margarina"],["Mlijeko","Jogurt"],["Sir","Vrhnje"],["Jaje","Omlet"],["Juha","Varivo"],["Sendvič","Tost"],["Hamburger","Ćevapi"],["Pomfrit","Pire"],["Riža","Tjestenina"],["Piletina","Puretina"],["Kobasica","Hrenovka"],["Salata","Kupus"],["Jabuka","Kruška"],["Banana","Mandarina"],["Limun","Naranča"],["Čokolada","Keks"],["Sladoled","Puding"],["Kava","Čaj"],["Sok","Gazirani sok"],
+    ["Pizza","Focaccia"],["Sushi","Sashimi"],["Hamburger","Sendvič"],["Lazanje","Musaka"],
+    ["Rižoto","Paella"],["Tacos","Burrito"],["Croissant","Brioche"],["Cheesecake","Tiramisù"],
+    ["Ramen","Pho"],["Hummus","Baba ganoush"],["Pancake","Waffle"],["Steak","Kotlet"],
+    ["Ćevapi","Pljeskavica"],["Punjene paprike","Sarma"],["Gulaš","Paprikaš"],
+    ["Burek","Pita"],["Baklava","Kadaif"],["Palačinke","Vafli"],["Fondue","Raclette"],
+    ["Gyros","Döner kebab"],["Falafel","Shawarma"],["Pad thai","Chow mein"],
+    ["Kimchi","Sauerkraut"],["Curry","Masala"],["Dim sum","Bao"],
+    ["Gazpacho","Salmorejo"],["Ceviche","Tartare"],["Crème brûlée","Panna cotta"],
+    ["Macaron","Financier"],["Gelato","Sorbetto"],["Baguette","Ciabatta"],
+    ["Gnocchi","Pelmeni"],["Couscous","Quinoa"],["Tagine","Shakshuka"],
+    ["Bibimbap","Japchae"],["Rendang","Satay"],["Osso buco","Saltimbocca"],
+    ["Mozzarella","Burrata"],["Brie","Camembert"],["Cacio e pepe","Carbonara"],
+    ["Biryani","Pilav"],["Spring roll","Egg roll"],["Miso juha","Tom yum"],
+    ["Banh mi","Goi cuon"],["Nasi goreng","Mie goreng"],["Pretzel","Bagel"]
   ],
   "Sport": [
-    [
-      "Nogomet",
-      "Košarka"
-    ],
-    [
-      "Tenis",
-      "Stolni tenis"
-    ],
-    [
-      "Odbojka",
-      "Rukomet"
-    ],
-    [
-      "Bazen",
-      "Plaža"
-    ],
-    [
-      "Trčanje",
-      "Hodanje"
-    ],
-    [
-      "Bicikl",
-      "Romobil"
-    ],
-    [
-      "Skijanje",
-      "Snowboard"
-    ],
-    [
-      "Teretana",
-      "Fitness"
-    ],
-    [
-      "Sudac",
-      "Trener"
-    ],
-    [
-      "Golman",
-      "Napadač"
-    ],
-    [
-      "Prvenstvo",
-      "Turnir"
-    ],
-    [
-      "Medalja",
-      "Pehar"
-    ],
-    [
-      "Stadion",
-      "Dvorana"
-    ],
-    [
-      "Zagrijavanje",
-      "Istezanje"
-    ],
-    [
-      "Plivanje",
-      "Ronjenje"
-    ],
-    [
-      "Boks",
-      "Hrvanje"
-    ],
-    [
-      "Badminton",
-      "Squash"
-    ],
-    [
-      "Golf",
-      "Kuglanje"
-    ],
-    [
-      "Dres",
-      "Kopačke"
-    ],
-    [
-      "Start",
-      "Cilj"
-    ]
+    ["Nogomet","Košarka"],["Tenis","Stolni tenis"],["Odbojka","Rukomet"],["Bazen","Plaža"],["Trčanje","Hodanje"],["Bicikl","Romobil"],["Skijanje","Snowboard"],["Teretana","Fitness"],["Sutiranje","Dodavanje"],["Trener","Sudac"],["Golman","Napadač"],["Prvenstvo","Turnir"],["Medalja","Pehar"],["Stadion","Dvorana"],["Zagrijavanje","Istezanje"],
+    ["Nogomet","Ragbi"],["Košarka","Netball"],["Tenis","Squash"],
+    ["Badminton","Pickleball"],["Odbojka","Beach volley"],["Plivanje","Vaterpolo"],
+    ["Atletika","Triatlon"],["Biatlon","Skijaško trčanje"],["Alpsko skijanje","Snowboard"],
+    ["Hokej na ledu","Curling"],["Bob","Skeleton"],["Boks","Kickboxing"],
+    ["Karate","Taekwondo"],["Judo","Aikido"],["MMA","Muay thai"],
+    ["Hrvanje","Sumo"],["Gimnastika","Akrobatika"],["Skok u vis","Skok s motkom"],
+    ["Bacanje koplja","Bacanje diska"],["Maraton","Ultramaraton"],
+    ["Cestovni biciklizam","Mountain biking"],["Jedriličarstvo","Veslanje"],
+    ["Surfanje","Kitesurfing"],["Baseball","Softball"],["Lacrosse","Hokej na travi"],
+    ["Golf","Disc golf"],["Kuglanje","Bocce"],["Streljaštvo","Streličarstvo"],
+    ["Penjanje","Bouldering"],["CrossFit","Powerlifting"],["Fencing","Mačevanje"],
+    ["Skateboard","Longboard"],["Paragliding","Skydiving"],["Darts","Biljar"],
+    ["Airsoft","Paintball"],["Rukomet","Futsal"],["Polo","Kriket"]
   ],
   "Životinje": [
-    [
-      "Pas",
-      "Mačka"
-    ],
-    [
-      "Štene",
-      "Mačić"
-    ],
-    [
-      "Krava",
-      "Bik"
-    ],
-    [
-      "Konj",
-      "Magarac"
-    ],
-    [
-      "Ovca",
-      "Koza"
-    ],
-    [
-      "Svinja",
-      "Vepar"
-    ],
-    [
-      "Kokoš",
-      "Pijetao"
-    ],
-    [
-      "Patka",
-      "Guska"
-    ],
-    [
-      "Vrabac",
-      "Golub"
-    ],
-    [
-      "Riba",
-      "Morski pas"
-    ],
-    [
-      "Pčela",
-      "Osa"
-    ],
-    [
-      "Mrav",
-      "Bubamara"
-    ],
-    [
-      "Lav",
-      "Tigar"
-    ],
-    [
-      "Medvjed",
-      "Vuk"
-    ],
-    [
-      "Zec",
-      "Kunić"
-    ],
-    [
-      "Slon",
-      "Žirafa"
-    ],
-    [
-      "Delfin",
-      "Kit"
-    ],
-    [
-      "Krokodil",
-      "Aligator"
-    ],
-    [
-      "Papiga",
-      "Kanarinac"
-    ],
-    [
-      "Žaba",
-      "Kornjača"
-    ]
+    ["Pas","Mačka"],["Štene","Mačić"],["Krava","Bik"],["Konj","Magarac"],["Ovca","Koza"],["Svinja","Vepar"],["Kokoš","Pijetao"],["Patka","Guska"],["Vrabac","Golub"],["Riba","Morski pas"],["Pčela","Osa"],["Mrav","Bubamara"],["Lav","Tigar"],["Medvjed","Vuk"],["Zec","Kunić"],
+    ["Lav","Gepard"],["Tigar","Leopard"],["Jaguar","Puma"],
+    ["Medvjed","Polarni medvjed"],["Vuk","Divlji pas"],["Slon","Mamut"],
+    ["Nosorog","Tapir"],["Hipopotam","Nilski konj"],["Žirafa","Okapi"],
+    ["Zebra","Divlji konj"],["Bizon","Musk ox"],["Šimpanza","Bonobo"],
+    ["Gorila","Orangutan"],["Delfin","Pliskavica"],["Orka","Pilot kit"],
+    ["Morski pas","Raža"],["Hobotnica","Lignja"],["Krokodil","Aligator"],
+    ["Piton","Boa constrictor"],["Kameleont","Gekko"],["Komodo zmaj","Monitor gušter"],
+    ["Orao","Kondor"],["Soko","Kobac"],["Sova","Ušara"],
+    ["Papiga","Kakadu"],["Tukan","Hornbill"],["Flamingo","Ibis"],
+    ["Pingvin","Razorbill"],["Kolibri","Sunbird"],["Koala","Kuskus"],
+    ["Klokam","Vombat"],["Armadillo","Pangolin"],["Alpaka","Ljama"],
+    ["Kamila","Dromedар"],["Fenekh","Arktička lisica"],["Mangusta","Meerkat"],
+    ["Vidra","Dabar"],["Foka","Morž"],["Dugong","Manatee"]
   ],
   "Mjesta": [
-    [
-      "Škola",
-      "Fakultet"
-    ],
-    [
-      "Bolnica",
-      "Dom zdravlja"
-    ],
-    [
-      "Trgovina",
-      "Supermarket"
-    ],
-    [
-      "Pekara",
-      "Slastičarnica"
-    ],
-    [
-      "Kafić",
-      "Restoran"
-    ],
-    [
-      "Park",
-      "Igralište"
-    ],
-    [
-      "Stan",
-      "Kuća"
-    ],
-    [
-      "Selo",
-      "Grad"
-    ],
-    [
-      "Ured",
-      "Banka"
-    ],
-    [
-      "Pošta",
-      "Ljekarna"
-    ],
-    [
-      "Aerodrom",
-      "Kolodvor"
-    ],
-    [
-      "Autobusna stanica",
-      "Tramvajska stanica"
-    ],
-    [
-      "Plaža",
-      "Bazen"
-    ],
-    [
-      "Kino",
-      "Kazalište"
-    ],
-    [
-      "Teretana",
-      "Stadion"
-    ],
-    [
-      "Knjižnica",
-      "Čitaonica"
-    ],
-    [
-      "Tržnica",
-      "Shopping centar"
-    ],
-    [
-      "Garaža",
-      "Parkiralište"
-    ],
-    [
-      "Most",
-      "Tunel"
-    ],
-    [
-      "Muzej",
-      "Galerija"
-    ]
+    ["Škola","Fakultet"],["Bolnica","Dom zdravlja"],["Trgovina","Supermarket"],["Pekara","Slastičarnica"],["Kafić","Restoran"],["Park","Igralište"],["Stan","Kuća"],["Selo","Grad"],["Ured","Banka"],["Pošta","Ljekarna"],["Aerodrom","Kolodvor"],["Autobusna stanica","Tramvajska stanica"],["Plaža","Bazen"],["Kino","Kazalište"],["Teretana","Stadion"],
+    ["Tokio","Osaka"],["Pariz","Lyon"],["New York","Chicago"],
+    ["London","Manchester"],["Dubai","Abu Dhabi"],["Sydney","Melbourne"],
+    ["Barcelona","Madrid"],["Rim","Milano"],["Atena","Solun"],
+    ["Istanbul","Ankara"],["Moskva","Sankt Peterburg"],["Peking","Shanghai"],
+    ["Bangkok","Chiang Mai"],["Singapur","Kuala Lumpur"],["Seoul","Busan"],
+    ["Beč","Salzburg"],["Amsterdam","Rotterdam"],["Stockholm","Göteborg"],
+    ["Lisabon","Porto"],["Prag","Brno"],["Varšava","Krakov"],
+    ["Zagreb","Split"],["Dubrovnik","Hvar"],["Sarajevo","Mostar"],
+    ["Beograd","Novi Sad"],["Ljubljana","Maribor"],["Marrakech","Fes"],
+    ["Himalaja","Andi"],["Kilimanjaro","Mont Blanc"],["Grand Canyon","Bryce Canyon"],
+    ["Yellowstone","Yosemite"],["Maldivi","Sejšeli"],["Galapagos","Komodo"],
+    ["Plitvička jezera","Krka"],["Venecija","Bruges"],["Santorini","Mykonos"],
+    ["Machu Picchu","Chichen Itza"],["Petra","Palmira"],["Pompeji","Herkulaneum"]
   ],
   "Predmeti": [
-    [
-      "Stol",
-      "Stolica"
-    ],
-    [
-      "Krevet",
-      "Kauč"
-    ],
-    [
-      "Jastuk",
-      "Pokrivač"
-    ],
-    [
-      "Žlica",
-      "Vilica"
-    ],
-    [
-      "Nož",
-      "Škare"
-    ],
-    [
-      "Tanjur",
-      "Zdjelica"
-    ],
-    [
-      "Čaša",
-      "Šalica"
-    ],
-    [
-      "Lonac",
-      "Tava"
-    ],
-    [
-      "Hladnjak",
-      "Zamrzivač"
-    ],
-    [
-      "Perilica",
-      "Sušilica"
-    ],
-    [
-      "Usisavač",
-      "Metla"
-    ],
-    [
-      "Televizor",
-      "Radio"
-    ],
-    [
-      "Mobitel",
-      "Tablet"
-    ],
-    [
-      "Punjač",
-      "Kabel"
-    ],
-    [
-      "Ključ",
-      "Lokot"
-    ],
-    [
-      "Ruksak",
-      "Torba"
-    ],
-    [
-      "Novčanik",
-      "Torbica"
-    ],
-    [
-      "Kišobran",
-      "Kabanica"
-    ],
-    [
-      "Olovka",
-      "Marker"
-    ],
-    [
-      "Bilježnica",
-      "Knjiga"
-    ],
-    [
-      "Naočale",
-      "Sat"
-    ],
-    [
-      "Lampa",
-      "Prekidač"
-    ],
-    [
-      "Gitara",
-      "Klavir"
-    ],
-    [
-      "Mikrofon",
-      "Zvučnik"
-    ],
-    [
-      "Bicikl",
-      "Romobil"
-    ]
+    ["Stol","Stolica"],["Krevet","Kauč"],["Jastuk","Pokrivač"],["Žlica","Vilica"],["Nož","Škare"],["Tanjur","Zdjelica"],["Čaša","Šalica"],["Lonac","Tava"],["Hladnjak","Zamrzivač"],["Perilica","Sušilica"],["Usisavač","Metla"],["Televizor","Radio"],["Mobitel","Daljinski"],["Punjač","Kabel"],["Ključ","Lokot"],["Ruksak","Torba"],["Novčanik","Torbica"],["Kišobran","Kabanica"],["Olovka","Marker"],["Bilježnica","Knjiga"],
+    ["Mobitel","Pametni sat"],["Laptop","Chromebook"],["Tablet","E-čitač"],
+    ["Slušalice","Airpods"],["Zvučnik","Soundbar"],["Projektor","Smart TV"],
+    ["Fotoaparat","Videokamera"],["Tipkovnica","Gamepad"],["Monitor","Televizor"],
+    ["Printer","3D printer"],["Hard disk","SSD"],["Power bank","Punjač"],
+    ["Lampa","Luster"],["Dalekozor","Teleskop"],["Mikroskop","Lupa"],
+    ["Šalica","Termos"],["Lonac","Wok"],["Blender","Mikser"],
+    ["Espresso aparat","French press"],["Kišobran","Poncho"],
+    ["Naočale","Kontaktne leće"],["Ruksak","Kovčeg"],
+    ["Gitara","Ukulele"],["Klavir","Sintesajzer"],["Violina","Viola"],
+    ["Saksofon","Klarinet"],["Bubnjevi","Udaraljke"],["Dron","RC auto"],
+    ["Skateboard","Longboard"],["Bicikl","Romobil"],
+    ["Nalivpero","Flomaster"],["Šestar","Pantograf"]
   ],
   "Filmovi i serije": [
-    [
-      "Titanic",
-      "Avatar"
-    ],
-    [
-      "Gladiator",
-      "Troja"
-    ],
-    [
-      "Batman",
-      "Superman"
-    ],
-    [
-      "Spider-Man",
-      "Iron Man"
-    ],
-    [
-      "Frozen",
-      "Moana"
-    ],
-    [
-      "Shrek",
-      "Madagaskar"
-    ],
-    [
-      "Harry Potter",
-      "Percy Jackson"
-    ],
-    [
-      "Gospodar prstenova",
-      "Hobit"
-    ],
-    [
-      "The Office",
-      "Brooklyn Nine-Nine"
-    ],
-    [
-      "Friends",
-      "How I Met Your Mother"
-    ],
-    [
-      "Breaking Bad",
-      "Better Call Saul"
-    ],
-    [
-      "Peaky Blinders",
-      "Narcos"
-    ],
-    [
-      "Dark",
-      "Black Mirror"
-    ],
-    [
-      "Stranger Things",
-      "Wednesday"
-    ],
-    [
-      "Home Alone",
-      "Mr. Bean"
-    ],
-    [
-      "Game of Thrones",
-      "House of the Dragon"
-    ],
-    [
-      "The Crown",
-      "Suits"
-    ],
-    [
-      "Squid Game",
-      "Alice in Borderland"
-    ],
-    [
-      "La Casa de Papel",
-      "Lupin"
-    ],
-    [
-      "The Simpsons",
-      "Family Guy"
-    ]
+    ["Titanic","Avatar"],["Gladiator","Troja"],["Batman","Superman"],["Spiderman","Iron Man"],["Frozen","Moana"],["Shrek","Madagaskar"],["Harry Potter","Percy Jackson"],["Gospodar prstenova","Hobit"],["The Office","Brooklyn Nine-Nine"],["Friends","Modern Family"],["Breaking Bad","Better Call Saul"],["Peaky Blinders","Narcos"],["Dark","Black Mirror"],["Stranger Things","Wednesday"],["Home Alone","Mr. Bean"],
+    ["Titanic","Pearl Harbor"],["The Godfather","Goodfellas"],
+    ["Inception","Interstellar"],["The Dark Knight","Batman Begins"],
+    ["Fight Club","American Psycho"],["Pulp Fiction","Reservoir Dogs"],
+    ["The Silence of the Lambs","Se7en"],["Shutter Island","Black Swan"],
+    ["The Matrix","Dark City"],["Star Wars","Star Trek"],
+    ["Game of Thrones","House of the Dragon"],["Breaking Bad","Ozark"],
+    ["Peaky Blinders","Boardwalk Empire"],["Narcos","Snowfall"],
+    ["Stranger Things","Dark"],["Black Mirror","Years and Years"],
+    ["Money Heist","Lupin"],["Squid Game","Alice in Borderland"],
+    ["The Crown","The Queen's Gambit"],["Friends","How I Met Your Mother"],
+    ["The Office","Parks and Recreation"],["Succession","Billions"],
+    ["Westworld","Altered Carbon"],["The Witcher","Shadow and Bone"],
+    ["Euphoria","Skins"],["True Detective","Mindhunter"],
+    ["The Wire","The Shield"],["Grey's Anatomy","House M.D."],
+    ["Dexter","You"],["Interstellar","The Martian"],
+    ["Dunkirk","1917"],["Parasite","Burning"],
+    ["La La Land","Whiplash"],["Midsommar","Hereditary"],
+    ["Dune","Foundation"],["Arrival","Annihilation"],
+    ["Oppenheimer","Dunkirk"],["Mad Max: Fury Road","Children of Men"]
   ],
   "Profesije": [
-    [
-      "Doktor",
-      "Medicinska sestra"
-    ],
-    [
-      "Učitelj",
-      "Profesor"
-    ],
-    [
-      "Konobar",
-      "Kuhar"
-    ],
-    [
-      "Vozač",
-      "Mehaničar"
-    ],
-    [
-      "Policajac",
-      "Vatrogasac"
-    ],
-    [
-      "Poštar",
-      "Dostavljač"
-    ],
-    [
-      "Frizer",
-      "Kozmetičar"
-    ],
-    [
-      "Prodavač",
-      "Blagajnik"
-    ],
-    [
-      "Električar",
-      "Vodoinstalater"
-    ],
-    [
-      "Zidar",
-      "Keramičar"
-    ],
-    [
-      "Programer",
-      "Dizajner"
-    ],
-    [
-      "Fotograf",
-      "Snimatelj"
-    ],
-    [
-      "Pjevač",
-      "Glumac"
-    ],
-    [
-      "Pilot",
-      "Stjuardesa"
-    ],
-    [
-      "Vrtlar",
-      "Cvjećar"
-    ],
-    [
-      "Pekar",
-      "Mesar"
-    ],
-    [
-      "Novinar",
-      "Voditelj"
-    ],
-    [
-      "Odvjetnik",
-      "Sudac"
-    ],
-    [
-      "Arhitekt",
-      "Građevinar"
-    ],
-    [
-      "Trener",
-      "Sudac"
-    ]
+    ["Doktor","Medicinska sestra"],["Učitelj","Profesor"],["Konobar","Kuhar"],["Vozač","Mehaničar"],["Policajac","Vatrogasac"],["Poštar","Dostavljač"],["Frizer","Kozmetičar"],["Prodavač","Blagajnik"],["Električar","Vodoinstalater"],["Zidar","Keramičar"],["Programer","Dizajner"],["Fotograf","Snimatelj"],["Pjevač","Glumac"],["Pilot","Stjuardesa"],["Vrtlar","Cvjećar"],
+    ["Kirurg","Anesteziolog"],["Kardiolog","Neurolog"],["Psihijatar","Psiholog"],
+    ["Dermatolog","Plastični kirurg"],["Oftalmolog","Optometrist"],
+    ["Profesor","Nastavnik"],["Arhitekt","Urbanist"],
+    ["Softverski inženjer","Full-stack developer"],["Data scientist","ML inženjer"],
+    ["UI/UX dizajner","Grafički dizajner"],["Fotograf","Snimatelj"],
+    ["Redatelj","Producent"],["Glumac","Kazališni redatelj"],
+    ["Chef","Sous chef"],["Slastičar","Čokolatijer"],["Sommelier","Barista"],
+    ["Pilot","Ko-pilot"],["Meteorolog","Klimatolog"],
+    ["Biokemičar","Molekularni biolog"],["Genetičar","Fiziolog"],
+    ["Paleontolog","Arkeolog"],["Antropolog","Etnolog"],
+    ["Lingvist","Prevodilac"],["Odvjetnik","Tužilac"],["Sudac","Arbitar"],
+    ["Diplomata","Konzul"],["Forenzičar","Kriminalist"],
+    ["Burzovni broker","Fund manager"],["Brand manager","Product manager"],
+    ["Personal trainer","Fizioterapeut"],["Nutricionist","Dijetetičar"]
   ],
   "Glazba": [
-    [
-      "Gitara",
-      "Klavir"
-    ],
-    [
-      "Bubnjevi",
-      "Violina"
-    ],
-    [
-      "Mikrofon",
-      "Zvučnik"
-    ],
-    [
-      "Koncert",
-      "Festival"
-    ],
-    [
-      "Refren",
-      "Strofa"
-    ],
-    [
-      "Album",
-      "Singl"
-    ],
-    [
-      "DJ",
-      "Pjevač"
-    ],
-    [
-      "Rap",
-      "Pop"
-    ],
-    [
-      "Rock",
-      "Metal"
-    ],
-    [
-      "Jazz",
-      "Blues"
-    ],
-    [
-      "Narodna glazba",
-      "Zabavna glazba"
-    ],
-    [
-      "Ples",
-      "Koreografija"
-    ],
-    [
-      "Slušalice",
-      "Pojačalo"
-    ],
-    [
-      "Bend",
-      "Orkestar"
-    ],
-    [
-      "Ulaznica",
-      "Pozornica"
-    ],
-    [
-      "Akustična gitara",
-      "Električna gitara"
-    ],
-    [
-      "Bas gitara",
-      "Gitara"
-    ],
-    [
-      "Klavijature",
-      "Sintisajzer"
-    ],
-    [
-      "Flauta",
-      "Truba"
-    ],
-    [
-      "Radio",
-      "Playlist"
-    ]
+    ["Gitara","Klavir"],["Bubnjevi","Violina"],["Mikrofon","Zvučnik"],["Koncert","Festival"],["Refren","Strofa"],["Album","Singl"],["DJ","Pjevač"],["Rap","Pop"],["Rock","Metal"],["Jazz","Blues"],["Narodna glazba","Zabavna glazba"],["Ples","Koreografija"],["Slušalice","Pojačalo"],["Bend","Orkestar"],["Ulaznica","Pozornica"],
+    ["Hip-hop","Trap"],["Jazz","Blues"],["Klasična glazba","Barokna glazba"],
+    ["Rock","Metal"],["Punk","Grunge"],["Pop","Indie pop"],
+    ["R&B","Soul"],["Funk","Disco"],["Electronic","Techno"],
+    ["House","Trance"],["Drum and bass","Dubstep"],["Reggae","Ska"],
+    ["Bossa nova","Samba"],["Flamenco","Fado"],["Country","Bluegrass"],
+    ["Opera","Musical"],["Ambient","New age"],["Synth-pop","New wave"],
+    ["Gitara","Bas gitara"],["Električna gitara","Akustična gitara"],
+    ["Klavir","Klavijature"],["Violina","Viola"],["Bubnjevi","Udaraljke"],
+    ["Saksofon","Klarinet"],["Flauta","Oboe"],["Harfa","Lira"],
+    ["Studijski album","Live album"],["Glastonbury","Coachella"],
+    ["Grammy","Brit Awards"],["Lo-fi","Hi-fi"]
   ],
   "Priroda i znanosti": [
-    [
-      "Sunce",
-      "Mjesec"
-    ],
-    [
-      "Zvijezda",
-      "Planet"
-    ],
-    [
-      "Kiša",
-      "Snijeg"
-    ],
-    [
-      "Vjetar",
-      "Oluja"
-    ],
-    [
-      "More",
-      "Jezero"
-    ],
-    [
-      "Rijeka",
-      "Potok"
-    ],
-    [
-      "Planina",
-      "Brdo"
-    ],
-    [
-      "Šuma",
-      "Livada"
-    ],
-    [
-      "Cvijet",
-      "Drvo"
-    ],
-    [
-      "List",
-      "Grana"
-    ],
-    [
-      "Kamen",
-      "Pijesak"
-    ],
-    [
-      "Vatra",
-      "Dim"
-    ],
-    [
-      "Led",
-      "Para"
-    ],
-    [
-      "Ljeto",
-      "Proljeće"
-    ],
-    [
-      "Jesen",
-      "Zima"
-    ],
-    [
-      "Atom",
-      "Molekula"
-    ],
-    [
-      "Struja",
-      "Magnet"
-    ],
-    [
-      "Vulkan",
-      "Potres"
-    ],
-    [
-      "Duga",
-      "Oblak"
-    ],
-    [
-      "Baterija",
-      "Žarulja"
-    ]
+    ["Sunce","Mjesec"],["Zvijezda","Planet"],["Kiša","Snijeg"],["Vjetar","Oluja"],["More","Jezero"],["Rijeka","Potok"],["Planina","Brdo"],["Šuma","Livada"],["Cvijet","Drvo"],["List","Grana"],["Kamen","Pijesak"],["Vatra","Dim"],["Led","Para"],["Ljeto","Proljeće"],["Jesen","Zima"],["Atom","Molekula"],["Struja","Magnet"],
+    ["Vulkan","Gejzir"],["Potres","Tsunami"],["Tornado","Hurikan"],
+    ["El Niño","La Niña"],["Polarna svjetlost","Zodijačka svjetlost"],
+    ["Crna rupa","Neutronska zvijezda"],["Bijeli patuljak","Supernova"],
+    ["Kvazar","Pulsar"],["Egzoplaneta","Super-Zemlja"],
+    ["Klif","Fjord"],["Atol","Koraljni greben"],
+    ["Tundra","Tajga"],["Savana","Prerija"],
+    ["Tropska prašuma","Borealna šuma"],["Stalagmit","Stalaktit"],
+    ["Fotosinteza","Kemosinteza"],["Simbioza","Parasitizam"],
+    ["Migracija","Hibernacija"],["DNA","RNA"],
+    ["Mutacija","Evolucija"],["Kvantna mehanika","Teorija relativnosti"],
+    ["Tamna materija","Tamna energija"],["Fuzija","Fisija"],
+    ["Osmoza","Difuzija"],["Polimeri","Monomeri"]
   ],
   "Tehnologija": [
-    [
-      "Mobitel",
-      "Tablet"
-    ],
-    [
-      "Laptop",
-      "Računalo"
-    ],
-    [
-      "Tipkovnica",
-      "Miš"
-    ],
-    [
-      "Monitor",
-      "Televizor"
-    ],
-    [
-      "Aplikacija",
-      "Program"
-    ],
-    [
-      "Lozinka",
-      "PIN"
-    ],
-    [
-      "WiFi",
-      "Bluetooth"
-    ],
-    [
-      "Punjač",
-      "Powerbank"
-    ],
-    [
-      "Printer",
-      "Skener"
-    ],
-    [
-      "Kamera",
-      "Web kamera"
-    ],
-    [
-      "Poruka",
-      "Email"
-    ],
-    [
-      "Web stranica",
-      "Online trgovina"
-    ],
-    [
-      "USB",
-      "Memorijska kartica"
-    ],
-    [
-      "Router",
-      "Modem"
-    ],
-    [
-      "Slušalice",
-      "Zvučnik"
-    ],
-    [
-      "Pametni sat",
-      "Narukvica"
-    ],
-    [
-      "Fotografija",
-      "Video"
-    ],
-    [
-      "Pretraživač",
-      "Stranica"
-    ],
-    [
-      "Kod",
-      "Datoteka"
-    ],
-    [
-      "Mapa",
-      "Cloud"
-    ]
-  ],
-  "Svakodnevica": [
-    [
-      "Tuš",
-      "Kada"
-    ],
-    [
-      "Četkica",
-      "Pasta za zube"
-    ],
-    [
-      "Sapun",
-      "Šampon"
-    ],
-    [
-      "Ručnik",
-      "Ogrtač"
-    ],
-    [
-      "Jastuk",
-      "Madrac"
-    ],
-    [
-      "Budilica",
-      "Sat"
-    ],
-    [
-      "Kava",
-      "Doručak"
-    ],
-    [
-      "Ručak",
-      "Večera"
-    ],
-    [
-      "Ključevi",
-      "Novčanik"
-    ],
-    [
-      "Mobitel",
-      "Punjač"
-    ],
-    [
-      "Autobus",
-      "Tramvaj"
-    ],
-    [
-      "Lift",
-      "Stepenice"
-    ],
-    [
-      "Red",
-      "Čekanje"
-    ],
-    [
-      "Račun",
-      "Kusur"
-    ],
-    [
-      "Torba",
-      "Ruksak"
-    ],
-    [
-      "Jakna",
-      "Kaput"
-    ],
-    [
-      "Tenisice",
-      "Cipele"
-    ],
-    [
-      "Daljinski",
-      "Televizor"
-    ],
-    [
-      "Vrata",
-      "Prozor"
-    ],
-    [
-      "Balkon",
-      "Terasa"
-    ],
-    [
-      "Kupaonica",
-      "Kuhinja"
-    ],
-    [
-      "Perilica",
-      "Deterdžent"
-    ],
-    [
-      "Čajnik",
-      "Lonac"
-    ],
-    [
-      "Tanjur",
-      "Čaša"
-    ],
-    [
-      "Kruh",
-      "Maslac"
-    ]
+    ["Mobitel","Tablet"],["Laptop","Računalo"],["Tipkovnica","Miš"],["Monitor","Televizor"],["Aplikacija","Program"],["Lozinka","PIN"],["Wi‑Fi","Bluetooth"],["Punjač","Powerbank"],["Printer","Skener"],["Kamera","Web kamera"],["Poruka","Email"],["Web stranica","Online trgovina"],["USB","Memorijska kartica"],["Router","Modem"],["Slušalice","Zvučnik"],["Pametni sat","Narukvica"],
+    ["Blockchain","Kriptovaluta"],["Bitcoin","Ethereum"],
+    ["AI","Machine learning"],["Neural network","Deep learning"],
+    ["VR","AR"],["Cloud computing","Edge computing"],
+    ["Cybersecurity","Etički hacking"],["Quantum computing","Supercomputer"],
+    ["5G","Wi-Fi 6E"],["IoT","Smart home"],
+    ["Autonomno vozilo","LIDAR sustav"],["3D printing","CNC obrada"],
+    ["CRISPR","Gene therapy"],["Solarne ćelije","Vjetroturbina"],
+    ["GPS","GLONASS"],["API","SDK"],
+    ["Open source","Proprietary software"],["Agile","Waterfall"],
+    ["Microservices","Monolith"],["Kubernetes","Docker"],
+    ["SQL","NoSQL"],["React","Vue.js"],
+    ["Python","Julia"],["Rust","C++"],
+    ["PostgreSQL","MongoDB"],["Kafka","RabbitMQ"]
   ]
 };
+
 const recentWords = new Map();
 const disconnectTimers = new Map();
 const RECONNECT_GRACE_MS = 90_000;
+
 function scoreKey(player) {
   return player?.playerToken || player?.id;
 }
+
 function makePlayerToken() {
   return Math.random().toString(36).slice(2) + Math.random().toString(36).slice(2);
 }
+
 function cancelDisconnectRemoval(code, playerToken) {
   const key = `${code}:${playerToken}`;
   const t = disconnectTimers.get(key);
@@ -996,42 +200,9 @@ function cancelDisconnectRemoval(code, playerToken) {
     disconnectTimers.delete(key);
   }
 }
-function normalizeWord(value = '') {
-  return String(value || '')
-    .toLowerCase()
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .replace(/[^a-z0-9 ]/g, ' ')
-    .replace(/\s+/g, ' ')
-    .trim();
-}
-function editDistance(a = '', b = '') {
-  const aa = normalizeWord(a);
-  const bb = normalizeWord(b);
-  const dp = Array.from({ length: aa.length + 1 }, () => Array(bb.length + 1).fill(0));
-  for (let i = 0; i <= aa.length; i++) dp[i][0] = i;
-  for (let j = 0; j <= bb.length; j++) dp[0][j] = j;
-  for (let i = 1; i <= aa.length; i++) {
-    for (let j = 1; j <= bb.length; j++) {
-      const cost = aa[i - 1] === bb[j - 1] ? 0 : 1;
-      dp[i][j] = Math.min(dp[i - 1][j] + 1, dp[i][j - 1] + 1, dp[i - 1][j - 1] + cost);
-    }
-  }
-  return dp[aa.length][bb.length];
-}
-function wordsTooSimilar(a, b) {
-  const aa = normalizeWord(a);
-  const bb = normalizeWord(b);
-  if (!aa || !bb) return true;
-  if (aa === bb) return true;
-  if (aa.includes(bb) || bb.includes(aa)) return true;
-  const dist = editDistance(aa, bb);
-  if (Math.max(aa.length, bb.length) <= 6) return dist <= 2;
-  if (aa.slice(0, 5) === bb.slice(0, 5) && dist <= 3) return true;
-  return false;
-}
+
 function getRandomWord(category, roomCode) {
-  const list = WORDS[category] || WORDS['Hrana'];
+  const list = WORDS[category] || WORDS["Hrana"];
   if (!recentWords.has(roomCode)) recentWords.set(roomCode, []);
   const recent = recentWords.get(roomCode);
   const pool = list.map((_, i) => i).filter(i => !recent.includes(i));
@@ -1040,71 +211,16 @@ function getRandomWord(category, roomCode) {
   recent.push(idx);
   if (recent.length > 15) recent.shift();
   const pair = list[idx];
+  // Randomly swap which word is citizen/impostor
   return Math.random() > 0.5
     ? { citizen: pair[0], impostor: pair[1] }
     : { citizen: pair[1], impostor: pair[0] };
 }
-function getPlayableCategories() {
-  return Object.keys(WORDS).filter(Boolean);
-}
-function getRandomCategory(room) {
-  const categories = getPlayableCategories();
-  if (!categories.length) return 'Hrana';
-  room._recentCategories = Array.isArray(room._recentCategories) ? room._recentCategories : [];
-  const pool = categories.filter(cat => !room._recentCategories.includes(cat));
-  const available = pool.length ? pool : categories;
-  const picked = available[Math.floor(Math.random() * available.length)] || 'Hrana';
-  room._recentCategories.push(picked);
-  if (room._recentCategories.length > 4) room._recentCategories.shift();
-  return picked;
-}
-function sanitizeCustomWords(input) {
-  const raw = Array.isArray(input)
-    ? input
-    : String(input || '').split(/[\n,]/g);
-  const cleaned = [];
-  const seen = new Set();
-  for (const item of raw) {
-    const word = String(item || '').trim().replace(/\s+/g, ' ');
-    const normalized = normalizeWord(word);
-    if (!word || word.length < 3 || word.length > 22) continue;
-    if (!/^[A-Za-zÀ-ž0-9 ]+$/.test(word)) continue;
-    if (normalized.split(' ').length > 2) continue;
-    if (seen.has(normalized)) continue;
-    if (cleaned.some(existing => wordsTooSimilar(existing, word))) continue;
-    cleaned.push(word);
-    seen.add(normalized);
-    if (cleaned.length >= 80) break;
-  }
-  return cleaned;
-}
-function roomUsesCustomWords(room) {
-  return sanitizeCustomWords(room?.customWords || []).length >= 6;
-}
-function roomUsesFairHostMode(room) {
-  return roomUsesCustomWords(room);
-}
-function getRoomWordPair(room) {
-  const custom = sanitizeCustomWords(room?.customWords || []);
-  if (custom.length >= 6) {
-    room.currentCategory = 'Custom riječi';
-    const shuffled = [...custom].sort(() => Math.random() - 0.5);
-    const subset = shuffled.slice(0, Math.min(6, shuffled.length));
-    const citizen = subset[Math.floor(Math.random() * subset.length)];
-    const impostorPool = subset.filter(word => !wordsTooSimilar(word, citizen));
-    const impostor = (impostorPool[Math.floor(Math.random() * impostorPool.length)]) || custom.find(word => !wordsTooSimilar(word, citizen)) || custom.find(word => word !== citizen) || citizen;
-    return { citizen, impostor };
-  }
-  const selectedCategory = room?.category === 'Random' ? getRandomCategory(room) : (room?.category || 'Hrana');
-  room.currentCategory = selectedCategory;
-  return getRandomWord(selectedCategory, room?.code);
-}
+
 // ── ROOMS ─────────────────────────────────────────────────────────────────────
 const rooms = new Map();
 const timers = new Map();
-function normalizeCode(code = '') {
-  return String(code || '').toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 6);
-}
+
 function generateCode() {
   const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
   let code;
@@ -1112,12 +228,11 @@ function generateCode() {
   while (rooms.has(code));
   return code;
 }
-function emitAppError(socket, scope, message, requestId = '') {
-  socket.emit('appError', { scope, message, requestId });
-}
+
 function clearTimer(code) {
   if (timers.has(code)) { clearInterval(timers.get(code)); timers.delete(code); }
 }
+
 function startTimer(code, seconds, onTick, onEnd) {
   clearTimer(code);
   let rem = seconds;
@@ -1129,11 +244,11 @@ function startTimer(code, seconds, onTick, onEnd) {
   }, 1000);
   timers.set(code, iv);
 }
+
 // Build a safe room snapshot — strips word/role from all players
 function safeRoom(room) {
   return {
     ...room,
-    currentCategory: room.currentCategory || room.category,
     players: room.players.map(p => ({
       id: p.id,
       name: p.name,
@@ -1142,350 +257,93 @@ function safeRoom(room) {
       hasRevealed: !!p.hasRevealed,
       voted: !!p.voted,
       isConnected: p.isConnected !== false,
-      disconnectedAt: p.disconnectedAt || null,
-      score: room.scores?.[scoreKey(p)] || 0,
-      isSpectator: !!p.isSpectator
+      score: room.scores?.[scoreKey(p)] || 0
     }))
   };
 }
-function ensureHost(room) {
-  if (!room?.players?.length) return;
-  room.players.forEach((p, i) => { p.isHost = i === 0 ? p.isHost : false; });
-  if (!room.players.some(p => p.isHost)) room.players[0].isHost = true;
-}
-function abortRoundToLobby(room, reason = 'Premalo igrača za nastavak.') {
-  if (!room) return;
-  clearTimer(room.code);
-  room.state = 'LOBBY';
-  room.votes = {};
-  room.results = null;
-  room.words = null;
-  room.scoreDeltas = {};
-  room.speakOrder = [];
-  room.currentSpeakerIdx = 0;
-  room.impostorGuess = null;
-  room.players.forEach(p => {
-    p.isReady = p.isHost;
-    delete p.role;
-    delete p.word;
-    delete p.hasRevealed;
-    delete p.voted;
-    delete p.isSpectator;
-  });
-  io.to(room.code).emit('roundAborted', { reason });
-}
-function normalizeRoomAfterRemoval(room, removedPlayer) {
-  if (!room) return;
-  ensureHost(room);
-  if ([ 'REVEAL', 'DISCUSSION', 'VOTING' ].includes(room.state) && room.players.length < 3) {
-    abortRoundToLobby(room, 'Premalo igrača za nastavak ove runde. Vraćamo vas u lobby.');
-    return;
-  }
-  if (room.state === 'REVEAL') {
-    const activePlayers = room.players.filter(p => !p.isSpectator);
-    const readyCount = activePlayers.filter(p => p.hasRevealed).length;
-    io.to(room.code).emit('revealProgress', { readyCount, total: activePlayers.length });
-    if (activePlayers.length > 0 && readyCount === activePlayers.length) {
-      room.state = 'DISCUSSION';
-      io.to(room.code).emit('startDiscussion', safeRoom(room));
-      startTimer(room.code, room.discussionTime,
-        t => io.to(room.code).emit('timer', { phase: 'discussion', remaining: t }),
-        () => { if (rooms.get(room.code)?.state === 'DISCUSSION') startVotingPhase(room.code); }
-      );
-    }
-    return;
-  }
-  if (room.state === 'DISCUSSION') {
-    room.speakOrder = (room.speakOrder || []).filter(id => id !== removedPlayer.id);
-    room.currentSpeakerIdx = Math.min(room.currentSpeakerIdx || 0, Math.max(0, room.speakOrder.length - 1));
-    return;
-  }
-  if (room.state === 'VOTING') {
-    delete room.votes[removedPlayer.id];
-    Object.keys(room.votes).forEach(voterId => {
-      if (room.votes[voterId] === removedPlayer.id) delete room.votes[voterId];
-    });
-    refreshVotingProgress(room);
-  }
-}
-function connectedPlayers(room) {
-  return room.players.filter(p => p.isConnected !== false);
-}
-function activeRoundPlayers(room) {
-  return room.players.filter(p => p.isConnected !== false && !p.isSpectator);
-}
-function votingEligiblePlayers(room) {
-  const eligible = activeRoundPlayers(room);
-  return eligible.length ? eligible : room.players.filter(p => !p.isSpectator);
-}
-function votingTargetCount(room) {
-  return votingEligiblePlayers(room).length;
-}
-function refreshVotingProgress(room) {
-  const total = Object.keys(room.votes || {}).length;
-  io.to(room.code).emit('voteCast', { total, max: votingTargetCount(room) });
-  if (votingTargetCount(room) > 0 && total >= votingTargetCount(room)) finalizeVotes(room.code);
-}
-function detachPlayerFromRoom(socket, code, { preserveScore = true, notice = null } = {}) {
-  const room = rooms.get(normalizeCode(code));
-  if (!room) return null;
-  const idx = room.players.findIndex(p => p.id === socket.id);
-  if (idx === -1) return room;
-  const leaving = room.players[idx];
-  cancelDisconnectRemoval(room.code, leaving.playerToken);
-  room.players.splice(idx, 1);
-  if (!preserveScore) {
-    delete room.scores[scoreKey(leaving)];
-  }
-  try { socket.leave?.(room.code); } catch {}
-  if (room.players.length === 0) {
-    rooms.delete(room.code);
-    recentWords.delete(room.code);
-    clearTimer(room.code);
-    return null;
-  }
-  const hadHost = room.players.some(p => p.isHost);
-  if (!hadHost) room.players[0].isHost = true;
-  if (leaving.isHost && !room.players.some(p => p.isHost)) room.players[0].isHost = true;
-  normalizeRoomAfterRemoval(room, leaving);
-  io.to(room.code).emit('roomUpdated', safeRoom(room));
-  if (notice) io.to(room.code).emit('roomNotice', { message: notice });
-  return room;
-}
-function forceLeaveCurrentRoom(socket, { preserveScore = true } = {}) {
-  rooms.forEach((room, code) => {
-    if (room.players.some(p => p.id === socket.id)) {
-      detachPlayerFromRoom(socket, code, { preserveScore });
-    }
-  });
-}
-function calcScores(room) {
-  room.scoreDeltas = {};
-  if (room.results.winner === 'CITIZENS') {
-    room.players.forEach(p => {
-      const key = scoreKey(p);
-      let delta = 0;
-      if (p.isSpectator) { room.scoreDeltas[key] = 0; return; }
-      if (p.isSpectator) { room.scoreDeltas[key] = 0; return; }
-      if (p.role === 'CITIZEN') {
-        const votedPlayer = room.players.find(x => x.id === room.votes[p.id]);
-        delta = votedPlayer?.role === 'IMPOSTOR' ? 2 : 1;
-      }
-      room.scores[key] = (room.scores[key] || 0) + delta;
-      room.scoreDeltas[key] = delta;
-    });
-  } else {
-    room.players.forEach(p => {
-      const key = scoreKey(p);
-      let delta = 0;
-      if (p.isSpectator) { room.scoreDeltas[key] = 0; return; }
-      if (p.isSpectator) { room.scoreDeltas[key] = 0; return; }
-      if (p.role === 'IMPOSTOR') {
-        delta = room.results.impostorGuessedCorrectly ? 4 : 3;
-      }
-      room.scores[key] = (room.scores[key] || 0) + delta;
-      room.scoreDeltas[key] = delta;
-    });
-  }
-}
-function buildResults(room) {
-  return {
-    ...safeRoom(room),
-    results: room.results,
-    words: room.words,
-    votes: room.votes,
-    scores: room.scores,
-    players: room.players.map(p => ({
-      id: p.id,
-      name: p.name,
-      playerToken: p.playerToken,
-      isHost: p.isHost,
-      role: p.role,
-      hasRevealed: p.hasRevealed,
-      voted: p.voted,
-      isConnected: p.isConnected !== false,
-      isSpectator: !!p.isSpectator,
-      score: room.scores?.[scoreKey(p)] || 0,
-      isSpectator: !!p.isSpectator
-    })),
-    scoreDeltas: room.scoreDeltas || {}
-  };
-}
-function finalizeVotes(code) {
-  clearTimer(code);
-  const room = rooms.get(code);
-  if (!room) return;
-  const tally = {};
-  Object.values(room.votes).forEach(id => { tally[id] = (tally[id] || 0) + 1; });
-  let maxV = 0, votedOutId = null;
-  for (const [id, cnt] of Object.entries(tally)) { if (cnt > maxV) { maxV = cnt; votedOutId = id; } }
-  const tied = Object.entries(tally).filter(([, c]) => c === maxV).length > 1;
-  const votedOut = tied ? null : room.players.find(p => p.id === votedOutId);
-  const isImp = !tied && votedOut?.role === 'IMPOSTOR';
-  room.state = 'RESULTS';
-  room.results = {
-    isTie: tied,
-    votedOutId: tied ? null : votedOutId,
-    votedOutName: votedOut?.name || null,
-    isImpostor: isImp,
-    winner: isImp ? 'CITIZENS' : 'IMPOSTORS',
-    impostors: room.players.filter(p => p.role === 'IMPOSTOR').map(p => p.name),
-    tally, reason: 'vote', impostorGuessedCorrectly: false
-  };
-  calcScores(room);
-  io.to(code).emit('gameEnded', buildResults(room));
-}
-function startVotingPhase(code) {
-  const room = rooms.get(code);
-  if (!room) return;
-  clearTimer(code);
-  room.state = 'VOTING';
-  room.votes = {};
-  io.to(code).emit('votingStarted', safeRoom(room));
-  startTimer(code, room.votingTime,
-    t => io.to(code).emit('timer', { phase: 'voting', remaining: t }),
-    () => { if (rooms.get(code)?.state === 'VOTING') finalizeVotes(code); }
-  );
-}
+
 // ── SOCKET HANDLERS ───────────────────────────────────────────────────────────
 io.on('connection', (socket) => {
+
   // WebRTC signaling
   socket.on('rtc-offer',   ({ to, offer })     => io.to(to).emit('rtc-offer',   { from: socket.id, offer }));
   socket.on('rtc-answer',  ({ to, answer })    => io.to(to).emit('rtc-answer',  { from: socket.id, answer }));
   socket.on('rtc-ice',     ({ to, candidate }) => io.to(to).emit('rtc-ice',     { from: socket.id, candidate }));
+
   // ── createRoom
-  socket.on('createRoom', ({ playerName, playerToken, requestId }) => {
-    playerName = String(playerName || '').trim().slice(0, 24);
-    if (!playerName) return emitAppError(socket, 'join', 'Unesite ime agenta.', requestId);
-    forceLeaveCurrentRoom(socket, { preserveScore: true });
+  socket.on('createRoom', ({ playerName }) => {
     const code = generateCode();
     const room = {
       code, state: 'LOBBY',
-      category: 'Random', impostorCount: 1,
+      category: 'Hrana', impostorCount: 1,
       discussionTime: 120, votingTime: 60,
-      privateRoom: false, roomPin: '', customWords: [],
       words: null, votes: {}, results: null,
       scores: {}, roundNumber: 0,
-      speakOrder: [], currentSpeakerIdx: 0, lastDiscussionStarterId: null,
-      players: [{ id: socket.id, name: playerName, isHost: true, isReady: true, playerToken: playerToken || makePlayerToken(), isConnected: true, disconnectedAt: null }]
+      speakOrder: [], currentSpeakerIdx: 0,
+      players: [{ id: socket.id, name: playerName, isHost: true, isReady: true, playerToken: makePlayerToken(), isConnected: true, disconnectedAt: null }]
     };
     rooms.set(code, room);
     socket.join(code);
-    socket.emit('roomCreated', { ...safeRoom(room), playerToken: room.players[0].playerToken, requestId });
+    socket.emit('roomCreated', { ...safeRoom(room), playerToken: room.players[0].playerToken });
   });
+
   // ── joinRoom
-  socket.on('joinRoom', ({ code, playerName, playerToken, roomPin, requestId }) => {
-    const normalizedCode = normalizeCode(code);
-    const normalizedPin = String(roomPin || '').replace(/\D/g, '').slice(0, 6);
-    playerName = String(playerName || '').trim().slice(0, 24);
-    if (!playerName) return emitAppError(socket, 'join', 'Unesite ime agenta.', requestId);
-    if (normalizedCode.length < 4) return emitAppError(socket, 'join', 'Unesite ispravan kod sobe.', requestId);
-    const room = rooms.get(normalizedCode);
-    if (!room) return emitAppError(socket, 'join', 'Soba nije pronađena.', requestId);
-    let existingByToken = playerToken ? room.players.find(p => p.playerToken === playerToken) : null;
-    if (!existingByToken && room.state === 'LOBBY') {
-      const reclaimByName = room.players.find(p => p.isConnected === false && p.name.toLowerCase() === playerName.toLowerCase());
-      if (reclaimByName) existingByToken = reclaimByName;
-    }
-    if (room.state !== 'LOBBY' && !existingByToken) return emitAppError(socket, 'join', 'Igra je već počela.', requestId);
-    if (room.privateRoom && String(room.roomPin || '') !== normalizedPin) {
-      return emitAppError(socket, 'join', 'Privatna soba — unesite ispravan PIN.', requestId);
-    }
-    forceLeaveCurrentRoom(socket, { preserveScore: true });
+  socket.on('joinRoom', ({ code, playerName, playerToken }) => {
+    const room = rooms.get(code.toUpperCase());
+    if (!room) return socket.emit('error', 'Soba nije pronađena.');
+    if (room.state !== 'LOBBY') return socket.emit('error', 'Igra je već počela.');
+
+    const existingByToken = playerToken ? room.players.find(p => p.playerToken === playerToken) : null;
     if (existingByToken) {
-      cancelDisconnectRemoval(normalizedCode, existingByToken.playerToken);
+      cancelDisconnectRemoval(code.toUpperCase(), existingByToken.playerToken);
       existingByToken.id = socket.id;
       existingByToken.name = playerName || existingByToken.name;
       existingByToken.isConnected = true;
       existingByToken.disconnectedAt = null;
-      socket.join(normalizedCode);
-      socket.emit('sessionResumed', { ...buildPlayerPayload(room, existingByToken), requestId });
-      io.to(normalizedCode).emit('roomUpdated', safeRoom(room));
+      socket.join(code.toUpperCase());
+      socket.emit('sessionResumed', buildPlayerPayload(room, existingByToken));
+      io.to(code.toUpperCase()).emit('roomUpdated', safeRoom(room));
       return;
     }
-    if (room.players.length >= 10) return emitAppError(socket, 'join', 'Soba je puna (max 10).', requestId);
+
+    if (room.players.length >= 10) return socket.emit('error', 'Soba je puna (max 10).');
     if (room.players.find(p => p.name.toLowerCase() === playerName.toLowerCase()))
-      return emitAppError(socket, 'join', 'To ime je već zauzeto.', requestId);
+      return socket.emit('error', 'To ime je već zauzeto.');
+
     const token = playerToken || makePlayerToken();
     room.players.push({ id: socket.id, name: playerName, isHost: false, isReady: false, playerToken: token, isConnected: true, disconnectedAt: null });
-    socket.join(normalizedCode);
-    socket.emit('roomJoined', { ...safeRoom(room), playerToken: token, requestId });
-    io.to(normalizedCode).emit('roomUpdated', safeRoom(room));
+    socket.join(code.toUpperCase());
+    socket.emit('roomJoined', { ...safeRoom(room), playerToken: token });
+    io.to(code.toUpperCase()).emit('roomUpdated', safeRoom(room));
   });
-  socket.on('resumeSession', ({ code, playerToken, playerName, requestId }) => {
-    const room = rooms.get(normalizeCode(code));
-    if (!room || !playerToken) return socket.emit('resumeFailed', { requestId });
+
+  socket.on('resumeSession', ({ code, playerToken, playerName }) => {
+    const room = rooms.get((code || '').toUpperCase());
+    if (!room || !playerToken) return socket.emit('resumeFailed');
     const player = room.players.find(p => p.playerToken === playerToken);
-    if (!player) return socket.emit('resumeFailed', { requestId });
+    if (!player) return socket.emit('resumeFailed');
+
     cancelDisconnectRemoval(room.code, player.playerToken);
     player.id = socket.id;
     if (playerName) player.name = playerName;
     player.isConnected = true;
     player.disconnectedAt = null;
     socket.join(room.code);
-    socket.emit('sessionResumed', { ...buildPlayerPayload(room, player), requestId });
+    socket.emit('sessionResumed', buildPlayerPayload(room, player));
     io.to(room.code).emit('roomUpdated', safeRoom(room));
   });
-  socket.on('leaveRoom', ({ code } = {}) => {
-    const targetCode = normalizeCode(code);
-    let leftAny = false;
-    if (targetCode) {
-      const room = rooms.get(targetCode);
-      if (room && room.players.some(p => p.id === socket.id)) {
-        detachPlayerFromRoom(socket, targetCode, { preserveScore: true, notice: 'Igrač je napustio sobu.' });
-        leftAny = true;
-      }
-    }
-    if (!leftAny) {
-      rooms.forEach((room, roomCode) => {
-        if (room.players.some(p => p.id === socket.id)) {
-          detachPlayerFromRoom(socket, roomCode, { preserveScore: true, notice: 'Igrač je napustio sobu.' });
-          leftAny = true;
-        }
-      });
-    }
-    socket.emit('roomLeft');
-  });
-  socket.on('kickPlayer', ({ code, targetId }) => {
-    const room = rooms.get(normalizeCode(code));
-    if (!room) return;
-    const host = room.players.find(p => p.id === socket.id && p.isHost);
-    if (!host) return;
-    const target = room.players.find(p => p.id === targetId);
-    if (!target || target.id === socket.id) return;
-    const targetSocket = io.sockets.sockets.get(target.id);
-    if (targetSocket) targetSocket.emit('kicked', { code: room.code });
-    detachPlayerFromRoom(targetSocket || { id: target.id, leave: () => {} }, room.code, {
-      preserveScore: true,
-      notice: `${target.name} je izbačen iz sobe.`
-    });
-  });
-  socket.on('removeDisconnectedPlayer', ({ code, targetId }) => {
-    const room = rooms.get(normalizeCode(code));
-    if (!room) return;
-    const host = room.players.find(p => p.id === socket.id && p.isHost);
-    if (!host) return;
-    const target = room.players.find(p => p.id === targetId);
-    if (!target || target.isConnected !== false) return;
-    cancelDisconnectRemoval(room.code, target.playerToken);
-    detachPlayerFromRoom({ id: target.id, leave: () => {} }, room.code, {
-      preserveScore: true,
-      notice: `${target.name} je uklonjen kako bi igra mogla dalje.`
-    });
-  });
+
   // ── updateConfig
-  socket.on('updateConfig', ({ code, category, impostors, discussionTime, votingTime, privateRoom, roomPin, customWords }) => {
-    const room = rooms.get(normalizeCode(code));
+  socket.on('updateConfig', ({ code, category, impostors, discussionTime, votingTime }) => {
+    const room = rooms.get((code || '').toUpperCase());
     if (!room || room.state !== 'LOBBY' || !room.players.find(p => p.id === socket.id && p.isHost)) return;
-    if (category === 'Random' || WORDS[category]) room.category = category;
+    if (WORDS[category]) room.category = category;
     room.impostorCount = Math.max(1, Math.min(3, parseInt(impostors) || 1));
-    if (discussionTime) room.discussionTime = Math.max(60, Math.min(600, parseInt(discussionTime)));
-    if (votingTime) room.votingTime = Math.max(60, Math.min(300, parseInt(votingTime)));
-    room.privateRoom = !!privateRoom;
-    room.roomPin = room.privateRoom ? String(roomPin || '').replace(/\D/g, '').slice(0, 6) : '';
-    room.customWords = sanitizeCustomWords(customWords);
-    io.to(room.code).emit('roomUpdated', safeRoom(room));
+    if (discussionTime) room.discussionTime = Math.max(30, Math.min(300, parseInt(discussionTime)));
+    if (votingTime) room.votingTime = Math.max(20, Math.min(120, parseInt(votingTime)));
+    io.to(code).emit('roomUpdated', safeRoom(room));
   });
+
   // ── toggleReady
   socket.on('toggleReady', ({ code }) => {
     const room = rooms.get(code);
@@ -1493,70 +351,43 @@ io.on('connection', (socket) => {
     const p = room.players.find(p => p.id === socket.id);
     if (p && !p.isHost) {
       p.isReady = !p.isReady;
-      io.to(room.code).emit('roomUpdated', safeRoom(room));
+      io.to(code).emit('roomUpdated', safeRoom(room));
     }
   });
+
   // ── startGame
   socket.on('startGame', ({ code }) => {
     const room = rooms.get(code);
-    if (!room) return socket.emit('appError', { scope: 'room', message: 'Soba nije pronađena.' });
+    if (!room) return socket.emit('error', 'Soba nije pronađena.');
     if (!room.players.find(p => p.id === socket.id && p.isHost))
-      return socket.emit('appError', { scope: 'lobby', message: 'Samo host može pokrenuti igru.' });
+      return socket.emit('error', 'Samo host može pokrenuti igru.');
     if (room.players.length < 3)
-      return socket.emit('appError', { scope: 'lobby', message: 'Potrebno je minimalno 3 igrača.' });
-    const activePlayersBefore = connectedPlayers(room);
-    const fairHostMode = roomUsesFairHostMode(room);
-    const minConnectedPlayers = fairHostMode ? 4 : 3;
-    if (activePlayersBefore.length < minConnectedPlayers)
-      return socket.emit('appError', { scope: 'lobby', message: fairHostMode
-        ? 'Potrebna su najmanje 4 povezana igrača jer host moderira rundu i ne igra.'
-        : 'Potrebna su najmanje 3 povezana igrača za početak runde.' });
+      return socket.emit('error', 'Potrebno je minimalno 3 igrača.');
+
     room.roundNumber++;
-    room.words = getRoomWordPair(room);
+    room.words = getRandomWord(room.category, code);
     room.state = 'REVEAL';
     room.votes = {};
     room.impostorGuess = null;
-    room.hostSpectating = fairHostMode;
+
+    // Init scores
+    room.players.forEach(p => { const key = scoreKey(p); if (room.scores[key] === undefined) room.scores[key] = 0; });
+
+    // Assign roles
+    const shuffled = [...room.players].sort(() => Math.random() - 0.5);
+    const impIds = new Set(shuffled.slice(0, room.impostorCount).map(p => p.id));
     room.players.forEach(p => {
-      delete p.isSpectator;
-      delete p.role;
-      delete p.word;
+      p.role = impIds.has(p.id) ? 'IMPOSTOR' : 'CITIZEN';
+      p.word = p.role === 'IMPOSTOR' ? room.words.impostor : room.words.citizen;
       p.hasRevealed = false;
       p.voted = false;
     });
-    if (fairHostMode) {
-      const hostPlayer = room.players.find(p => p.isHost);
-      if (hostPlayer) {
-        hostPlayer.isSpectator = true;
-        hostPlayer.role = 'SPECTATOR';
-        hostPlayer.word = null;
-        hostPlayer.hasRevealed = true;
-      }
-    }
-    const roundPlayers = room.players.filter(p => !p.isSpectator);
-    if (roundPlayers.length < 3) {
-      room.state = 'LOBBY';
-      return socket.emit('appError', { scope: 'lobby', message: 'Nema dovoljno aktivnih igrača za rundu.' });
-    }
-    room.players.forEach(p => { const key = scoreKey(p); if (room.scores[key] === undefined) room.scores[key] = 0; });
-    const shuffled = [...roundPlayers].sort(() => Math.random() - 0.5);
-    const impostorCount = Math.min(room.impostorCount, Math.max(1, roundPlayers.length - 1));
-    const impIds = new Set(shuffled.slice(0, impostorCount).map(p => p.id));
-    roundPlayers.forEach(p => {
-      p.role = impIds.has(p.id) ? 'IMPOSTOR' : 'CITIZEN';
-      p.word = p.role === 'IMPOSTOR' ? room.words.impostor : room.words.citizen;
-    });
-    const randomOrder = [...roundPlayers].sort(() => Math.random() - 0.5).map(p => p.id);
-    if (randomOrder.length > 1 && room.lastDiscussionStarterId) {
-      const firstCandidate = randomOrder[0];
-      if (firstCandidate === room.lastDiscussionStarterId) {
-        const swapIdx = randomOrder.findIndex(id => id !== room.lastDiscussionStarterId);
-        if (swapIdx > 0) [randomOrder[0], randomOrder[swapIdx]] = [randomOrder[swapIdx], randomOrder[0]];
-      }
-    }
-    room.speakOrder = randomOrder;
+
+    // Random speak order
+    room.speakOrder = [...room.players].sort(() => Math.random() - 0.5).map(p => p.id);
     room.currentSpeakerIdx = 0;
-    room.lastDiscussionStarterId = room.speakOrder[0] || null;
+
+    // Send each player ONLY their own word — never leak others
     const base = safeRoom(room);
     room.players.forEach(p => {
       io.to(p.id).emit('gameStarted', {
@@ -1565,20 +396,18 @@ io.on('connection', (socket) => {
         myRole: p.role
       });
     });
-    if (room.hostSpectating) io.to(room.code).emit('roomNotice', { message: 'Premium fair mode: host moderira ovu rundu i ne sudjeluje kao igrač.' });
   });
+
   // ── playerReady
   socket.on('playerReady', ({ code }) => {
     const room = rooms.get(code);
     if (!room) return;
     const p = room.players.find(p => p.id === socket.id);
     if (!p) return;
-    if (p.isSpectator) return;
     p.hasRevealed = true;
-    const activePlayers = room.players.filter(player => !player.isSpectator);
-    const readyCount = activePlayers.filter(player => player.hasRevealed).length;
-    io.to(code).emit('revealProgress', { readyCount, total: activePlayers.length });
-    if (readyCount === activePlayers.length) {
+    const readyCount = room.players.filter(p => p.hasRevealed).length;
+    io.to(code).emit('revealProgress', { readyCount, total: room.players.length });
+    if (readyCount === room.players.length) {
       room.state = 'DISCUSSION';
       io.to(code).emit('startDiscussion', safeRoom(room));
       startTimer(code, room.discussionTime,
@@ -1587,14 +416,14 @@ io.on('connection', (socket) => {
       );
     }
   });
+
   // ── rerollWord — host changes word pair during REVEAL
   socket.on('rerollWord', ({ code }) => {
     const room = rooms.get(code);
     if (!room || room.state !== 'REVEAL') return;
     if (!room.players.find(p => p.id === socket.id && p.isHost)) return;
-    room.words = getRoomWordPair(room);
+    room.words = getRandomWord(room.category, code);
     room.players.forEach(p => {
-      if (p.isSpectator) return;
       p.word = p.role === 'IMPOSTOR' ? room.words.impostor : room.words.citizen;
       p.hasRevealed = false;
     });
@@ -1603,26 +432,14 @@ io.on('connection', (socket) => {
       io.to(p.id).emit('wordRerolled', { ...base, myWord: p.word, myRole: p.role });
     });
   });
+
   // ── startVoting (host trigger)
-  socket.on('startVoting', ({ code, playerToken }) => {
-    const normalizedCode = normalizeCode(code);
-    const room = rooms.get(normalizedCode);
-    if (!room || room.state !== 'DISCUSSION') return;
-    let host = room.players.find(p => p.id === socket.id && p.isHost);
-    if (!host && playerToken) {
-      host = room.players.find(p => p.playerToken === playerToken && p.isHost);
-      if (host) {
-        cancelDisconnectRemoval(room.code, host.playerToken);
-        host.id = socket.id;
-        host.isConnected = true;
-        host.disconnectedAt = null;
-        socket.join(room.code);
-        io.to(room.code).emit('roomUpdated', safeRoom(room));
-      }
-    }
-    if (!host) return emitAppError(socket, 'room', 'Samo host može otvoriti glasanje.');
-    startVotingPhase(normalizedCode);
+  socket.on('startVoting', ({ code }) => {
+    const room = rooms.get(code);
+    if (!room || !room.players.find(p => p.id === socket.id && p.isHost)) return;
+    startVotingPhase(code);
   });
+
   function startVotingPhase(code) {
     const room = rooms.get(code);
     if (!room) return;
@@ -1635,17 +452,17 @@ io.on('connection', (socket) => {
       () => { if (rooms.get(code)?.state === 'VOTING') finalizeVotes(code); }
     );
   }
+
   // ── castVote
   socket.on('castVote', ({ code, targetId }) => {
     const room = rooms.get(code);
     if (!room || room.state !== 'VOTING' || room.votes[socket.id]) return;
-    const voter = room.players.find(p => p.id === socket.id);
-    const target = room.players.find(p => p.id === targetId);
-    if (!voter || voter.isConnected === false || voter.isSpectator || !target || target.isSpectator) return;
     room.votes[socket.id] = targetId;
-    voter.voted = true;
-    refreshVotingProgress(room);
+    const total = Object.keys(room.votes).length;
+    io.to(code).emit('voteCast', { total, max: room.players.length });
+    if (total === room.players.length) finalizeVotes(code);
   });
+
   // ── impostorGuess
   socket.on('impostorGuess', ({ code, guess }) => {
     const room = rooms.get(code);
@@ -1669,6 +486,7 @@ io.on('connection', (socket) => {
       socket.emit('impostorGuessFailed', { guess });
     }
   });
+
   function finalizeVotes(code) {
     clearTimer(code);
     const room = rooms.get(code);
@@ -1693,8 +511,10 @@ io.on('connection', (socket) => {
     calcScores(room);
     io.to(code).emit('gameEnded', buildResults(room));
   }
+
   function calcScores(room) {
     room.scoreDeltas = {};
+
     if (room.results.winner === 'CITIZENS') {
       room.players.forEach(p => {
         const key = scoreKey(p);
@@ -1718,6 +538,7 @@ io.on('connection', (socket) => {
       });
     }
   }
+
   function buildPlayerPayload(room, player) {
     const base = safeRoom(room);
     return {
@@ -1727,6 +548,7 @@ io.on('connection', (socket) => {
       myRole: player.role || null
     };
   }
+
   function buildResults(room) {
     // Include role/word in results so UI can show debrief
     return {
@@ -1749,64 +571,65 @@ io.on('connection', (socket) => {
       scoreDeltas: room.scoreDeltas || {}
     };
   }
+
   // ── playAgain
-  socket.on('playAgain', ({ code, playerToken }) => {
-    const normalizedCode = normalizeCode(code);
-    const room = rooms.get(normalizedCode);
+  socket.on('playAgain', ({ code }) => {
+    const room = rooms.get(code);
     if (!room) return;
-    if (playerToken) {
-      const hostByToken = room.players.find(p => p.playerToken === playerToken && p.isHost);
-      if (hostByToken && hostByToken.id !== socket.id) {
-        cancelDisconnectRemoval(room.code, hostByToken.playerToken);
-        hostByToken.id = socket.id;
-        hostByToken.isConnected = true;
-        hostByToken.disconnectedAt = null;
-        socket.join(room.code);
-      }
-    }
-    clearTimer(room.code);
-    ensureHost(room);
+    clearTimer(code);
     room.state = 'LOBBY';
     room.votes = {}; room.results = null; room.words = null; room.scoreDeltas = {};
     room.speakOrder = []; room.currentSpeakerIdx = 0; room.impostorGuess = null;
     room.players.forEach(p => {
       p.isReady = p.isHost;
-      delete p.role; delete p.word; delete p.hasRevealed; delete p.voted; delete p.isSpectator;
+      delete p.role; delete p.word; delete p.hasRevealed; delete p.voted;
     });
-    io.to(room.code).emit('roomUpdated', safeRoom(room));
-    io.to(code).emit('roomNotice', { message: 'Nova runda je spremna. Host može promijeniti kategoriju i postavke.' });
+    io.to(code).emit('roomUpdated', safeRoom(room));
   });
+
   // ── resetScores
   socket.on('resetScores', ({ code }) => {
     const room = rooms.get(code);
     if (!room || !room.players.find(p => p.id === socket.id && p.isHost)) return;
     room.scores = {}; room.roundNumber = 0;
-    io.to(room.code).emit('roomUpdated', safeRoom(room));
+    io.to(code).emit('roomUpdated', safeRoom(room));
   });
+
   // ── disconnect
   socket.on('disconnect', () => {
     rooms.forEach((room, code) => {
       const player = room.players.find(p => p.id === socket.id);
       if (!player) return;
+
       player.isConnected = false;
       player.disconnectedAt = Date.now();
+
       const key = `${code}:${player.playerToken}`;
       cancelDisconnectRemoval(code, player.playerToken);
-      const token = player.playerToken;
       const timer = setTimeout(() => {
         const liveRoom = rooms.get(code);
         if (!liveRoom) return;
-        const livePlayer = liveRoom.players.find(p => p.playerToken === token);
-        if (!livePlayer || livePlayer.isConnected) return;
+        const idx = liveRoom.players.findIndex(p => p.playerToken === player.playerToken);
+        if (idx === -1) return;
+        const removed = liveRoom.players[idx];
+        liveRoom.players.splice(idx, 1);
+        delete liveRoom.scores[scoreKey(removed)];
+
+        if (liveRoom.players.length === 0) {
+          rooms.delete(code); recentWords.delete(code); clearTimer(code);
+        } else {
+          if (!liveRoom.players.some(p => p.isHost)) liveRoom.players[0].isHost = true;
+          io.to(code).emit('roomUpdated', safeRoom(liveRoom));
+        }
         disconnectTimers.delete(key);
-        detachPlayerFromRoom({ ...socket, id: livePlayer.id, leave: socket.leave.bind(socket) }, code, { preserveScore: false, notice: `${livePlayer.name} je uklonjen nakon prekida veze.` });
       }, RECONNECT_GRACE_MS);
+
       disconnectTimers.set(key, timer);
-      io.to(room.code).emit('roomUpdated', safeRoom(room));
-      if (room.state === 'VOTING') refreshVotingProgress(room);
+      io.to(code).emit('roomUpdated', safeRoom(room));
     });
   });
 });
+
 app.use(express.static(path.join(__dirname, 'public')));
 app.get('*', (req, res) => res.sendFile(path.join(__dirname, 'public', 'index.html')));
 httpServer.listen(PORT, '0.0.0.0', () => console.log(`✓ Impostor server on port ${PORT}`));
