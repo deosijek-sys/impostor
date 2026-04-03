@@ -956,9 +956,16 @@ function monitorMic(){
   }catch(e){}
 }
 
-// Svaki peer inicira konekciju prema svima — handleOffer zatvori duplikate
+// Polite peer pattern — deterministički određuje tko je "polite"
+// Polite peer (manji id) prihvaća collision i resetira, impolite ignorira incoming offer ako već ima PC
+function isPolitePeerTo(pid){
+  return socket.id < pid;
+}
+
+// Samo "impolite" peer inicira offer prema "polite" peeru
+// Polite peer čeka offer, ne šalje prvi
 function shouldInitiatePeerTo(pid){
-  return true;
+  return !isPolitePeerTo(pid); // impolite (veći id) inicira
 }
 
 // Osigurava da postoji konekcija prema svakom aktivnom igraču
@@ -987,7 +994,16 @@ function initPC(pid){
 }
 async function handleOffer(from,offer){
   if(!hasLiveMic()){ pendingOffers.push({from,offer}); if(micWanted) initMic().catch(()=>{}); return; }
-  if(pcs[from]){try{pcs[from].close();}catch(e){} delete pcs[from];}
+  const polite=isPolitePeerTo(from); // ja sam polite prema ovom peeru?
+  if(pcs[from]){
+    if(!polite){
+      // Impolite peer — ignoriraj incoming offer, moja konekcija ima prednost
+      return;
+    }
+    // Polite peer — zatvori svoju i prihvati tuđu
+    try{pcs[from].close();}catch(e){}
+    delete pcs[from];
+  }
   const ICE={iceServers:[{urls:'stun:stun.l.google.com:19302'},{urls:'stun:stun1.l.google.com:19302'}]};
   const pc=new RTCPeerConnection(ICE);pcs[from]=pc;
   micStream.getTracks().forEach(t=>pc.addTrack(t,micStream));
