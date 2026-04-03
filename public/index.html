@@ -275,9 +275,6 @@ select{appearance:none;cursor:pointer;}
       <button class="ibtn" id="btn-rules-icon" style="display:none;" title="Pravila">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
       </button>
-      <button class="ibtn" id="btn-leave-icon" style="display:none;" title="Napusti sobu">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
-      </button>
       <div class="pb" id="pb"><div class="pbav" id="pbav">—</div><span id="pbname">—</span></div>
     </div>
   </div>
@@ -592,29 +589,11 @@ function show(id){
   document.querySelector('.scroll').scrollTo(0,0);
 }
 function badge(){
-  if(!me){
-    $('pb').classList.remove('on');
-    $('btn-rules-icon').style.display='none';
-    $('btn-leave-icon').style.display='none';
-    return;
-  }
+  if(!me)return;
   $('pbav').textContent=ini(me.name);
   $('pbname').textContent=me.name;
   $('pb').classList.add('on');
   $('btn-rules-icon').style.display='flex';
-  $('btn-leave-icon').style.display='flex';
-}
-function requestLeaveRoom(){
-  if(!G?.code){
-    clearSession();
-    me=null; G={}; myWord=null; myRole=null;
-    badge();
-    show('s-join');
-    return;
-  }
-  const ok=window.confirm('Napustiti sobu?');
-  if(!ok) return;
-  socket.emit('leaveRoom',{ code:G.code, playerToken:getSession().playerToken||me?.playerToken||'' });
 }
 function toast(msg,dur=2600){
   const t=$('toast');t.textContent=msg;t.classList.add('on');
@@ -742,7 +721,6 @@ function toggleSelfMute(){ selfMuted=!selfMuted; saveAudioPrefs(); applySelfMute
 // ── RULES ─────────────────────────────────────────────────────────────────────
 $('btn-rules-join').onclick=()=>{rulesFrom='s-join';show('s-rules');};
 $('btn-rules-icon').onclick=()=>{rulesFrom=document.querySelector('.sc.on')?.id||'s-lobby';show('s-rules');};
-$('btn-leave-icon').onclick=()=>requestLeaveRoom();
 $('btn-rbk').onclick=$('btn-rbk2').onclick=()=>show(rulesFrom);
 
 // ── JOIN ──────────────────────────────────────────────────────────────────────
@@ -766,7 +744,7 @@ $('btn-create').onclick=()=>{
 function renderLobby(){
   if(!G||!$('l-code'))return;
   $('l-code').textContent=G.code;
-  $('l-cat').textContent=G.category;
+  $('l-cat').textContent=G.activeCategory || G.category;
   $('l-imps').textContent=G.impostorCount;
   $('rnd').textContent=G.roundNumber>0?`R${G.roundNumber}`:'';
   const rc=G.players.filter(p=>p.isReady).length;
@@ -1121,7 +1099,7 @@ function renderResults(){
 }
 
 $('btn-again').onclick=()=>socket.emit('playAgain',{code:G.code});
-$('btn-quit').onclick=()=>requestLeaveRoom();
+$('btn-quit').onclick=()=>{clearSession();location.reload();};
 $('btn-rst').onclick=()=>{socket.emit('resetScores',{code:G.code});toast('Bodovi resetirani');};
 
 
@@ -1140,19 +1118,6 @@ socket.on('sessionResumed',room=>{G=room;me=meNow();myWord=room.myWord;myRole=ro
   toast('✅ Veza obnovljena');
 });
 socket.on('resumeFailed',()=>{clearSession();});
-socket.on('leftRoom',()=>{
-  const name=me?.name||$('j-name').value.trim()||getSession().name||'';
-  stopMic({fullStop:true});
-  clearSession();
-  if(name) localStorage.setItem(SESSION_KEY, JSON.stringify({name}));
-  G={}; me=null; myWord=null; myRole=null;
-  $('j-code').value='';
-  if(name) $('j-name').value=name;
-  badge();
-  show('s-join');
-  clearJoinErrors && clearJoinErrors();
-  toast('Napustio si sobu');
-});
 socket.on('connect',()=>{loadAudioPrefs();
 updateVoiceButtons();
 maybeResumeSession();});
