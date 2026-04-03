@@ -9,8 +9,7 @@ const app = express();
 const httpServer = createServer(app);
 const io = new Server(httpServer, {
   cors: { origin: '*', methods: ['GET', 'POST'] },
-  transports: ['polling', 'websocket'],
-  allowEIO3: true,
+  transports: ['websocket'],
   pingInterval: 25000,
   pingTimeout: 60000
 });
@@ -48,7 +47,7 @@ const WORDS = {
     ],
     [
       "Pizza",
-      "Burger"
+      "Hamburger"
     ],
     [
       "Pomfrit",
@@ -133,6 +132,10 @@ const WORDS = {
       "Rukomet"
     ],
     [
+      "Bazen",
+      "Plaža"
+    ],
+    [
       "Trčanje",
       "Hodanje"
     ],
@@ -182,6 +185,10 @@ const WORDS = {
     ],
     [
       "Badminton",
+      "Squash"
+    ],
+    [
+      "Golf",
       "Kuglanje"
     ],
     [
@@ -191,14 +198,6 @@ const WORDS = {
     [
       "Start",
       "Cilj"
-    ],
-    [
-      "Navijač",
-      "Publika"
-    ],
-    [
-      "Vježba",
-      "Trening"
     ]
   ],
   "Životinje": [
@@ -224,43 +223,23 @@ const WORDS = {
     ],
     [
       "Svinja",
-      "Prase"
-    ],
-    [
-      "Lav",
-      "Tigar"
-    ],
-    [
-      "Vuk",
-      "Lisica"
-    ],
-    [
-      "Medvjed",
-      "Panda"
-    ],
-    [
-      "Zec",
-      "Kunić"
-    ],
-    [
-      "Miš",
-      "Štakor"
-    ],
-    [
-      "Patka",
-      "Guska"
+      "Vepar"
     ],
     [
       "Kokoš",
       "Pijetao"
     ],
     [
-      "Riba",
-      "Morski pas"
+      "Patka",
+      "Guska"
     ],
     [
-      "Delfin",
-      "Kit"
+      "Vrabac",
+      "Golub"
+    ],
+    [
+      "Riba",
+      "Morski pas"
     ],
     [
       "Pčela",
@@ -268,19 +247,39 @@ const WORDS = {
     ],
     [
       "Mrav",
-      "Pauk"
+      "Bubamara"
     ],
     [
-      "Zmija",
-      "Gušter"
+      "Lav",
+      "Tigar"
+    ],
+    [
+      "Medvjed",
+      "Vuk"
+    ],
+    [
+      "Zec",
+      "Kunić"
+    ],
+    [
+      "Slon",
+      "Žirafa"
+    ],
+    [
+      "Delfin",
+      "Kit"
+    ],
+    [
+      "Krokodil",
+      "Aligator"
+    ],
+    [
+      "Papiga",
+      "Kanarinac"
     ],
     [
       "Žaba",
       "Kornjača"
-    ],
-    [
-      "Sova",
-      "Golub"
     ]
   ],
   "Mjesta": [
@@ -290,7 +289,7 @@ const WORDS = {
     ],
     [
       "Bolnica",
-      "Ambulanta"
+      "Dom zdravlja"
     ],
     [
       "Trgovina",
@@ -298,7 +297,7 @@ const WORDS = {
     ],
     [
       "Pekara",
-      "Slastičarna"
+      "Slastičarnica"
     ],
     [
       "Kafić",
@@ -309,60 +308,60 @@ const WORDS = {
       "Igralište"
     ],
     [
-      "More",
-      "Plaža"
+      "Stan",
+      "Kuća"
     ],
     [
-      "Kolodvor",
-      "Stanica"
+      "Selo",
+      "Grad"
+    ],
+    [
+      "Ured",
+      "Banka"
+    ],
+    [
+      "Pošta",
+      "Ljekarna"
     ],
     [
       "Aerodrom",
-      "Luka"
+      "Kolodvor"
     ],
     [
-      "Hotel",
-      "Apartman"
+      "Autobusna stanica",
+      "Tramvajska stanica"
     ],
     [
-      "Banka",
-      "Pošta"
-    ],
-    [
-      "Ljekarna",
-      "Drogerija"
-    ],
-    [
-      "Knjižnica",
-      "Knjižara"
-    ],
-    [
-      "Muzej",
-      "Kazalište"
-    ],
-    [
-      "Kino",
-      "Dvorana"
-    ],
-    [
-      "Crkva",
-      "Kapelica"
-    ],
-    [
-      "Frizerski salon",
-      "Kozmetički salon"
-    ],
-    [
-      "Teretana",
+      "Plaža",
       "Bazen"
     ],
     [
-      "Tržnica",
-      "Sajam"
+      "Kino",
+      "Kazalište"
     ],
     [
-      "Lift",
-      "Stepenice"
+      "Teretana",
+      "Stadion"
+    ],
+    [
+      "Knjižnica",
+      "Čitaonica"
+    ],
+    [
+      "Tržnica",
+      "Shopping centar"
+    ],
+    [
+      "Garaža",
+      "Parkiralište"
+    ],
+    [
+      "Most",
+      "Tunel"
+    ],
+    [
+      "Muzej",
+      "Galerija"
     ]
   ],
   "Predmeti": [
@@ -375,32 +374,8 @@ const WORDS = {
       "Kauč"
     ],
     [
-      "Televizor",
-      "Radio"
-    ],
-    [
-      "Mobitel",
-      "Tablet"
-    ],
-    [
-      "Laptop",
-      "Računalo"
-    ],
-    [
-      "Punjač",
-      "Kabel"
-    ],
-    [
-      "Tipkovnica",
-      "Miš"
-    ],
-    [
-      "Čaša",
-      "Šalica"
-    ],
-    [
-      "Tanjur",
-      "Zdjelica"
+      "Jastuk",
+      "Pokrivač"
     ],
     [
       "Žlica",
@@ -411,142 +386,166 @@ const WORDS = {
       "Škare"
     ],
     [
-      "Torba",
-      "Ruksak"
+      "Tanjur",
+      "Zdjelica"
     ],
     [
-      "Novčanik",
-      "Kartica"
+      "Čaša",
+      "Šalica"
     ],
     [
-      "Ključ",
-      "Brava"
+      "Lonac",
+      "Tava"
     ],
     [
-      "Sat",
-      "Budilica"
-    ],
-    [
-      "Kišobran",
-      "Kabanica"
-    ],
-    [
-      "Jastuk",
-      "Pokrivač"
-    ],
-    [
-      "Lampa",
-      "Svjetiljka"
-    ],
-    [
-      "Usisavač",
-      "Metla"
-    ],
-    [
-      "Ogledalo",
-      "Prozor"
-    ],
-    [
-      "Vrata",
-      "Kvaka"
+      "Hladnjak",
+      "Zamrzivač"
     ],
     [
       "Perilica",
       "Sušilica"
     ],
     [
-      "Pegla",
-      "Daska"
+      "Usisavač",
+      "Metla"
     ],
     [
-      "Bočica",
-      "Tuba"
+      "Televizor",
+      "Radio"
     ],
     [
-      "Sapun",
-      "Šampon"
+      "Mobitel",
+      "Tablet"
+    ],
+    [
+      "Punjač",
+      "Kabel"
+    ],
+    [
+      "Ključ",
+      "Lokot"
+    ],
+    [
+      "Ruksak",
+      "Torba"
+    ],
+    [
+      "Novčanik",
+      "Torbica"
+    ],
+    [
+      "Kišobran",
+      "Kabanica"
+    ],
+    [
+      "Olovka",
+      "Marker"
+    ],
+    [
+      "Bilježnica",
+      "Knjiga"
+    ],
+    [
+      "Naočale",
+      "Sat"
+    ],
+    [
+      "Lampa",
+      "Prekidač"
+    ],
+    [
+      "Gitara",
+      "Klavir"
+    ],
+    [
+      "Mikrofon",
+      "Zvučnik"
+    ],
+    [
+      "Bicikl",
+      "Romobil"
     ]
   ],
   "Filmovi i serije": [
     [
-      "Film",
-      "Serija"
+      "Titanic",
+      "Avatar"
     ],
     [
-      "Epizoda",
-      "Sezona"
+      "Gladiator",
+      "Troja"
     ],
     [
-      "Glumac",
-      "Redatelj"
+      "Batman",
+      "Superman"
     ],
     [
-      "Kino",
-      "Televizija"
+      "Spider-Man",
+      "Iron Man"
     ],
     [
-      "Kokice",
-      "Ulaznica"
+      "Frozen",
+      "Moana"
     ],
     [
-      "Scena",
-      "Kadar"
+      "Shrek",
+      "Madagaskar"
     ],
     [
-      "Komedija",
-      "Drama"
+      "Harry Potter",
+      "Percy Jackson"
     ],
     [
-      "Akcija",
-      "Triler"
+      "Gospodar prstenova",
+      "Hobit"
     ],
     [
-      "Horor",
-      "Misterij"
+      "The Office",
+      "Brooklyn Nine-Nine"
     ],
     [
-      "Dokumentarac",
-      "Crtić"
+      "Friends",
+      "How I Met Your Mother"
     ],
     [
-      "Junak",
-      "Zlikovac"
+      "Breaking Bad",
+      "Better Call Saul"
     ],
     [
-      "Detektiv",
-      "Policajac"
+      "Peaky Blinders",
+      "Narcos"
     ],
     [
-      "Princeza",
-      "Kraljica"
+      "Dark",
+      "Black Mirror"
     ],
     [
-      "Robot",
-      "Superheroj"
+      "Stranger Things",
+      "Wednesday"
     ],
     [
-      "Tajna",
-      "Istraga"
+      "Home Alone",
+      "Mr. Bean"
     ],
     [
-      "Plan",
-      "Misija"
+      "Game of Thrones",
+      "House of the Dragon"
     ],
     [
-      "Otok",
-      "Grad"
+      "The Crown",
+      "Suits"
     ],
     [
-      "Svemir",
-      "Planet"
+      "Squid Game",
+      "Alice in Borderland"
     ],
     [
-      "Mač",
-      "Pištolj"
+      "La Casa de Papel",
+      "Lupin"
     ],
     [
-      "Maska",
-      "Kostim"
+      "The Simpsons",
+      "Family Guy"
     ]
   ],
   "Profesije": [
@@ -559,12 +558,12 @@ const WORDS = {
       "Profesor"
     ],
     [
-      "Kuhar",
-      "Konobar"
+      "Konobar",
+      "Kuhar"
     ],
     [
       "Vozač",
-      "Pilot"
+      "Mehaničar"
     ],
     [
       "Policajac",
@@ -576,7 +575,7 @@ const WORDS = {
     ],
     [
       "Frizer",
-      "Brijač"
+      "Kozmetičar"
     ],
     [
       "Prodavač",
@@ -599,118 +598,118 @@ const WORDS = {
       "Snimatelj"
     ],
     [
-      "Novinar",
-      "Voditelj"
+      "Pjevač",
+      "Glumac"
     ],
     [
-      "Glazbenik",
-      "Pjevač"
-    ],
-    [
-      "Glumac",
-      "Komičar"
-    ],
-    [
-      "Trener",
-      "Sudac"
-    ],
-    [
-      "Pekar",
-      "Slastičar"
-    ],
-    [
-      "Konobar",
-      "Barmen"
-    ],
-    [
-      "Taksist",
-      "Automehaničar"
+      "Pilot",
+      "Stjuardesa"
     ],
     [
       "Vrtlar",
       "Cvjećar"
+    ],
+    [
+      "Pekar",
+      "Mesar"
+    ],
+    [
+      "Novinar",
+      "Voditelj"
+    ],
+    [
+      "Odvjetnik",
+      "Sudac"
+    ],
+    [
+      "Arhitekt",
+      "Građevinar"
+    ],
+    [
+      "Trener",
+      "Sudac"
     ]
   ],
   "Glazba": [
-    [
-      "Pjesma",
-      "Album"
-    ],
-    [
-      "Pjevač",
-      "Bend"
-    ],
     [
       "Gitara",
       "Klavir"
     ],
     [
-      "Bubanj",
-      "Truba"
+      "Bubnjevi",
+      "Violina"
     ],
     [
       "Mikrofon",
       "Zvučnik"
     ],
     [
-      "Slušalice",
-      "Pojačalo"
-    ],
-    [
       "Koncert",
       "Festival"
-    ],
-    [
-      "Pozornica",
-      "Backstage"
-    ],
-    [
-      "Ritam",
-      "Melodija"
     ],
     [
       "Refren",
       "Strofa"
     ],
     [
-      "Radio",
-      "Playlista"
+      "Album",
+      "Singl"
     ],
     [
       "DJ",
-      "Producent"
+      "Pjevač"
     ],
     [
-      "Note",
-      "Tekst"
+      "Rap",
+      "Pop"
     ],
     [
-      "Balada",
-      "Hit"
+      "Rock",
+      "Metal"
+    ],
+    [
+      "Jazz",
+      "Blues"
+    ],
+    [
+      "Narodna glazba",
+      "Zabavna glazba"
     ],
     [
       "Ples",
       "Koreografija"
     ],
     [
-      "Publika",
-      "Aplauz"
+      "Slušalice",
+      "Pojačalo"
+    ],
+    [
+      "Bend",
+      "Orkestar"
     ],
     [
       "Ulaznica",
-      "Narukvica"
+      "Pozornica"
     ],
     [
-      "Akustično",
-      "Električno"
+      "Akustična gitara",
+      "Električna gitara"
     ],
     [
-      "Studio",
-      "Probe"
+      "Bas gitara",
+      "Gitara"
     ],
     [
-      "Takt",
-      "Tempo"
+      "Klavijature",
+      "Sintisajzer"
+    ],
+    [
+      "Flauta",
+      "Truba"
+    ],
+    [
+      "Radio",
+      "Playlist"
     ]
   ],
   "Priroda i znanosti": [
@@ -725,10 +724,6 @@ const WORDS = {
     [
       "Kiša",
       "Snijeg"
-    ],
-    [
-      "Oblak",
-      "Magla"
     ],
     [
       "Vjetar",
@@ -759,8 +754,8 @@ const WORDS = {
       "Grana"
     ],
     [
-      "Pijesak",
-      "Kamen"
+      "Kamen",
+      "Pijesak"
     ],
     [
       "Vatra",
@@ -771,28 +766,32 @@ const WORDS = {
       "Para"
     ],
     [
+      "Ljeto",
+      "Proljeće"
+    ],
+    [
+      "Jesen",
+      "Zima"
+    ],
+    [
+      "Atom",
+      "Molekula"
+    ],
+    [
+      "Struja",
+      "Magnet"
+    ],
+    [
+      "Vulkan",
+      "Potres"
+    ],
+    [
+      "Duga",
+      "Oblak"
+    ],
+    [
       "Baterija",
       "Žarulja"
-    ],
-    [
-      "Magnet",
-      "Metal"
-    ],
-    [
-      "Mikroskop",
-      "Teleskop"
-    ],
-    [
-      "Karta",
-      "Globus"
-    ],
-    [
-      "Vrijeme",
-      "Klima"
-    ],
-    [
-      "Sjena",
-      "Svjetlo"
     ]
   ],
   "Tehnologija": [
@@ -805,20 +804,12 @@ const WORDS = {
       "Računalo"
     ],
     [
-      "Ekran",
-      "Monitor"
-    ],
-    [
       "Tipkovnica",
       "Miš"
     ],
     [
-      "Punjač",
-      "Baterija"
-    ],
-    [
-      "Wi-Fi",
-      "Internet"
+      "Monitor",
+      "Televizor"
     ],
     [
       "Aplikacija",
@@ -829,154 +820,162 @@ const WORDS = {
       "PIN"
     ],
     [
-      "Poruka",
-      "Poziv"
+      "WiFi",
+      "Bluetooth"
     ],
     [
-      "Kamera",
-      "Fotografija"
-    ],
-    [
-      "Video",
-      "Snimka"
-    ],
-    [
-      "Bluetooth",
-      "USB"
+      "Punjač",
+      "Powerbank"
     ],
     [
       "Printer",
       "Skener"
     ],
     [
+      "Kamera",
+      "Web kamera"
+    ],
+    [
+      "Poruka",
+      "Email"
+    ],
+    [
+      "Web stranica",
+      "Online trgovina"
+    ],
+    [
+      "USB",
+      "Memorijska kartica"
+    ],
+    [
       "Router",
       "Modem"
     ],
     [
-      "Cloud",
-      "Memorija"
+      "Slušalice",
+      "Zvučnik"
     ],
     [
-      "Stranica",
-      "Link"
+      "Pametni sat",
+      "Narukvica"
     ],
     [
-      "Profil",
-      "Račun"
+      "Fotografija",
+      "Video"
     ],
     [
-      "Mapa",
+      "Pretraživač",
+      "Stranica"
+    ],
+    [
+      "Kod",
       "Datoteka"
     ],
     [
-      "Preuzimanje",
-      "Upload"
-    ],
-    [
-      "Klik",
-      "Dodir"
+      "Mapa",
+      "Cloud"
     ]
   ],
   "Svakodnevica": [
     [
-      "Jutro",
-      "Večer"
-    ],
-    [
-      "Dan",
-      "Noć"
-    ],
-    [
-      "Posao",
-      "Smjena"
-    ],
-    [
-      "Plaća",
-      "Račun"
-    ],
-    [
-      "Novac",
-      "Kovanica"
-    ],
-    [
-      "Tramvaj",
-      "Autobus"
-    ],
-    [
-      "Semafor",
-      "Zebra"
-    ],
-    [
-      "Klupa",
-      "Stolac"
-    ],
-    [
       "Tuš",
       "Kada"
+    ],
+    [
+      "Četkica",
+      "Pasta za zube"
+    ],
+    [
+      "Sapun",
+      "Šampon"
+    ],
+    [
+      "Ručnik",
+      "Ogrtač"
+    ],
+    [
+      "Jastuk",
+      "Madrac"
+    ],
+    [
+      "Budilica",
+      "Sat"
+    ],
+    [
+      "Kava",
+      "Doručak"
     ],
     [
       "Ručak",
       "Večera"
     ],
     [
-      "Doručak",
-      "Užina"
+      "Ključevi",
+      "Novčanik"
     ],
     [
-      "Kava",
-      "Pauza"
+      "Mobitel",
+      "Punjač"
     ],
     [
-      "Alarm",
-      "Budilica"
+      "Autobus",
+      "Tramvaj"
     ],
     [
-      "Kupovina",
-      "Popis"
+      "Lift",
+      "Stepenice"
     ],
     [
-      "Čekanje",
-      "Red"
-    ],
-    [
-      "Rođendan",
-      "Poklon"
-    ],
-    [
-      "Odmor",
-      "Vikend"
-    ],
-    [
-      "Susjed",
-      "Prijatelj"
-    ],
-    [
-      "Sastanak",
-      "Dogovor"
-    ],
-    [
-      "Poruka",
-      "Obavijest"
-    ],
-    [
-      "Torba",
-      "Vrećica"
+      "Red",
+      "Čekanje"
     ],
     [
       "Račun",
       "Kusur"
     ],
     [
-      "Klima",
-      "Grijanje"
+      "Torba",
+      "Ruksak"
     ],
     [
-      "Prozor",
-      "Balkon"
+      "Jakna",
+      "Kaput"
     ],
     [
-      "Lift",
-      "Hodnik"
+      "Tenisice",
+      "Cipele"
+    ],
+    [
+      "Daljinski",
+      "Televizor"
+    ],
+    [
+      "Vrata",
+      "Prozor"
+    ],
+    [
+      "Balkon",
+      "Terasa"
+    ],
+    [
+      "Kupaonica",
+      "Kuhinja"
+    ],
+    [
+      "Perilica",
+      "Deterdžent"
+    ],
+    [
+      "Čajnik",
+      "Lonac"
+    ],
+    [
+      "Tanjur",
+      "Čaša"
+    ],
+    [
+      "Kruh",
+      "Maslac"
     ]
   ]
 };

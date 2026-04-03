@@ -1027,8 +1027,8 @@ const SFX={
 
 // ── STATE ─────────────────────────────────────────────────────────────────────
 const socket=io({
-  transports:['polling','websocket'],
-  upgrade:true,
+  transports:['websocket'],
+  upgrade:false,
   reconnection:true,
   reconnectionAttempts:Infinity,
   reconnectionDelay:1000,
@@ -1051,6 +1051,23 @@ const meNow=()=>G?.players?G.players.find(p=>p.id===socket.id):null;
 const connectedPlayers=()=> (G?.players||[]).filter(p=>p.isConnected!==false);
 const disconnectedPlayers=()=> (G?.players||[]).filter(p=>p.isConnected===false);
 const canManagePlayer=p=> !!(me?.isHost && p && p.id!==socket.id);
+function playerSignalKey(id){
+  const p=(G?.players||[]).find(x=>x.id===id);
+  return String(p?.playerToken || p?.id || id || '');
+}
+function shouldInitiatePeerTo(pid){
+  const mine=playerSignalKey(socket.id);
+  const theirs=playerSignalKey(pid);
+  if(!mine || !theirs || mine===theirs) return false;
+  return mine < theirs;
+}
+function ensurePeerLinks(){
+  if(!micWanted || !hasLiveMic()) return;
+  (G?.players||[]).forEach(p=>{
+    if(!p || p.id===socket.id || p.isConnected===false) return;
+    if(shouldInitiatePeerTo(p.id)) initPC(p.id);
+  });
+}
 function clearJoinErrors(){ if($('j-err')) $('j-err').textContent=''; if($('l-err')) $('l-err').textContent=''; }
 let joinPending=false, createPending=false;
 let actionSeq=0, pendingAction=null, pendingActionTimer=null;
@@ -1790,7 +1807,7 @@ async function initMic({force=false}={}){
       }
 
       teardownPeerGraph();
-      (G.players||[]).forEach(p=>{if(p.id!==socket.id)initPC(p.id);});
+      ensurePeerLinks();
       const queued=[...pendingOffers];pendingOffers=[];
       for(const {from,offer} of queued) await handleOffer(from,offer);
       return stream;
@@ -1833,7 +1850,7 @@ function monitorMic(){
 }
 
 function initPC(pid){
-  if(!hasLiveMic()||pcs[pid])return;
+  if(!hasLiveMic()||pcs[pid]||!shouldInitiatePeerTo(pid))return;
   const ICE={iceServers:[{urls:'stun:stun.l.google.com:19302'},{urls:'stun:stun1.l.google.com:19302'}]};
   const pc=new RTCPeerConnection(ICE);pcs[pid]=pc;
   micStream.getTracks().forEach(t=>pc.addTrack(t,micStream));
@@ -2062,7 +2079,7 @@ socket.on('roomJoined',room=>{if(!isMatchingAction(room?.requestId)) return; cle
 socket.on('sessionResumed',room=>{if(!isMatchingAction(room?.requestId)) return; clearPendingAction(room?.requestId); clearActionLoading();clearJoinErrors(); G=room;me=meNow();myWord=room.myWord;myRole=room.myRole;saveSession({code:room.code,name:me?.name||$('j-name').value.trim(),playerToken:room.playerToken});badge();
   if(G.state==='LOBBY'){show('s-lobby');renderLobby();renderCustomWordsPreview();updatePinPill();}
   else if(G.state==='REVEAL'){show('s-reveal');setupReveal();}
-  else if(G.state==='DISCUSSION'){show('s-disc');setupDisc(room); wantMic(true);}
+  else if(G.state==='DISCUSSION'){show('s-disc');setupDisc(room); wantMic(true); setTimeout(()=>ensurePeerLinks(),400);}
   else if(G.state==='VOTING'){show('s-vote');renderVoting(); wantMic(false);}
   else if(G.state==='RESULTS'){show('s-res');renderResults(); wantMic(true); unlockAudio();}
   toast('✅ Veza obnovljena');
