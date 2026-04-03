@@ -12,59 +12,59 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
 :root{
-  --red:#E63946;--rdim:#ff6b75;--rbg:rgba(230,57,70,.09);--rb:rgba(230,57,70,.28);
-  --teal:#52b788;--tbg:rgba(82,183,136,.09);--tb:rgba(82,183,136,.28);
-  --amb:#f4a261;--abg:rgba(244,162,97,.09);--ab:rgba(244,162,97,.28);
-  --bg:#0d0d0d;--bg2:#141414;--bg3:#1a1a1a;--bg4:#242424;
-  --ln:rgba(255,255,255,.07);--ln2:rgba(255,255,255,.13);
-  --tx:#f0eeeb;--tx2:#888;--tx3:#555;
-  --r:16px;--rs:10px;
+  --red:#E63946;--rdim:#ff6b75;--rbg:rgba(230,57,70,.09);--rb:rgba(230,57,70,.3);
+  --teal:#52b788;--tbg:rgba(82,183,136,.09);--tb:rgba(82,183,136,.3);
+  --amb:#f4a261;--abg:rgba(244,162,97,.09);--ab:rgba(244,162,97,.3);
+  --bg:#0d0d0d;--bg2:#141414;--bg3:#1c1c1c;--bg4:#252525;
+  --ln:rgba(255,255,255,.06);--ln2:rgba(255,255,255,.12);--ln3:rgba(255,255,255,.2);
+  --tx:#f0eeeb;--tx2:#909090;--tx3:#555;
+  --r:14px;--rs:9px;
 }
 html,body{height:100%;background:var(--bg);color:var(--tx);font-family:'DM Sans',sans-serif;overflow:hidden;}
 .app{height:100dvh;max-width:430px;margin:0 auto;display:flex;flex-direction:column;}
 
-/* TOP BAR */
-.bar{flex-shrink:0;height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 16px;border-bottom:1px solid var(--ln);background:var(--bg);}
-.logo{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:3px;color:var(--red);}
-.bar-r{display:flex;align-items:center;gap:8px;}
-.pb{display:none;align-items:center;gap:6px;background:var(--bg3);border:1px solid var(--ln2);border-radius:999px;padding:4px 10px 4px 4px;font-size:12px;font-weight:500;color:var(--tx2);}
+/* ── BAR */
+.bar{flex-shrink:0;height:54px;display:flex;align-items:center;justify-content:space-between;padding:0 15px;border-bottom:1px solid var(--ln);background:var(--bg);}
+.logo{font-family:'Bebas Neue',sans-serif;font-size:21px;letter-spacing:3px;color:var(--red);}
+.bar-r{display:flex;align-items:center;gap:7px;}
+.pb{display:none;align-items:center;gap:6px;background:var(--bg3);border:1px solid var(--ln2);border-radius:999px;padding:3px 10px 3px 4px;font-size:11px;font-weight:500;color:var(--tx2);}
 .pb.on{display:flex;}
 .pbav{width:24px;height:24px;border-radius:50%;background:var(--rbg);border:1px solid var(--rb);display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:9px;color:var(--rdim);}
-.rndbdg{font-family:'Bebas Neue',sans-serif;font-size:12px;color:var(--tx3);}
-.ibtn{width:32px;height:32px;border-radius:50%;border:1px solid var(--ln2);background:none;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--tx3);}
-.ibtn:hover{color:var(--tx2);}
+.rndbdg{font-family:'Bebas Neue',sans-serif;font-size:11px;color:var(--tx3);}
+.ibtn{width:30px;height:30px;border-radius:50%;border:1px solid var(--ln2);background:none;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--tx3);flex-shrink:0;}
+.ibtn:hover{color:var(--tx2);border-color:var(--ln3);}
 
-/* SCROLL */
+/* ── SCROLL */
 .scroll{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;scrollbar-width:none;}
 .scroll::-webkit-scrollbar{display:none;}
 
-/* SCREENS */
-.sc{display:none;padding:22px 16px 56px;animation:up .25s cubic-bezier(.16,1,.3,1);}
+/* ── SCREENS */
+.sc{display:none;padding:20px 15px 60px;animation:up .22s cubic-bezier(.16,1,.3,1);}
 .sc.on{display:block;}
-@keyframes up{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+@keyframes up{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
 
-/* TYPOGRAPHY */
-.lbl{font-size:10px;font-weight:600;letter-spacing:2.5px;text-transform:uppercase;color:var(--tx3);display:block;margin-bottom:7px;}
+/* ── TYPE */
+.lbl{font-size:10px;font-weight:600;letter-spacing:2.5px;text-transform:uppercase;color:var(--tx3);display:block;margin-bottom:6px;}
 .lr{color:rgba(230,57,70,.5);}
 .lt{color:rgba(82,183,136,.5);}
 .la{color:rgba(244,162,97,.5);}
-.disp{font-family:'Bebas Neue',sans-serif;font-size:64px;letter-spacing:4px;color:var(--red);line-height:.9;}
-.ttl{font-family:'Bebas Neue',sans-serif;font-size:36px;letter-spacing:2px;line-height:1.05;color:var(--tx);}
+.disp{font-family:'Bebas Neue',sans-serif;font-size:60px;letter-spacing:4px;color:var(--red);line-height:.9;}
+.ttl{font-family:'Bebas Neue',sans-serif;font-size:34px;letter-spacing:2px;line-height:1.05;color:var(--tx);}
 
-/* INPUTS */
+/* ── INPUTS */
 input[type=text],input[type=number],select{
   width:100%;background:var(--bg3);border:1px solid var(--ln2);border-radius:var(--rs);
   color:var(--tx);font-family:'DM Sans',sans-serif;font-size:15px;font-weight:500;
-  padding:12px 14px;outline:none;transition:border-color .2s;
+  padding:12px 13px;outline:none;transition:border-color .15s;
 }
 input:focus,select:focus{border-color:var(--red);}
 input::placeholder{color:var(--tx3);}
 select{appearance:none;cursor:pointer;}
 .sw{position:relative;}
-.sw::after{content:'▾';position:absolute;right:12px;top:50%;transform:translateY(-50%);color:var(--tx3);pointer-events:none;font-size:13px;}
+.sw::after{content:'▾';position:absolute;right:12px;top:50%;transform:translateY(-50%);color:var(--tx3);pointer-events:none;font-size:12px;}
 
-/* BUTTONS */
-.btn{display:flex;align-items:center;justify-content:center;gap:7px;width:100%;padding:14px;border-radius:var(--r);border:none;font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:2px;cursor:pointer;transition:transform .1s,opacity .15s;}
+/* ── BUTTONS */
+.btn{display:flex;align-items:center;justify-content:center;gap:7px;width:100%;padding:13px;border-radius:var(--r);border:none;font-family:'Bebas Neue',sans-serif;font-size:17px;letter-spacing:1.5px;cursor:pointer;transition:transform .1s,opacity .12s;}
 .btn:active{transform:scale(.97);}
 .bp{background:var(--red);color:#fff;}
 .bp:hover{opacity:.9;}
@@ -72,198 +72,212 @@ select{appearance:none;cursor:pointer;}
 .bo:hover{border-color:var(--rb);color:var(--rdim);}
 .bt{background:var(--tbg);border:1px solid var(--tb);color:var(--teal);}
 .ba{background:var(--abg);border:1px solid var(--ab);color:var(--amb);}
-.bsm{padding:10px 16px;font-size:14px;border-radius:var(--rs);}
-.mb{margin-bottom:9px;}
+.bdng{background:rgba(230,57,70,.15);border:1px solid var(--rb);color:var(--rdim);}
+.bsm{padding:9px 15px;font-size:13px;border-radius:var(--rs);}
+.mb{margin-bottom:8px;}
 
-/* CARDS */
-.card{background:var(--bg2);border:1px solid var(--ln);border-radius:var(--r);padding:15px;}
+/* ── CARDS */
+.card{background:var(--bg2);border:1px solid var(--ln);border-radius:var(--r);padding:14px;}
 .cr{background:var(--rbg);border-color:var(--rb);}
 .ct{background:var(--tbg);border-color:var(--tb);}
 .ca{background:var(--abg);border-color:var(--ab);}
 
-/* DIVIDER */
-.div-l{display:flex;align-items:center;gap:10px;margin:16px 0;}
+/* ── DIVIDER */
+.div-l{display:flex;align-items:center;gap:10px;margin:14px 0;}
 .div-l::before,.div-l::after{content:'';flex:1;height:1px;background:var(--ln);}
 .div-l span{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--tx3);}
 
-/* PLAYER ROW */
-.pr{display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--bg3);border:1px solid var(--ln);border-radius:var(--rs);margin-bottom:7px;}
-.av{width:36px;height:36px;border-radius:9px;background:var(--bg4);border:1px solid var(--ln2);display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:12px;letter-spacing:1px;color:var(--tx2);flex-shrink:0;}
+/* ── PLAYER ROW */
+.pr{display:flex;align-items:center;gap:9px;padding:10px 11px;background:var(--bg3);border:1px solid var(--ln);border-radius:var(--rs);margin-bottom:6px;animation:up .18s ease;}
+.av{width:34px;height:34px;border-radius:8px;background:var(--bg4);border:1px solid var(--ln2);display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:11px;letter-spacing:1px;color:var(--tx2);flex-shrink:0;}
 .av.r{background:var(--rbg);border-color:var(--rb);color:var(--rdim);}
 .av.t{background:var(--tbg);border-color:var(--tb);color:var(--teal);}
+.av.a{background:var(--abg);border-color:var(--ab);color:var(--amb);}
 .pi{flex:1;min-width:0;}
 .pn{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .ps{font-size:10px;color:var(--tx3);margin-top:1px;}
-.dot{width:8px;height:8px;border-radius:50%;background:var(--tx3);flex-shrink:0;}
-.dot.on{background:var(--teal);box-shadow:0 0 7px var(--teal);}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--tx3);flex-shrink:0;}
+.dot.on{background:var(--teal);box-shadow:0 0 6px var(--teal);}
 
-/* COUNTER */
+/* ── COUNTER */
 .ctr{display:flex;align-items:center;background:var(--bg3);border:1px solid var(--ln2);border-radius:var(--rs);overflow:hidden;}
-.cbtn{width:44px;height:44px;display:flex;align-items:center;justify-content:center;background:none;border:none;color:var(--tx2);font-size:20px;cursor:pointer;}
+.cbtn{width:42px;height:42px;display:flex;align-items:center;justify-content:center;background:none;border:none;color:var(--tx2);font-size:20px;cursor:pointer;}
 .cbtn:hover{background:var(--bg4);color:var(--tx);}
-.cval{flex:1;text-align:center;font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:2px;}
+.cval{flex:1;text-align:center;font-family:'Bebas Neue',sans-serif;font-size:21px;letter-spacing:2px;}
 
-/* GRID */
-.sg{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:13px;}
-.scard{background:var(--bg2);border:1px solid var(--ln);border-radius:var(--rs);padding:12px;}
-.sval{font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:1px;line-height:1;margin-top:4px;}
+/* ── GRID */
+.sg{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;}
+.sg3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px;margin-bottom:12px;}
+.scard{background:var(--bg2);border:1px solid var(--ln);border-radius:var(--rs);padding:11px;}
+.sval{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:1px;line-height:1;margin-top:4px;}
 
-/* ── FLIP CARD
-   Fixed layout: word-label on top, big word in middle, role tag at bottom
-   All elements use flex-direction:column with explicit spacing, no overlap possible */
-.fwrap{perspective:1200px;cursor:pointer;margin-bottom:16px;user-select:none;}
-.finnr{width:100%;height:260px;position:relative;transform-style:preserve-3d;transition:transform .6s cubic-bezier(.4,0,.2,1);}
+/* ── FLIP CARD */
+.fwrap{perspective:1200px;cursor:pointer;margin-bottom:14px;user-select:none;}
+.finnr{width:100%;height:250px;position:relative;transform-style:preserve-3d;transition:transform .55s cubic-bezier(.4,0,.2,1);}
 .fwrap.flip .finnr{transform:rotateY(180deg);}
-.ff,.fb{
-  position:absolute;inset:0;
-  backface-visibility:hidden;-webkit-backface-visibility:hidden;
-  border-radius:var(--r);
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  gap:0;padding:20px 16px;
-}
+.ff,.fb{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:var(--r);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:18px 14px;}
 .ff{background:var(--bg2);border:1px solid var(--ln2);}
 .fb{background:var(--bg2);border:1px solid var(--rb);transform:rotateY(180deg);}
-.fb.fi{background:var(--rbg);border-color:var(--rb);}
-/* eye icon on front */
-.eye{width:56px;height:56px;border-radius:50%;border:1px solid var(--ln2);display:flex;align-items:center;justify-content:center;margin-bottom:12px;animation:epulse 2s infinite;flex-shrink:0;}
+.fb.fi{background:var(--rbg);}
+.eye{width:52px;height:52px;border-radius:50%;border:1px solid var(--ln2);display:flex;align-items:center;justify-content:center;margin-bottom:12px;animation:epulse 2s infinite;flex-shrink:0;}
 @keyframes epulse{0%,100%{border-color:var(--ln2);}50%{border-color:var(--rb);}}
-.ff-hint{font-size:10px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:var(--tx3);margin-top:4px;}
-/* back card content — strictly stacked */
-.fb-lbl{font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--tx3);margin-bottom:10px;flex-shrink:0;}
-.fb-word{
-  font-family:'Bebas Neue',sans-serif;
-  font-size:44px;letter-spacing:3px;color:var(--tx);
-  text-align:center;line-height:1.05;
-  word-break:break-word;hyphens:auto;
-  max-width:100%;
-  margin-bottom:12px;
-  flex-shrink:1;
-}
+.fb-lbl{font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--tx3);margin-bottom:8px;flex-shrink:0;}
+.fb-word{font-family:'Bebas Neue',sans-serif;font-size:42px;letter-spacing:3px;color:var(--tx);text-align:center;line-height:1.05;word-break:break-word;hyphens:auto;max-width:100%;margin-bottom:10px;flex-shrink:1;}
 .fb-word.ri{color:var(--red);}
-.rtag{display:inline-flex;align-items:center;gap:5px;padding:5px 13px;border-radius:999px;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;flex-shrink:0;}
+.rtag{display:inline-flex;align-items:center;gap:5px;padding:4px 12px;border-radius:999px;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;flex-shrink:0;}
 .rtag.cit{background:var(--tbg);border:1px solid var(--tb);color:var(--teal);}
 .rtag.imp{background:var(--rbg);border:1px solid var(--rb);color:var(--rdim);}
 
-/* TIMER */
-.tbar{margin-bottom:13px;}
-.tbar-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;}
+/* ── MY WORD CHIP — diskusija */
+.mywc{display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:var(--r);border:1px solid var(--ln2);background:var(--bg2);margin-bottom:12px;}
+.mywc-w{font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:2px;line-height:1;}
+.mywc-lbl{font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--tx3);margin-bottom:3px;}
+
+/* ── TIMER */
+.tcard{background:var(--bg2);border:1px solid var(--ln);border-radius:var(--r);padding:14px 16px;margin-bottom:12px;}
+.tcard-top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:9px;}
+.tcard-lbl{font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--tx3);}
+.tcard-val{font-family:'Bebas Neue',sans-serif;font-size:30px;letter-spacing:2px;color:var(--tx);line-height:1;transition:color .3s;}
 .tbar-track{height:3px;background:var(--bg4);border-radius:999px;overflow:hidden;}
 .tbar-fill{height:100%;border-radius:999px;transition:width 1s linear,background .4s;}
-.tval{font-family:'Bebas Neue',sans-serif;font-size:17px;letter-spacing:1px;color:var(--tx2);}
 
-/* SPEAKER CARD */
-.spk{background:var(--bg2);border:2px solid var(--ab);border-radius:var(--r);padding:16px;text-align:center;margin-bottom:13px;overflow:hidden;position:relative;}
-.spk::before{content:'';position:absolute;inset:0;background:var(--abg);}
-.spk>*{position:relative;}
-.spk-lbl{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--amb);opacity:.6;margin-bottom:4px;}
-.spk-name{font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:2px;color:var(--amb);line-height:1.1;word-break:break-word;}
+/* ── SPEAKER */
+.spkcard{border-radius:var(--r);padding:13px 16px;margin-bottom:12px;position:relative;overflow:hidden;border:1px solid var(--ab);background:var(--abg);}
+.spkcard-lbl{font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--amb);opacity:.7;margin-bottom:3px;}
+.spkcard-name{font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:2px;color:var(--amb);word-break:break-word;line-height:1.1;}
 
-/* MIC */
-.mic{display:flex;align-items:center;gap:9px;padding:10px 13px;background:var(--bg3);border:1px solid var(--ln);border-radius:var(--rs);margin-bottom:12px;}
+/* ── MIC / VOICE */
+.mic{display:flex;align-items:center;gap:8px;padding:9px 12px;background:var(--bg3);border:1px solid var(--ln);border-radius:var(--rs);margin-bottom:11px;}
 .mled{width:7px;height:7px;border-radius:50%;background:var(--tx3);flex-shrink:0;transition:background .2s;}
 .mled.live{background:var(--red);animation:mbl 1s infinite;}
 @keyframes mbl{0%,100%{opacity:1;}50%{opacity:.2;}}
-.mtxt{font-size:12px;color:var(--tx2);flex:1;}
+.mtxt{font-size:11px;color:var(--tx2);flex:1;}
 .mwaves{display:flex;align-items:center;gap:2px;}
 .mwaves span{display:block;width:3px;border-radius:2px;background:var(--rdim);}
-.mwaves span:nth-child(1){height:5px;animation:wv .8s .0s ease-in-out infinite;}
+.mwaves span:nth-child(1){height:5px;animation:wv .8s 0s ease-in-out infinite;}
 .mwaves span:nth-child(2){height:10px;animation:wv .8s .1s ease-in-out infinite;}
 .mwaves span:nth-child(3){height:7px;animation:wv .8s .2s ease-in-out infinite;}
 .mwaves span:nth-child(4){height:12px;animation:wv .8s .05s ease-in-out infinite;}
 .mwaves span:nth-child(5){height:4px;animation:wv .8s .15s ease-in-out infinite;}
 @keyframes wv{0%,100%{transform:scaleY(.3);}50%{transform:scaleY(1.2);}}
 
-
-/* VOICE V2 */
-.vpanel{background:var(--bg2);border:1px solid var(--ln);border-radius:var(--r);padding:12px;margin-bottom:13px;}
-.vhead{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px;}
+.vpanel{background:var(--bg2);border:1px solid var(--ln);border-radius:var(--r);padding:11px;margin-bottom:11px;}
+.vhead{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:9px;}
 .vtitle{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--tx3);}
-.vactions{display:flex;gap:8px;flex-wrap:wrap;}
-.vbtn{padding:8px 12px;border-radius:999px;border:1px solid var(--ln2);background:var(--bg3);color:var(--tx2);font-size:11px;font-weight:700;letter-spacing:1px;cursor:pointer;}
+.vactions{display:flex;gap:7px;}
+.vbtn{padding:7px 11px;border-radius:999px;border:1px solid var(--ln2);background:var(--bg3);color:var(--tx2);font-size:10px;font-weight:700;letter-spacing:1px;cursor:pointer;}
 .vbtn.live{border-color:var(--tb);color:var(--teal);background:var(--tbg);}
 .vbtn.muted{border-color:var(--rb);color:var(--rdim);background:var(--rbg);}
-.vlist{display:flex;flex-direction:column;gap:7px;}
-.vrow{display:flex;align-items:center;gap:9px;padding:9px 10px;background:var(--bg3);border:1px solid var(--ln);border-radius:12px;}
-.vrow.speaking{border-color:var(--tb);box-shadow:0 0 0 1px rgba(82,183,136,.18) inset;}
+.vlist{display:flex;flex-direction:column;gap:6px;}
+.vrow{display:flex;align-items:center;gap:8px;padding:8px 10px;background:var(--bg3);border:1px solid var(--ln);border-radius:10px;}
+.vrow.speaking{border-color:var(--tb);}
 .vmeta{flex:1;min-width:0;}
-.vname{font-size:12px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.vsub{font-size:10px;color:var(--tx3);margin-top:2px;}
-.vmeter{width:62px;height:6px;background:var(--bg4);border-radius:999px;overflow:hidden;flex-shrink:0;}
-.vmeter>span{display:block;height:100%;width:0%;background:var(--teal);transition:width .12s linear;}
-.vtoggle{padding:7px 10px;border-radius:999px;border:1px solid var(--ln2);background:transparent;color:var(--tx2);font-size:10px;font-weight:700;letter-spacing:1px;cursor:pointer;flex-shrink:0;}
+.vname{font-size:12px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.vsub{font-size:10px;color:var(--tx3);margin-top:1px;}
+.vmeter{width:56px;height:5px;background:var(--bg4);border-radius:999px;overflow:hidden;flex-shrink:0;}
+.vmeter>span{display:block;height:100%;width:0%;background:var(--teal);transition:width .1s linear;}
+.vtoggle{padding:6px 9px;border-radius:999px;border:1px solid var(--ln2);background:transparent;color:var(--tx2);font-size:9px;font-weight:700;letter-spacing:1px;cursor:pointer;flex-shrink:0;}
 .vtoggle.on{border-color:var(--rb);color:var(--rdim);background:var(--rbg);}
 
-/* VOTE */
-.vgrid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:13px;}
-.vc{background:var(--bg2);border:1px solid var(--ln);border-radius:var(--r);padding:13px 9px;text-align:center;cursor:pointer;transition:border-color .15s,background .15s,transform .1s;position:relative;}
+/* ── HOST CONTROLS STRIP */
+.hstrip{background:var(--bg2);border:1px solid var(--ln);border-radius:var(--r);padding:11px;margin-bottom:11px;}
+.hstrip-title{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--tx3);margin-bottom:9px;}
+.hstrip-btns{display:flex;gap:7px;flex-wrap:wrap;}
+.hstrip-btn{padding:8px 13px;border-radius:999px;border:1px solid var(--ln2);background:var(--bg3);color:var(--tx2);font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:1px;cursor:pointer;transition:border-color .15s,color .15s;}
+.hstrip-btn:hover{border-color:var(--ln3);color:var(--tx);}
+.hstrip-btn.danger{border-color:var(--rb);color:var(--rdim);}
+.hstrip-btn.danger:hover{background:var(--rbg);}
+.hstrip-btn.prim{border-color:var(--tb);color:var(--teal);}
+.hstrip-btn.prim:hover{background:var(--tbg);}
+.hstrip-btn.amb{border-color:var(--ab);color:var(--amb);}
+.hstrip-btn.amb:hover{background:var(--abg);}
+
+/* ── VOTE */
+.vgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;}
+.vc{background:var(--bg2);border:1px solid var(--ln);border-radius:var(--r);padding:12px 8px;text-align:center;cursor:pointer;transition:border-color .12s,background .12s,transform .1s;position:relative;}
 .vc:hover{border-color:var(--ln2);background:var(--bg3);}
 .vc.sel{border-color:var(--red);background:var(--rbg);}
 .vc:active{transform:scale(.97);}
-.vav{width:44px;height:44px;border-radius:11px;background:var(--bg4);border:1px solid var(--ln2);display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:14px;color:var(--tx2);margin:0 auto 7px;}
+.vav{width:42px;height:42px;border-radius:10px;background:var(--bg4);border:1px solid var(--ln2);display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:13px;color:var(--tx2);margin:0 auto 7px;}
 .vc.sel .vav{border-color:var(--rb);color:var(--rdim);background:var(--rbg);}
-.vn{font-size:12px;font-weight:600;}
-.vchk{position:absolute;top:7px;right:7px;width:15px;height:15px;border-radius:50%;background:var(--red);display:flex;align-items:center;justify-content:center;font-size:8px;color:#fff;}
+.vn{font-size:11px;font-weight:600;}
+.vchk{position:absolute;top:6px;right:6px;width:14px;height:14px;border-radius:50%;background:var(--red);display:flex;align-items:center;justify-content:center;font-size:8px;color:#fff;}
 
-/* CONFIRM */
-.cfm{background:var(--bg2);border:1px solid var(--ln2);border-left:3px solid var(--red);border-radius:var(--r);padding:14px;margin-bottom:13px;display:none;}
-.cfm.on{display:block;animation:up .2s ease;}
+/* ── CONFIRM */
+.cfm{background:var(--bg2);border:1px solid var(--ln2);border-left:2px solid var(--red);border-radius:var(--r);padding:13px;margin-bottom:12px;display:none;}
+.cfm.on{display:block;animation:up .18s ease;}
 
-/* IMPOSTOR GUESS */
-.igbox{background:var(--rbg);border:1px solid var(--rb);border-radius:var(--r);padding:14px;margin-bottom:13px;display:none;}
+/* ── IMPOSTOR GUESS */
+.igbox{background:var(--rbg);border:1px solid var(--rb);border-radius:var(--r);padding:13px;margin-bottom:12px;display:none;}
 .igbox.on{display:block;}
-.igrow{display:flex;gap:7px;margin-top:9px;}
+.igrow{display:flex;gap:7px;margin-top:8px;}
 .igrow input{flex:1;}
-.igrow button{flex-shrink:0;padding:12px 14px;border-radius:var(--rs);border:none;background:var(--red);color:#fff;font-family:'Bebas Neue',sans-serif;font-size:14px;letter-spacing:1px;cursor:pointer;}
+.igrow button{flex-shrink:0;padding:12px 13px;border-radius:var(--rs);border:none;background:var(--red);color:#fff;font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:1px;cursor:pointer;}
 
-/* SCORE */
-.srow{display:flex;align-items:center;gap:9px;padding:10px 12px;background:var(--bg2);border:1px solid var(--ln);border-radius:var(--rs);margin-bottom:6px;}
-.srk{font-family:'Bebas Neue',sans-serif;font-size:16px;color:var(--tx3);width:20px;flex-shrink:0;}
-.srk.g{color:#f4a261;}.srk.s{color:#a0a0b0;}.srk.b{color:#cd7f32;}
-.spt{font-family:'Bebas Neue',sans-serif;font-size:19px;margin-left:auto;}
-.sdelta{font-size:10px;font-weight:600;padding:2px 6px;border-radius:999px;margin-left:4px;}
+/* ── SCOREBOARD */
+.srow{display:flex;align-items:center;gap:8px;padding:9px 11px;background:var(--bg2);border:1px solid var(--ln);border-radius:var(--rs);margin-bottom:5px;}
+.srk{font-family:'Bebas Neue',sans-serif;font-size:15px;color:var(--tx3);width:18px;flex-shrink:0;}
+.srk.g{color:#f4a261;}.srk.s{color:#a0a0b0;}.srk.b{color:#8b6914;}
+.spt{font-family:'Bebas Neue',sans-serif;font-size:18px;margin-left:auto;}
+.sdelta{font-size:9px;font-weight:600;padding:2px 5px;border-radius:999px;margin-left:4px;}
 .sdelta.up{background:var(--tbg);color:var(--teal);}
 .sdelta.z{background:var(--bg4);color:var(--tx3);}
 
-/* RESULT BANNER */
-.rbanner{padding:26px 16px;text-align:center;border-radius:var(--r);margin-bottom:13px;}
+/* ── RESULT */
+.rbanner{padding:24px 15px;text-align:center;border-radius:var(--r);margin-bottom:12px;}
 .rbanner.win{background:var(--tbg);border:1px solid var(--tb);color:var(--teal);}
 .rbanner.lose{background:var(--rbg);border:1px solid var(--rb);color:var(--red);}
 .rbanner.tie{background:var(--abg);border:1px solid var(--ab);color:var(--amb);}
-.remoji{font-size:40px;margin-bottom:8px;line-height:1;}
-.rtitle{font-family:'Bebas Neue',sans-serif;font-size:34px;letter-spacing:3px;line-height:1;}
+.remoji{font-size:38px;margin-bottom:7px;line-height:1;}
+.rtitle{font-family:'Bebas Neue',sans-serif;font-size:32px;letter-spacing:3px;line-height:1;}
 .rsub{font-size:12px;opacity:.7;margin-top:5px;line-height:1.5;}
-.rrow{display:flex;align-items:center;gap:9px;padding:10px 12px;border-radius:var(--rs);background:var(--bg2);border:1px solid var(--ln);margin-bottom:6px;}
+.rrow{display:flex;align-items:center;gap:8px;padding:9px 11px;border-radius:var(--rs);background:var(--bg2);border:1px solid var(--ln);margin-bottom:5px;}
 .rrow.ir{background:var(--rbg);border-color:var(--rb);}
 
-/* REVEAL PROGRESS */
-.revprog{background:var(--bg2);border:1px solid var(--ln);border-radius:var(--r);padding:14px;margin-bottom:13px;}
-.revprog-bar{height:3px;background:var(--bg4);border-radius:999px;overflow:hidden;margin-top:8px;}
+/* ── REVEAL PROGRESS */
+.revprog{background:var(--bg2);border:1px solid var(--ln);border-radius:var(--r);padding:13px;margin-bottom:12px;}
+.revprog-bar{height:3px;background:var(--bg4);border-radius:999px;overflow:hidden;margin-top:7px;}
 .revprog-fill{height:100%;background:var(--teal);border-radius:999px;transition:width .4s ease;}
 
-/* RULES */
-.rstep{display:flex;gap:11px;margin-bottom:11px;align-items:flex-start;}
-.rnum{font-family:'Bebas Neue',sans-serif;font-size:20px;color:var(--red);flex-shrink:0;width:24px;line-height:1.2;}
+/* ── RULES */
+.rstep{display:flex;gap:10px;margin-bottom:10px;align-items:flex-start;}
+.rnum{font-family:'Bebas Neue',sans-serif;font-size:18px;color:var(--red);flex-shrink:0;width:22px;line-height:1.2;}
 .rtxt{font-size:13px;color:var(--tx2);line-height:1.7;}
 .rtxt strong{color:var(--tx);font-weight:600;}
-.rhl{border-radius:var(--rs);padding:11px 13px;margin-bottom:9px;}
 
-/* MISC */
-.err{font-size:12px;color:var(--rdim);font-weight:500;margin-top:6px;min-height:14px;}
-.wait{text-align:center;font-size:11px;color:var(--tx3);letter-spacing:1px;text-transform:uppercase;padding:9px;}
+/* ── MISC */
+.err{font-size:11px;color:var(--rdim);font-weight:500;margin-top:5px;min-height:14px;}
+.wait{text-align:center;font-size:10px;color:var(--tx3);letter-spacing:1px;text-transform:uppercase;padding:8px;}
 .rowb{display:flex;justify-content:space-between;align-items:center;}
 .g4{margin-bottom:4px;}.g8{margin-bottom:8px;}.g12{margin-bottom:12px;}.g16{margin-bottom:16px;}.g20{margin-bottom:20px;}.g24{margin-bottom:24px;}
-.divider{height:1px;background:var(--ln);margin:16px 0;}
+.divider{height:1px;background:var(--ln);margin:14px 0;}
 
-/* TOAST */
-.toast{position:fixed;top:64px;left:50%;transform:translateX(-50%);background:var(--bg3);border:1px solid var(--ln2);border-radius:var(--rs);padding:8px 16px;font-size:12px;font-weight:600;color:var(--tx);z-index:999;display:none;white-space:nowrap;box-shadow:0 4px 16px rgba(0,0,0,.5);max-width:88vw;overflow:hidden;text-overflow:ellipsis;}
-.toast.on{display:block;animation:up .2s ease;}
+/* ── TOAST */
+.toast{position:fixed;top:62px;left:50%;transform:translateX(-50%);background:var(--bg3);border:1px solid var(--ln2);border-radius:var(--rs);padding:7px 15px;font-size:12px;font-weight:600;color:var(--tx);z-index:999;display:none;white-space:nowrap;box-shadow:0 4px 16px rgba(0,0,0,.5);max-width:88vw;overflow:hidden;text-overflow:ellipsis;}
+.toast.on{display:block;animation:up .18s ease;}
 
-/* SPINNER */
-.spinov{position:fixed;inset:0;background:rgba(13,13,13,.94);z-index:500;display:none;flex-direction:column;align-items:center;justify-content:center;gap:12px;}
+/* ── SPINNER */
+.spinov{position:fixed;inset:0;background:rgba(13,13,13,.94);z-index:500;display:none;flex-direction:column;align-items:center;justify-content:center;gap:11px;}
 .spinov.on{display:flex;}
-.spn-sub{font-family:'Bebas Neue',sans-serif;font-size:12px;letter-spacing:3px;color:var(--tx3);}
-.spn-name{font-family:'Bebas Neue',sans-serif;font-size:44px;letter-spacing:4px;color:var(--red);text-align:center;padding:0 20px;animation:up .35s ease;}
-.spn-hint{font-size:11px;color:var(--tx3);letter-spacing:1px;text-transform:uppercase;}
+.spn-sub{font-family:'Bebas Neue',sans-serif;font-size:11px;letter-spacing:3px;color:var(--tx3);}
+.spn-name{font-family:'Bebas Neue',sans-serif;font-size:42px;letter-spacing:4px;color:var(--red);text-align:center;padding:0 20px;animation:up .3s ease;}
+.spn-hint{font-size:10px;color:var(--tx3);letter-spacing:1px;text-transform:uppercase;}
+
+/* ── MODAL (kick/transfer) */
+.modal-ov{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:800;display:none;align-items:flex-end;justify-content:center;}
+.modal-ov.on{display:flex;}
+.modal{background:var(--bg2);border:1px solid var(--ln2);border-radius:var(--r) var(--r) 0 0;padding:20px 16px 32px;width:100%;max-width:430px;animation:mup .22s cubic-bezier(.16,1,.3,1);}
+@keyframes mup{from{opacity:0;transform:translateY(30px);}to{opacity:1;transform:translateY(0);}}
+.modal-title{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:2px;margin-bottom:16px;color:var(--tx);}
+.modal-close{float:right;background:none;border:none;color:var(--tx3);cursor:pointer;font-size:18px;margin-top:-2px;}
+.modal-list{display:flex;flex-direction:column;gap:7px;margin-bottom:14px;}
+.modal-item{display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--bg3);border:1px solid var(--ln);border-radius:var(--rs);cursor:pointer;}
+.modal-item:hover{border-color:var(--ln2);}
+.modal-item-btns{display:flex;gap:6px;margin-left:auto;}
+.modal-ibtn{padding:5px 10px;border-radius:999px;border:1px solid var(--ln2);background:none;color:var(--tx3);font-size:10px;font-weight:700;letter-spacing:1px;cursor:pointer;}
+.modal-ibtn.kick{border-color:var(--rb);color:var(--rdim);}
+.modal-ibtn.host{border-color:var(--tb);color:var(--teal);}
+.modal-ibtn:hover{opacity:.8;}
 </style>
 </head>
 <body>
@@ -273,7 +287,10 @@ select{appearance:none;cursor:pointer;}
     <div class="bar-r">
       <span class="rndbdg" id="rnd"></span>
       <button class="ibtn" id="btn-rules-icon" style="display:none;" title="Pravila">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      </button>
+      <button class="ibtn" id="btn-leave-icon" style="display:none;" title="Napusti sobu">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--rdim)" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
       </button>
       <div class="pb" id="pb"><div class="pbav" id="pbav">—</div><span id="pbname">—</span></div>
     </div>
@@ -285,18 +302,18 @@ select{appearance:none;cursor:pointer;}
     <div class="sc on" id="s-join">
       <div class="g24">
         <span class="lbl">Pristupite misiji</span>
-        <h2 class="ttl" style="font-size:40px;">Unesite<br>podatke</h2>
+        <h2 class="ttl" style="font-size:38px;">Unesite<br>podatke</h2>
       </div>
       <span class="lbl g4">Vaše ime</span>
       <input type="text" id="j-name" placeholder="Ime agenta..." autocomplete="off" autocorrect="off" autocapitalize="words" class="g12"/>
       <span class="lbl g4">Kod sobe <span style="color:var(--tx3)">(za pristupanje)</span></span>
-      <input type="text" id="j-code" placeholder="ABCD" maxlength="4" class="g8" style="text-transform:uppercase;font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:8px;" autocomplete="off" autocorrect="off"/>
+      <input type="text" id="j-code" placeholder="ABCD" maxlength="4" class="g8" style="text-transform:uppercase;font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:8px;" autocomplete="off" autocorrect="off"/>
       <div class="err g12" id="j-err"></div>
       <button class="btn bp mb" id="btn-join">PRIDRUŽI SE</button>
       <div class="div-l"><span>ili</span></div>
       <button class="btn bo mb" id="btn-create">KREIRAJ NOVU SOBU</button>
-      <button class="btn bo" id="btn-rules-join" style="border-color:var(--rb);color:var(--rdim);font-size:14px;">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      <button class="btn bo" id="btn-rules-join" style="border-color:var(--rb);color:var(--rdim);font-size:13px;padding:10px;">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
         KAKO SE IGRA?
       </button>
     </div>
@@ -306,16 +323,18 @@ select{appearance:none;cursor:pointer;}
       <div class="g20">
         <span class="lbl lr">Kod sobe</span>
         <h1 class="disp" id="l-code">ABCD</h1>
-        <div style="font-size:11px;color:var(--tx3);margin-top:5px;">Podijelite kod s prijateljima</div>
+        <div style="font-size:11px;color:var(--tx3);margin-top:4px;">Podijelite kod s prijateljima</div>
       </div>
-      <div class="sg g16">
-        <div class="scard ct"><span class="lbl lt">Kategorija</span><div class="sval" id="l-cat" style="font-size:15px;color:var(--teal);">—</div></div>
+      <div class="sg g14">
+        <div class="scard ct"><span class="lbl lt">Kategorija</span><div class="sval" id="l-cat" style="font-size:14px;color:var(--teal);">—</div></div>
         <div class="scard cr"><span class="lbl lr">Impostori</span><div class="sval" id="l-imps" style="color:var(--red);">1</div></div>
       </div>
+
+      <!-- Host config -->
       <div id="hcfg" style="display:none;">
-        <div class="card g16">
+        <div class="card g14">
           <span class="lbl g4">Kategorija</span>
-          <div class="sw g12">
+          <div class="sw g10">
             <select id="cfg-cat">
               <option value="Hrana">🍕 Hrana i piće</option>
               <option value="Sport">⚽ Sport</option>
@@ -325,25 +344,33 @@ select{appearance:none;cursor:pointer;}
               <option value="Filmovi i serije">🎬 Filmovi i serije</option>
               <option value="Profesije">👔 Profesije</option>
               <option value="Glazba">🎵 Glazba</option>
-              <option value="Priroda i znanosti">🔬 Priroda i znanosti</option>
+              <option value="Svakodnevni život">☀️ Svakodnevni život</option>
+              <option value="Priroda">🌿 Priroda</option>
               <option value="Tehnologija">💻 Tehnologija</option>
             </select>
           </div>
           <span class="lbl g4">Broj impostora</span>
-          <div class="ctr g12">
+          <div class="ctr g10" style="margin-bottom:10px;">
             <button class="cbtn" id="imp-m">−</button>
             <div class="cval" id="imp-v">1</div>
             <button class="cbtn" id="imp-p">+</button>
           </div>
-          <div class="sg" style="margin-top:4px;margin-bottom:0;">
-            <div><span class="lbl g4">Rasprava (sek)</span><input type="number" id="cfg-disc" value="120" min="30" max="300" style="padding:9px 11px;font-size:13px;"/></div>
-            <div><span class="lbl g4">Glasanje (sek)</span><input type="number" id="cfg-vote" value="60" min="20" max="120" style="padding:9px 11px;font-size:13px;"/></div>
+          <div class="sg" style="margin-bottom:0;">
+            <div><span class="lbl g4">Rasprava (sek)</span><input type="number" id="cfg-disc" value="120" min="30" max="300" style="padding:9px 10px;font-size:13px;"/></div>
+            <div><span class="lbl g4">Glasanje (sek)</span><input type="number" id="cfg-vote" value="60" min="20" max="120" style="padding:9px 10px;font-size:13px;"/></div>
           </div>
         </div>
       </div>
+
       <div class="rowb g8">
         <span class="lbl" style="margin-bottom:0;">Igrači</span>
-        <span id="rcount" style="font-size:11px;color:var(--tx3);"></span>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span id="rcount" style="font-size:10px;color:var(--tx3);"></span>
+          <!-- Manage players button — only host sees -->
+          <button id="btn-manage" class="ibtn" style="display:none;" title="Upravljaj igračima">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+          </button>
+        </div>
       </div>
       <div id="plist" class="g12"></div>
       <div class="err g4" id="l-err"></div>
@@ -352,24 +379,21 @@ select{appearance:none;cursor:pointer;}
       <div class="wait" id="l-wait">Čekanje na hosta...</div>
     </div>
 
-    <!-- REVEAL — each player on their own device -->
+    <!-- REVEAL -->
     <div class="sc" id="s-reveal">
-      <div class="g16">
+      <div class="g14">
         <span class="lbl lr">Protokol identiteta</span>
-        <h2 class="ttl g16">Otkrij<br>svoju ulogu</h2>
+        <h2 class="ttl g14">Otkrij<br>svoju ulogu</h2>
       </div>
-
-      <!-- flip card — front: tap to reveal; back: word + role stacked cleanly -->
       <div class="fwrap" id="fwrap">
         <div class="finnr">
           <div class="ff">
             <div class="eye">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--rdim)" stroke-width="1.5"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--rdim)" stroke-width="1.5"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
             </div>
-            <div style="font-size:11px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:var(--tx3);">Tapnite za otkrivanje</div>
-            <div style="font-size:11px;color:var(--tx3);margin-top:5px;">Uvjerite se da vas drugi ne gledaju</div>
+            <div style="font-size:10px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:var(--tx3);">Tapnite za otkrivanje</div>
+            <div style="font-size:10px;color:var(--tx3);margin-top:4px;">Uvjerite se da vas drugi ne gledaju</div>
           </div>
-          <!-- Back: label → word → role, no overlap possible -->
           <div class="fb" id="fback">
             <div class="fb-lbl" id="fb-lbl">Vaša riječ</div>
             <div class="fb-word" id="fb-word">???</div>
@@ -377,61 +401,61 @@ select{appearance:none;cursor:pointer;}
           </div>
         </div>
       </div>
-
-      <!-- progress: how many have confirmed -->
       <div class="revprog" id="revprog">
         <div class="rowb">
-          <span style="font-size:12px;color:var(--tx2);">Igrači koji su potvrdili svoju ulogu</span>
-          <span id="rev-count" style="font-family:'Bebas Neue',sans-serif;font-size:16px;color:var(--tx3);">0/0</span>
+          <span style="font-size:11px;color:var(--tx2);">Tko je potvrdio ulogu</span>
+          <span id="rev-count" style="font-family:'Bebas Neue',sans-serif;font-size:15px;color:var(--tx3);">0/0</span>
         </div>
         <div class="revprog-bar"><div class="revprog-fill" id="rev-fill" style="width:0%"></div></div>
       </div>
-
-      <button class="btn bp" id="btn-rev-done">VIDIO SAM — GOTOVO ✓</button>
-      <div id="reroll-wrap" style="display:none;margin-top:9px;">
+      <button class="btn bp mb" id="btn-rev-done">VIDIO SAM — GOTOVO ✓</button>
+      <div id="reroll-wrap" style="display:none;margin-top:0;">
         <button class="btn bo bsm" id="btn-reroll" style="border-color:var(--ab);color:var(--amb);">↻ PROMIJENI RIJEČ</button>
       </div>
     </div>
 
     <!-- DISCUSSION -->
     <div class="sc" id="s-disc">
-      <!-- Header -->
-      <div style="display:flex;align-items:center;gap:10px;margin-bottom:20px;">
-        <div style="width:8px;height:8px;border-radius:50%;background:var(--red);animation:mbl 1s infinite;flex-shrink:0;box-shadow:0 0 8px var(--red);"></div>
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px;">
+        <div style="width:7px;height:7px;border-radius:50%;background:var(--red);animation:mbl 1s infinite;flex-shrink:0;"></div>
         <span class="lbl" style="letter-spacing:3px;margin-bottom:0;color:var(--rdim);">LIVE · RASPRAVA</span>
       </div>
 
-      <!-- Timer card -->
-      <div style="background:var(--bg2);border:1px solid var(--ln);border-radius:var(--r);padding:16px 18px;margin-bottom:14px;">
-        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px;">
-          <span style="font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--tx3);">Preostalo</span>
-          <span id="disc-tv" style="font-family:'Bebas Neue',sans-serif;font-size:32px;letter-spacing:2px;color:var(--tx);line-height:1;">—</span>
+      <!-- Timer -->
+      <div class="tcard" id="disc-tcard">
+        <div class="tcard-top">
+          <span class="tcard-lbl">Preostalo</span>
+          <span class="tcard-val" id="disc-tv">—</span>
         </div>
-        <div style="height:3px;background:var(--bg4);border-radius:999px;overflow:hidden;">
-          <div id="disc-tf" style="height:100%;border-radius:999px;background:var(--teal);width:100%;transition:width 1s linear,background .4s;"></div>
-        </div>
+        <div class="tbar-track"><div class="tbar-fill" id="disc-tf" style="background:var(--teal);width:100%;"></div></div>
       </div>
 
-      <!-- My word reminder -->
-      <div id="disc-myword" style="background:var(--bg2);border:1px solid var(--ln2);border-radius:var(--r);padding:14px 16px;margin-bottom:14px;display:flex;align-items:center;gap:12px;">
+      <!-- Who speaks now -->
+      <div class="spkcard g12" id="spkcard">
+        <div class="spkcard-lbl">Govori sada</div>
+        <div class="spkcard-name" id="spk-name">—</div>
+      </div>
+
+      <!-- MY WORD reminder -->
+      <div class="mywc g12" id="mywc">
         <div style="flex:1;min-width:0;">
-          <div style="font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--tx3);margin-bottom:4px;">Tvoja skrivena riječ</div>
-          <div id="disc-word-display" style="font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:2px;line-height:1;color:var(--tx);">—</div>
+          <div class="mywc-lbl">Tvoja skrivena riječ</div>
+          <div class="mywc-w" id="mywc-w">—</div>
         </div>
-        <div id="disc-role-tag"></div>
+        <div id="mywc-tag"></div>
       </div>
 
-      <!-- Mic row -->
-      <div class="mic g12" id="mic">
+      <!-- Mic indicator -->
+      <div class="mic g10" id="mic">
         <div class="mled" id="mled"></div>
         <span class="mtxt" id="mtxt">Spajanje mikrofona...</span>
         <div class="mwaves" id="mwaves" style="display:none;"><span></span><span></span><span></span><span></span><span></span></div>
       </div>
 
       <!-- Voice panel -->
-      <div class="vpanel g12" id="disc-voice">
+      <div class="vpanel g10" id="disc-voice">
         <div class="vhead">
-          <span class="vtitle">Igrači</span>
+          <span class="vtitle">Igrači · Mikrofon</span>
           <div class="vactions">
             <button class="vbtn" id="btn-self-mute" type="button">MIC ON</button>
             <button class="vbtn" id="btn-audio-unlock" type="button">AUDIO</button>
@@ -440,51 +464,49 @@ select{appearance:none;cursor:pointer;}
         <div class="vlist" id="voice-list"></div>
       </div>
 
-      <!-- Host controls -->
-      <div id="disc-host" style="display:none;">
-        <button class="btn bp" id="btn-start-vote" style="border-radius:var(--r);">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
-          POKRENITE GLASANJE
-        </button>
+      <!-- HOST CONTROLS STRIP -->
+      <div class="hstrip" id="disc-hstrip" style="display:none;">
+        <div class="hstrip-title">Host kontrole</div>
+        <div class="hstrip-btns">
+          <button class="hstrip-btn prim" id="btn-nxt-spk">SLJEDEĆI →</button>
+          <button class="hstrip-btn amb" id="btn-ext-disc">+30 SEK</button>
+          <button class="hstrip-btn danger" id="btn-start-vote">GLASANJE</button>
+        </div>
       </div>
       <div class="wait" id="disc-wait">Čekanje na hosta da pokrene glasanje...</div>
     </div>
 
     <!-- VOTING -->
     <div class="sc" id="s-vote">
-      <div class="g14">
+      <div class="g12">
         <span class="lbl lr">Protokol selekcije</span>
-        <h2 class="ttl" style="font-size:40px;margin-bottom:6px;">GLASANJE</h2>
-        <p style="font-size:12px;color:var(--tx2);margin-bottom:13px;">Tko je impostor? Odaberite pažljivo.</p>
+        <h2 class="ttl" style="font-size:38px;margin-bottom:5px;">GLASANJE</h2>
+        <p style="font-size:12px;color:var(--tx2);margin-bottom:12px;">Tko je impostor? Odaberite pažljivo.</p>
       </div>
-
-      <!-- timer -->
-      <div class="tbar">
-        <div class="tbar-top"><span class="lbl" style="margin-bottom:0;">Preostalo</span><span class="tval" id="vote-tv">—</span></div>
+      <div class="tcard" id="vote-tcard" style="margin-bottom:12px;">
+        <div class="tcard-top">
+          <span class="tcard-lbl">Preostalo</span>
+          <span class="tcard-val" id="vote-tv">—</span>
+        </div>
         <div class="tbar-track"><div class="tbar-fill" id="vote-tf" style="background:var(--red);width:100%;"></div></div>
       </div>
-
-      <!-- impostor secret guess -->
       <div class="igbox" id="igbox">
         <span class="lbl lr g4">Tajni potez impostora</span>
-        <p style="font-size:12px;color:var(--tx2);line-height:1.6;">Znate li pravu riječ? Pogodite i pobijedite!</p>
+        <p style="font-size:11px;color:var(--tx2);line-height:1.6;">Znate li pravu riječ? Pogodite i odmah pobijede!</p>
         <div class="igrow">
           <input type="text" id="ig-in" placeholder="Upišite pravu riječ..." autocomplete="off" autocorrect="off"/>
           <button id="ig-sub">POGODI</button>
         </div>
       </div>
-
       <div class="vgrid" id="vgrid"></div>
-
       <div class="cfm" id="cfm">
-        <div style="font-size:10px;color:var(--rdim);letter-spacing:2px;text-transform:uppercase;margin-bottom:7px;">Potvrda glasanja</div>
-        <p style="font-size:13px;color:var(--tx2);margin-bottom:13px;">Glasate za <strong id="vtname" style="color:var(--tx);">—</strong>. Konačna odluka.</p>
+        <div style="font-size:10px;color:var(--rdim);letter-spacing:2px;text-transform:uppercase;margin-bottom:6px;">Potvrda glasanja</div>
+        <p style="font-size:12px;color:var(--tx2);margin-bottom:12px;">Glasate za <strong id="vtname" style="color:var(--tx);">—</strong>. Konačna odluka.</p>
         <button class="btn bp bsm" id="btn-cfm">POTVRDI</button>
       </div>
-
-      <div id="vsent" style="display:none;text-align:center;padding:13px;">
+      <div id="vsent" style="display:none;text-align:center;padding:12px;">
         <span class="lbl" style="color:var(--tx3);">Glas poslan — čekanje ostalih...</span>
-        <div id="vcnt" style="font-size:11px;color:var(--tx3);margin-top:5px;"></div>
+        <div id="vcnt" style="font-size:10px;color:var(--tx3);margin-top:4px;"></div>
       </div>
     </div>
 
@@ -496,10 +518,10 @@ select{appearance:none;cursor:pointer;}
         <div class="rsub" id="rsub"></div>
       </div>
       <div class="sg g12">
-        <div class="scard ct"><span class="lbl lt">Prava riječ</span><div class="sval" id="rw-r" style="font-size:16px;color:var(--teal);">—</div></div>
-        <div class="scard cr"><span class="lbl lr">Impostor riječ</span><div class="sval" id="rw-i" style="font-size:16px;color:var(--red);">—</div></div>
+        <div class="scard ct"><span class="lbl lt">Prava riječ</span><div class="sval" id="rw-r" style="font-size:15px;color:var(--teal);">—</div></div>
+        <div class="scard cr"><span class="lbl lr">Impostor riječ</span><div class="sval" id="rw-i" style="font-size:15px;color:var(--red);">—</div></div>
       </div>
-      <div class="vpanel g12" id="res-voice">
+      <div class="vpanel g10" id="res-voice">
         <div class="vhead">
           <span class="vtitle">Open mic · rezultati</span>
           <div class="vactions">
@@ -510,9 +532,9 @@ select{appearance:none;cursor:pointer;}
         <div class="vlist" id="voice-list-res"></div>
       </div>
       <span class="lbl g8">Bodovnica</span>
-      <div id="scoreboard" class="g14"></div>
+      <div id="scoreboard" class="g12"></div>
       <span class="lbl g8">Debrief</span>
-      <div id="rlist" class="g20"></div>
+      <div id="rlist" class="g16"></div>
       <button class="btn bp mb" id="btn-again">NOVA RUNDA</button>
       <button class="btn ba mb" id="btn-rst" style="display:none;">RESETIRAJ BODOVE</button>
       <button class="btn bo" id="btn-quit">IZLAZ</button>
@@ -520,55 +542,81 @@ select{appearance:none;cursor:pointer;}
 
     <!-- RULES -->
     <div class="sc" id="s-rules">
-      <button class="btn bo bsm mb" id="btn-rbk" style="width:auto;padding:8px 14px;font-size:13px;">← Natrag</button>
-      <div class="g20">
+      <button class="btn bo bsm mb" id="btn-rbk" style="width:auto;padding:7px 13px;font-size:12px;">← Natrag</button>
+      <div class="g18">
         <span class="lbl lr">Protokol misije</span>
-        <h2 class="ttl g20">PRAVILA<br>IGRE</h2>
+        <h2 class="ttl g18">PRAVILA<br>IGRE</h2>
       </div>
-
-      <div class="g16">
+      <div class="g14">
         <span class="lbl">Cilj igre</span>
         <div class="card cr g12">
-          <p class="rtxt">Svi igrači dobiju <strong>tajnu riječ</strong>. Jedan ili više su <strong>impostori</strong> — oni dobiju <strong>sličnu, ali drugu riječ</strong>. Primjer: citizens dobiju "Pizza", impostor dobije "Focaccia".</p>
+          <p class="rtxt">Svi igrači dobiju <strong>tajnu riječ</strong>. Jedan ili više su <strong>impostori</strong> — oni dobiju <strong>drugu, različitu riječ iz iste kategorije</strong>. Npr. citizens dobiju "Pizza", impostor dobije "Burek".</p>
         </div>
       </div>
-
-      <div class="g16">
+      <div class="g14">
         <span class="lbl">Tijek igre</span>
-        <div class="rstep"><span class="rnum">1</span><p class="rtxt"><strong>Otkrivanje</strong> — Svaki igrač na svom uređaju tapne kartu, pogleda svoju tajnu ulogu i pritisne "Vidio sam". Sačekajte da svi potvrde.</p></div>
-        <div class="rstep"><span class="rnum">2</span><p class="rtxt"><strong>Rasprava</strong> — Slobodna diskusija. Opisujte svoju riječ bez da je direktno izgovorite. Timer odbrojava. Mikrofon je dostupan svima.</p></div>
-        <div class="rstep"><span class="rnum">3</span><p class="rtxt"><strong>Glasanje</strong> — Svi glasaju tko je impostor. Igrač s najviše glasova je izbačen. Tko ne glasa na vrijeme — ne glasa.</p></div>
-        <div class="rstep"><span class="rnum">4</span><p class="rtxt"><strong>Rezultati</strong> — Otkriva se tko je bio impostor, koje su bile obje tajne riječi i tko je glasao za koga.</p></div>
+        <div class="rstep"><span class="rnum">1</span><p class="rtxt"><strong>Otkrivanje</strong> — Svaki igrač na svom uređaju tapne kartu, pogleda svoju tajnu ulogu i klikne "Vidio sam". Sačekajte da svi potvrde.</p></div>
+        <div class="rstep"><span class="rnum">2</span><p class="rtxt"><strong>Rasprava</strong> — Slobodna diskusija. Opisujte svoju riječ bez da je direktno kažete. Mikrofon je dostupan svima. Vaša skrivena riječ vidljiva je u kartici na ekranu.</p></div>
+        <div class="rstep"><span class="rnum">3</span><p class="rtxt"><strong>Glasanje</strong> — Svi glasaju tko je impostor. Igrač s najviše glasova je izbačen. Timer odbrojava — tko ne glasa na vrijeme ne glasa.</p></div>
+        <div class="rstep"><span class="rnum">4</span><p class="rtxt"><strong>Rezultati</strong> — Otkriva se tko je bio impostor i koje su bile obje tajne riječi.</p></div>
       </div>
-
-      <div class="g16">
-        <span class="lbl">Pobjeda i bodovi</span>
-        <div class="rstep"><span class="rnum" style="color:var(--teal);">✓</span><p class="rtxt"><strong>Citizens pobijede</strong> ako izglasaju impostora. Točan glas: <strong>+2 boda</strong>. Netočan glas: <strong>+0 bodova</strong>.</p></div>
-        <div class="rstep"><span class="rnum" style="color:var(--red);">✗</span><p class="rtxt"><strong>Impostor pobijedi</strong> ako preživi glasanje <strong>(+3 boda)</strong> ili pogodi pravu riječ citizens <strong>(+4 boda)</strong>. U slučaju pobjede impostora, citizens dobivaju <strong>+0 bodova</strong>.</p></div>
-        <div class="rstep"><span class="rnum" style="color:var(--amb);">=</span><p class="rtxt"><strong>Neriješeno</strong> — izjednačeno glasanje, nitko nije izbačen. Pobjeda impostora — citizens +0, impostor +3.</p></div>
+      <div class="g14">
+        <span class="lbl">Bodovanje</span>
+        <div class="rstep"><span class="rnum" style="color:var(--teal);">✓</span><p class="rtxt"><strong>Citizens pobijede</strong> (impostor uhvaćen): svaki citizen koji je glasao ispravno dobiva <strong>+2 boda</strong>. Netočan glas: <strong>+0</strong>.</p></div>
+        <div class="rstep"><span class="rnum" style="color:var(--red);">✗</span><p class="rtxt"><strong>Impostor pobijedi</strong> (preživi glasanje ili neriješeno): <strong>+3 boda</strong> svakom impostoru. Citizens: <strong>+0 bodova</strong>.</p></div>
+        <div class="rstep"><span class="rnum" style="color:var(--amb);">★</span><p class="rtxt"><strong>Impostor pogodi pravu riječ</strong> (tajni potez u glasanju): <strong>+3 boda</strong> impostoru. Citizens: <strong>+0 bodova</strong>.</p></div>
       </div>
-
-      <div class="g16">
+      <div class="g14">
         <span class="lbl">Savjeti za impostore</span>
-        <div class="card cr g12"><p class="rtxt">Vaša je riječ slična pravoj — dajte <strong>opće opise</strong> koji pristaju i vašoj i pravoj riječi. Slušajte pažljivo druge da <strong>pogodite pravu riječ</strong> i pobijedite odmah kroz tajni panel u glasanju.</p></div>
+        <div class="card cr g12"><p class="rtxt">Vaša je riječ <strong>različita</strong> od prave — dajte opće opise koji bi mogli pristati obojem. Slušajte pažljivo ostale i pogodite pravu riječ kroz tajni panel u glasanju.</p></div>
       </div>
-
-      <div class="g16">
+      <div class="g14">
         <span class="lbl">Savjeti za citizens</span>
-        <div class="card ct g12"><p class="rtxt">Opišite svoju riječ <strong>specifično</strong> ali nemojte je direktno reći. Impostor ne zna pravu riječ — zbunite ga <strong>detaljnim pitanjima</strong>. Pazite na igrače koji daju previše opće opise.</p></div>
+        <div class="card ct g12"><p class="rtxt">Opišite svoju riječ <strong>specifično</strong> ali nemojte je direktno reći. Impostor ne zna pravu riječ — zbunite ga pitanjima. Primjetite tko daje nejasne, nespecifične opise.</p></div>
       </div>
-
+      <div class="g14">
+        <span class="lbl">Host kontrole</span>
+        <div class="card ca g12"><p class="rtxt">Host može <strong>kickati igrače</strong> i <strong>prenositi host ulogu</strong> prije igre. Tokom rasprave host može <strong>promijeniti govornika</strong>, <strong>produžiti timer za 30 sekundi</strong> i <strong>pokrenuti glasanje ranije</strong>.</p></div>
+      </div>
       <button class="btn bp" id="btn-rbk2">RAZUMIJEM — IGRAJMO!</button>
     </div>
 
   </div>
 </div>
 
+<!-- TOAST -->
 <div class="toast" id="toast"></div>
+
+<!-- SPINNER -->
 <div class="spinov" id="spinov">
   <div class="spn-sub">PRVI GOVORI</div>
   <div class="spn-name" id="spn-name">—</div>
   <div class="spn-hint">Počnite raspravu!</div>
+</div>
+
+<!-- MANAGE PLAYERS MODAL -->
+<div class="modal-ov" id="modal-manage">
+  <div class="modal">
+    <div class="rowb" style="margin-bottom:14px;">
+      <span class="modal-title">Upravljaj igračima</span>
+      <button class="modal-close" id="modal-close-manage">✕</button>
+    </div>
+    <div class="modal-list" id="modal-plist"></div>
+    <p style="font-size:11px;color:var(--tx3);">KICK uklanja igrača iz sobe. HOST prenosi ulogu domaćina.</p>
+  </div>
+</div>
+
+<!-- LEAVE CONFIRM MODAL -->
+<div class="modal-ov" id="modal-leave">
+  <div class="modal">
+    <div class="rowb" style="margin-bottom:14px;">
+      <span class="modal-title">Napusti sobu?</span>
+      <button class="modal-close" id="modal-close-leave">✕</button>
+    </div>
+    <p style="font-size:13px;color:var(--tx2);margin-bottom:16px;line-height:1.6;">Jeste li sigurni da želite napustiti sobu? Vaši bodovi bit će izgubljeni.</p>
+    <button class="btn bdng mb" id="btn-leave-confirm">DA, NAPUSTI SOBU</button>
+    <button class="btn bo" id="btn-leave-cancel">OSTANI</button>
+  </div>
 </div>
 
 <script>
@@ -598,7 +646,7 @@ let G={},me=null,myWord=null,myRole=null,selVote=null,impCount=1,discTotal=120,v
 let micStream=null,pcs={},pendingOffers=[],rulesFrom='s-join';
 let micWanted=false,micInitPromise=null,micRestartTimer=null,resumeTried=false;
 let mobileResumeLock=false;
-const SESSION_KEY='impostor.session.v1';
+const SESSION_KEY='impostor.session.v2';
 const AUDIO_PREFS_KEY='impostor.audioPrefs.v2';
 let selfMuted=false, remoteMuted={}, remoteMeters={}, localMeterStop=null;
 
@@ -618,6 +666,7 @@ function badge(){
   $('pbname').textContent=me.name;
   $('pb').classList.add('on');
   $('btn-rules-icon').style.display='flex';
+  $('btn-leave-icon').style.display='flex';
 }
 function toast(msg,dur=2600){
   const t=$('toast');t.textContent=msg;t.classList.add('on');
@@ -627,125 +676,144 @@ function spinner(name,cb){
   $('spn-name').textContent=(name||'').toUpperCase();
   $('spinov').classList.add('on');
   SFX.join();
-  setTimeout(()=>{$('spinov').classList.remove('on');cb&&cb();},2600);
+  setTimeout(()=>{$('spinov').classList.remove('on');cb&&cb();},2400);
 }
 function fmt(s){return s>=60?`${Math.floor(s/60)}:${String(s%60).padStart(2,'0')}`:`${s}s`;}
 function saveSession(extra={}){
-  const current=JSON.parse(localStorage.getItem(SESSION_KEY)||'{}');
-  const next={
-    code:G?.code||current.code||'',
-    name:me?.name||$('j-name')?.value?.trim()||current.name||'',
-    playerToken:current.playerToken||'',
-    ...extra
-  };
-  if(next.code||next.name||next.playerToken)localStorage.setItem(SESSION_KEY,JSON.stringify(next));
+  const c=JSON.parse(localStorage.getItem(SESSION_KEY)||'{}');
+  const n={code:G?.code||c.code||'',name:me?.name||$('j-name')?.value?.trim()||c.name||'',playerToken:c.playerToken||'',...extra};
+  if(n.code||n.name||n.playerToken)localStorage.setItem(SESSION_KEY,JSON.stringify(n));
 }
 function getSession(){try{return JSON.parse(localStorage.getItem(SESSION_KEY)||'{}');}catch{return {};}}
 function clearSession(){localStorage.removeItem(SESSION_KEY);}
 function maybeResumeSession(){
-  if(resumeTried) return;
-  resumeTried=true;
+  if(resumeTried)return;resumeTried=true;
   const ss=getSession();
-  if(ss.code&&ss.name&&ss.playerToken){
-    $('j-name').value=ss.name;
-    $('j-code').value=ss.code;
-    socket.emit('resumeSession', ss);
-  } else {
-    if(ss.name) $('j-name').value=ss.name;
-    if(ss.code) $('j-code').value=ss.code;
-  }
+  if(ss.code&&ss.name&&ss.playerToken){$('j-name').value=ss.name;$('j-code').value=ss.code;socket.emit('resumeSession',ss);}
+  else{if(ss.name)$('j-name').value=ss.name;if(ss.code)$('j-code').value=ss.code;}
 }
-
-
 function getAudioPrefs(){try{return JSON.parse(localStorage.getItem(AUDIO_PREFS_KEY)||'{}');}catch{return {};}}
 function saveAudioPrefs(){localStorage.setItem(AUDIO_PREFS_KEY,JSON.stringify({selfMuted,remoteMuted}));}
-function loadAudioPrefs(){
-  const prefs=getAudioPrefs();
-  selfMuted=!!prefs.selfMuted;
-  remoteMuted=prefs.remoteMuted||{};
-}
+function loadAudioPrefs(){const p=getAudioPrefs();selfMuted=!!p.selfMuted;remoteMuted=p.remoteMuted||{};}
 function applySelfMute(){
-  if(micStream){ micStream.getAudioTracks().forEach(t=>{t.enabled=!selfMuted;}); }
+  if(micStream){micStream.getAudioTracks().forEach(t=>{t.enabled=!selfMuted;});}
   updateVoiceButtons();
-  if(selfMuted) setMicUi('idle','Mikrofon utišan');
-  else if(hasLiveMic()) setMicUi('live','Mikrofon aktivan · Svi se čuju');
+  if(selfMuted)setMicUi('idle','Mikrofon utišan');
+  else if(hasLiveMic())setMicUi('live','Mikrofon aktivan · Svi se čuju');
 }
 function updateVoiceButtons(){
-  ['btn-self-mute','btn-self-mute-res'].forEach(id=>{
-    const b=$(id); if(!b) return;
-    b.textContent=selfMuted?'MIC OFF':'MIC ON';
-    b.className='vbtn '+(selfMuted?'muted':'live');
-  });
+  ['btn-self-mute','btn-self-mute-res'].forEach(id=>{const b=$(id);if(!b)return;b.textContent=selfMuted?'MIC OFF':'MIC ON';b.className='vbtn '+(selfMuted?'muted':'live');});
 }
 async function unlockAudio(){
-  try{ const a=gAC(); if(a?.state==='suspended') await a.resume(); }catch(e){}
+  try{const a=gAC();if(a?.state==='suspended')await a.resume();}catch(e){}
   document.querySelectorAll('audio').forEach(au=>au.play?.().catch(()=>{}));
   toast('Audio aktiviran');
 }
 function speakerStatus(pid){
   const p=(G.players||[]).find(x=>x.id===pid);
-  if(!p) return 'Igrač';
+  if(!p)return 'Igrač';
   const tags=[];
-  if(pid===socket.id) tags.push('Vi');
-  if(p.role==='IMPOSTOR') tags.push('IMPOSTOR');
-  else if(p.role==='CITIZEN') tags.push('CITIZEN');
-  if(p.isHost) tags.push('HOST');
-  return tags.join(' · ') || 'Igrač';
+  if(pid===socket.id)tags.push('Vi');
+  if(G.state==='RESULTS'){if(p.role==='IMPOSTOR')tags.push('IMPOSTOR');else if(p.role==='CITIZEN')tags.push('CITIZEN');}
+  if(p.isHost)tags.push('HOST');
+  return tags.join(' · ')||'Igrač';
 }
-function setVoiceLevel(pid, level){
+function setVoiceLevel(pid,level){
   document.querySelectorAll(`[data-vmeter="${pid}"] > span`).forEach(el=>el.style.width=`${Math.max(0,Math.min(100,level))}%`);
-  document.querySelectorAll(`[data-vrow="${pid}"]`).forEach(el=>el.classList.toggle('speaking', level>18));
+  document.querySelectorAll(`[data-vrow="${pid}"]`).forEach(el=>el.classList.toggle('speaking',level>18));
 }
-function monitorRemoteStream(pid, stream){
-  try{ if(remoteMeters[pid]?.stop) remoteMeters[pid].stop(); }catch(e){}
+function monitorRemoteStream(pid,stream){
+  try{if(remoteMeters[pid]?.stop)remoteMeters[pid].stop();}catch(e){}
   try{
-    const a=gAC(); if(!a) return;
-    const src=a.createMediaStreamSource(stream), an=a.createAnalyser();
-    an.fftSize=128; src.connect(an);
+    const a=gAC();if(!a)return;
+    const src=a.createMediaStreamSource(stream),an=a.createAnalyser();
+    an.fftSize=128;src.connect(an);
     const buf=new Uint8Array(an.frequencyBinCount);
     let live=true;
-    remoteMeters[pid]={stop:()=>{live=false; try{src.disconnect();an.disconnect();}catch(e){}; setVoiceLevel(pid,0);}};
-    (function tick(){
-      if(!live) return;
-      an.getByteFrequencyData(buf);
-      const avg=buf.reduce((s,v)=>s+v,0)/buf.length;
-      setVoiceLevel(pid, avg*1.8);
-      requestAnimationFrame(tick);
-    })();
+    remoteMeters[pid]={stop:()=>{live=false;try{src.disconnect();an.disconnect();}catch(e){};setVoiceLevel(pid,0);}};
+    (function tick(){if(!live)return;an.getByteFrequencyData(buf);const avg=buf.reduce((s,v)=>s+v,0)/buf.length;setVoiceLevel(pid,avg*1.8);requestAnimationFrame(tick);})();
   }catch(e){}
 }
-function stopRemoteMonitor(pid){
-  try{remoteMeters[pid]?.stop?.();}catch(e){}
-  delete remoteMeters[pid];
-}
+function stopRemoteMonitor(pid){try{remoteMeters[pid]?.stop?.();}catch(e){}delete remoteMeters[pid];}
 function renderVoiceList(targetId){
-  const host=$(targetId); if(!host) return;
-  host.innerHTML='';
+  const host=$(targetId);if(!host)return;host.innerHTML='';
   (G.players||[]).forEach(p=>{
-    const row=document.createElement('div'); row.className='vrow'; row.dataset.vrow=p.id;
+    const row=document.createElement('div');row.className='vrow';row.dataset.vrow=p.id;
     const muted=!!remoteMuted[p.id];
     row.innerHTML=`<div class="av ${p.id===socket.id?'t':(p.isHost?'r':'')}">${ini(p.name)}</div>
       <div class="vmeta"><div class="vname">${esc(p.name)}</div><div class="vsub">${esc(speakerStatus(p.id))}</div></div>
       <div class="vmeter" data-vmeter="${p.id}"><span></span></div>
-      ${p.id===socket.id ? '<button class="vtoggle '+(selfMuted?'on':'')+'" data-self-toggle="1">'+(selfMuted?'UNMUTE':'MUTE')+'</button>' : '<button class="vtoggle '+(muted?'on':'')+'" data-peer-toggle="'+p.id+'">'+(muted?'UNMUTE':'MUTE')+'</button>'}`;
+      ${p.id===socket.id?`<button class="vtoggle ${selfMuted?'on':''}" data-self-toggle="1">${selfMuted?'UNMUTE':'MUTE'}</button>`:`<button class="vtoggle ${muted?'on':''}" data-peer-toggle="${p.id}">${muted?'UNMUTE':'MUTE'}</button>`}`;
     host.appendChild(row);
   });
   host.querySelectorAll('[data-peer-toggle]').forEach(btn=>btn.onclick=()=>toggleRemoteMute(btn.dataset.peerToggle));
   host.querySelectorAll('[data-self-toggle]').forEach(btn=>btn.onclick=()=>toggleSelfMute());
 }
-function renderAllVoiceLists(){ renderVoiceList('voice-list'); renderVoiceList('voice-list-res'); }
-function applyRemoteMute(pid){
-  const au=document.getElementById('au-'+pid);
-  if(au) au.muted=!!remoteMuted[pid];
-  renderAllVoiceLists();
-}
-function toggleRemoteMute(pid){ remoteMuted[pid]=!remoteMuted[pid]; saveAudioPrefs(); applyRemoteMute(pid); }
-function toggleSelfMute(){ selfMuted=!selfMuted; saveAudioPrefs(); applySelfMute(); renderAllVoiceLists(); }
+function renderAllVoiceLists(){renderVoiceList('voice-list');renderVoiceList('voice-list-res');}
+function applyRemoteMute(pid){const au=document.getElementById('au-'+pid);if(au)au.muted=!!remoteMuted[pid];renderAllVoiceLists();}
+function toggleRemoteMute(pid){remoteMuted[pid]=!remoteMuted[pid];saveAudioPrefs();applyRemoteMute(pid);}
+function toggleSelfMute(){selfMuted=!selfMuted;saveAudioPrefs();applySelfMute();renderAllVoiceLists();}
 
 // ── RULES ─────────────────────────────────────────────────────────────────────
 $('btn-rules-join').onclick=()=>{rulesFrom='s-join';show('s-rules');};
 $('btn-rules-icon').onclick=()=>{rulesFrom=document.querySelector('.sc.on')?.id||'s-lobby';show('s-rules');};
 $('btn-rbk').onclick=$('btn-rbk2').onclick=()=>show(rulesFrom);
+
+// ── LEAVE ─────────────────────────────────────────────────────────────────────
+$('btn-leave-icon').onclick=()=>$('modal-leave').classList.add('on');
+$('modal-close-leave').onclick=$('btn-leave-cancel').onclick=()=>$('modal-leave').classList.remove('on');
+$('btn-leave-confirm').onclick=()=>{
+  $('modal-leave').classList.remove('on');
+  socket.emit('leaveRoom',{code:G.code});
+  clearSession();
+  show('s-join');
+  G={};me=null;myWord=null;myRole=null;
+  $('pb').classList.remove('on');
+  $('btn-leave-icon').style.display='none';
+  $('btn-rules-icon').style.display='none';
+  wantMic(false);
+  toast('Napustili ste sobu');
+};
+socket.on('leftRoom',()=>{});
+socket.on('kicked',({reason})=>{
+  $('modal-leave').classList.remove('on');
+  clearSession();
+  show('s-join');
+  G={};me=null;myWord=null;myRole=null;
+  $('pb').classList.remove('on');
+  $('btn-leave-icon').style.display='none';
+  wantMic(false);
+  toast('⚠ '+reason,4000);
+});
+socket.on('becameHost',()=>toast('✅ Sada ste host sobe'));
+
+// ── MANAGE PLAYERS MODAL ──────────────────────────────────────────────────────
+$('btn-manage').onclick=()=>{renderManageModal();$('modal-manage').classList.add('on');};
+$('modal-close-manage').onclick=()=>$('modal-manage').classList.remove('on');
+function renderManageModal(){
+  const list=$('modal-plist');list.innerHTML='';
+  (G.players||[]).forEach(p=>{
+    if(p.id===socket.id)return; // can't kick yourself
+    const d=document.createElement('div');d.className='modal-item';
+    d.innerHTML=`<div class="av ${p.isHost?'r':''}">${ini(p.name)}</div>
+      <div class="pi"><div class="pn">${esc(p.name)}</div><div class="ps">${p.isHost?'Host':'Igrač'}</div></div>
+      <div class="modal-item-btns">
+        <button class="modal-ibtn host" data-action="host" data-id="${p.id}">HOST</button>
+        <button class="modal-ibtn kick" data-action="kick" data-id="${p.id}">KICK</button>
+      </div>`;
+    list.appendChild(d);
+  });
+  list.querySelectorAll('[data-action=kick]').forEach(btn=>btn.onclick=()=>{
+    socket.emit('kickPlayer',{code:G.code,targetId:btn.dataset.id});
+    $('modal-manage').classList.remove('on');
+    toast('Igrač uklonjen');
+  });
+  list.querySelectorAll('[data-action=host]').forEach(btn=>btn.onclick=()=>{
+    socket.emit('transferHost',{code:G.code,targetId:btn.dataset.id});
+    $('modal-manage').classList.remove('on');
+    toast('Host uloga prenesena');
+  });
+}
 
 // ── JOIN ──────────────────────────────────────────────────────────────────────
 $('btn-join').onclick=()=>{
@@ -775,12 +843,11 @@ function renderLobby(){
   $('rcount').textContent=`${rc}/${G.players.length} spreman`;
   const isHost=me&&me.isHost;
   $('hcfg').style.display=isHost?'block':'none';
-  $('cfg-cat').disabled=!isHost; $('cfg-disc').disabled=!isHost; $('cfg-vote').disabled=!isHost;
-  $('imp-m').disabled=!isHost; $('imp-p').disabled=!isHost;
+  $('btn-manage').style.display=isHost&&G.players.length>1?'flex':'none';
   $('l-wait').style.display=isHost?'none':'block';
   $('btn-start').style.display='none';
   if(isHost){
-    $('cfg-cat').value=G.category; $('cfg-cat').dispatchEvent(new Event('input'));
+    $('cfg-cat').value=G.category;
     $('imp-v').textContent=G.impostorCount;impCount=G.impostorCount;
     const ok=G.players.length>=3&&G.players.every(p=>p.isReady);
     $('btn-start').style.display=ok?'flex':'none';
@@ -789,8 +856,16 @@ function renderLobby(){
   const list=$('plist');list.innerHTML='';
   G.players.forEach(p=>{
     const sc=p.score??0;
+    const offline=p.isConnected===false;
     const d=document.createElement('div');d.className='pr';
-    d.innerHTML=`<div class="av ${p.isHost?'r':''}">${ini(p.name)}</div><div class="pi"><div class="pn">${esc(p.name)}</div><div class="ps">${p.isHost?'Host · Leader':'Operative'}</div></div><div style="font-family:'Bebas Neue',sans-serif;font-size:15px;color:var(--tx3);margin-right:5px;">${sc}pt</div><div class="dot ${p.isReady?'on':''}"></div>`;
+    d.style.opacity=offline?'.5':'1';
+    d.innerHTML=`<div class="av ${p.isHost?'r':''}">${ini(p.name)}</div>
+      <div class="pi">
+        <div class="pn">${esc(p.name)}${offline?' <span style="font-size:9px;color:var(--tx3);">(offline)</span>':''}</div>
+        <div class="ps">${p.isHost?'Host · Leader':'Operative'}</div>
+      </div>
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:14px;color:var(--tx3);margin-right:5px;">${sc}pt</div>
+      <div class="dot ${p.isReady?'on':''}"></div>`;
     list.appendChild(d);
   });
   const mr=me&&me.isReady;
@@ -818,154 +893,91 @@ function setupReveal(){
   $('fwrap').classList.remove('flip');
   updateRevealProgress(0,G.players.length);
   if(isImp){setTimeout(()=>{SFX.imp();toast('⚠ Ti si IMPOSTOR! Pazi što govoriš.',3500);},400);}
-  wantMic(true); // pripremi mikrofon odmah da discussion krene bez kašnjenja
+  wantMic(true);
 }
 function updateRevealProgress(done,total){
   $('rev-count').textContent=`${done}/${total}`;
   $('rev-fill').style.width=`${total>0?(done/total*100):0}%`;
 }
-$('fwrap').onclick=function(){
-  if(!this.classList.contains('flip')){SFX.reveal();}
-  this.classList.toggle('flip');
-};
+$('fwrap').onclick=function(){if(!this.classList.contains('flip')){SFX.reveal();}this.classList.toggle('flip');};
 $('btn-rev-done').onclick=()=>{
   socket.emit('playerReady',{code:G.code});
   $('btn-rev-done').disabled=true;
   $('btn-rev-done').textContent='POTVRĐENO ✓';
   $('btn-rev-done').style.opacity='.5';
 };
-$('btn-reroll').onclick=()=>{
-  socket.emit('rerollWord',{code:G.code});
-  toast('↻ Nova riječ u pripremi...');
-};
-socket.on('wordRerolled',room=>{
-  myWord=room.myWord;myRole=room.myRole;
-  G=room;me=meNow();
-  if(me){me.word=myWord;me.role=myRole;}
-  setupReveal();
-  toast('↻ Riječ promijenjena — svi potvrđuju iznova');SFX.next();
-});
+$('btn-reroll').onclick=()=>{socket.emit('rerollWord',{code:G.code});toast('↻ Nova riječ u pripremi...');};
+socket.on('wordRerolled',room=>{myWord=room.myWord;myRole=room.myRole;G=room;me=meNow();if(me){me.word=myWord;me.role=myRole;}setupReveal();toast('↻ Riječ promijenjena');SFX.next();});
 
 // ── DISCUSSION ────────────────────────────────────────────────────────────────
 function setupDisc(room){
   const isHost=me&&me.isHost;
-  $('disc-host').style.display=isHost?'block':'none';
+  $('disc-hstrip').style.display=isHost?'block':'none';
   $('disc-wait').style.display=isHost?'none':'block';
   discTotal=room.discussionTime||120;
-  // Podsjetnik na svoju skrivenu riječ
+  // My word reminder
   const isImp=myRole==='IMPOSTOR';
-  const wd=$('disc-word-display');
-  const rt=$('disc-role-tag');
-  if(wd){ wd.textContent=myWord||'?'; wd.style.color=isImp?'var(--rdim)':'var(--teal)'; }
-  if(rt){ rt.innerHTML=`<span class="rtag ${isImp?'imp':'cit'}">${isImp?'IMPOSTOR':'CITIZEN'}</span>`; }
-  const mwCard=$('disc-myword');
-  if(mwCard){ mwCard.style.borderColor=isImp?'var(--rb)':'var(--tb)'; mwCard.style.background=isImp?'var(--rbg)':'var(--tbg)'; }
+  const wd=$('mywc-w');const rt=$('mywc-tag');const mwc=$('mywc');
+  if(wd){wd.textContent=myWord||'?';wd.style.color=isImp?'var(--rdim)':'var(--teal)';}
+  if(rt){rt.innerHTML=`<span class="rtag ${isImp?'imp':'cit'}">${isImp?'IMPOSTOR':'CITIZEN'}</span>`;}
+  if(mwc){mwc.style.borderColor=isImp?'var(--rb)':'var(--tb)';mwc.style.background=isImp?'var(--rbg)':'var(--tbg)';}
+  // First speaker
+  if(room.firstSpeakerName)$('spk-name').textContent=room.firstSpeakerName;
   renderAllVoiceLists();
   updateVoiceButtons();
   wantMic(true);
 }
+$('btn-nxt-spk').onclick=()=>{SFX.next();socket.emit('nextSpeaker',{code:G.code});};
+$('btn-ext-disc').onclick=()=>{socket.emit('extendDiscussion',{code:G.code,seconds:30});toast('+30 sekundi dodano');SFX.next();};
 $('btn-start-vote').onclick=()=>socket.emit('startVoting',{code:G.code});
+socket.on('speakerChanged',({name})=>{$('spk-name').textContent=name||'—';toast(`🎤 ${name} govori`);SFX.next();});
+socket.on('timerExtended',({phase,added})=>{toast(`+${added}s dodano!`);});
 
 // ── OPEN MIC ──────────────────────────────────────────────────────────────────
 function makeAudio(id){
   let au=document.getElementById('au-'+id);
   if(!au){au=document.createElement('audio');au.id='au-'+id;au.autoplay=true;au.playsInline=true;document.body.appendChild(au);}
-  au.muted=!!remoteMuted[id];
-  return au;
+  au.muted=!!remoteMuted[id];return au;
 }
-function removeAudio(pid){
-  stopRemoteMonitor(pid);
-  const au=document.getElementById('au-'+pid);
-  if(au){au.srcObject=null;au.remove();}
-  setVoiceLevel(pid,0);
-}
-function hasLiveMic(){
-  return !!(micStream && micStream.getAudioTracks().some(t=>t.readyState==='live'));
-}
-function setMicUi(state,msg){
-  $('mtxt').textContent=msg;
-  $('mled').classList.toggle('live',state==='live');
-  $('mwaves').style.display=state==='live'?'flex':'none';
-  if(state!=='live') $('mled').style.background='var(--tx3)';
-}
-function scheduleMicEnsure(delay=500){
-  clearTimeout(micRestartTimer);
-  micRestartTimer=setTimeout(()=>{if(micWanted) initMic({force:true});},delay);
-}
-function teardownPeerGraph(){
-  Object.entries(pcs).forEach(([pid,pc])=>{try{pc.onicecandidate=null;pc.ontrack=null;pc.close();}catch(e){} removeAudio(pid);});
-  pcs={};
-  pendingOffers=[];
-}
+function removeAudio(pid){stopRemoteMonitor(pid);const au=document.getElementById('au-'+pid);if(au){au.srcObject=null;au.remove();}setVoiceLevel(pid,0);}
+function hasLiveMic(){return !!(micStream&&micStream.getAudioTracks().some(t=>t.readyState==='live'));}
+function setMicUi(state,msg){$('mtxt').textContent=msg;$('mled').classList.toggle('live',state==='live');$('mwaves').style.display=state==='live'?'flex':'none';if(state!=='live')$('mled').style.background='var(--tx3)';}
+function scheduleMicEnsure(delay=500){clearTimeout(micRestartTimer);micRestartTimer=setTimeout(()=>{if(micWanted)initMic({force:true});},delay);}
+function teardownPeerGraph(){Object.entries(pcs).forEach(([pid,pc])=>{try{pc.onicecandidate=null;pc.ontrack=null;pc.close();}catch(e){}removeAudio(pid);});pcs={};pendingOffers=[];}
 function stopMic({fullStop=true}={}){
   clearTimeout(micRestartTimer);
-  if(micStream){
-    try{if(localMeterStop)localMeterStop(); localMeterStop=null;}catch(e){}
-    try{if(micStream._stopMon)micStream._stopMon();}catch(e){}
-    micStream.getTracks().forEach(t=>{try{t.onended=null;t.onmute=null;t.onunmute=null;t.stop();}catch(e){}});
-    micStream=null;
-  }
+  if(micStream){try{if(localMeterStop)localMeterStop();localMeterStop=null;}catch(e){}try{if(micStream._stopMon)micStream._stopMon();}catch(e){}micStream.getTracks().forEach(t=>{try{t.onended=null;t.onmute=null;t.onunmute=null;t.stop();}catch(e){}});micStream=null;}
   teardownPeerGraph();
-  if(fullStop){
-    micWanted=false;
-    setMicUi('idle','Mikrofon neaktivan');
-  }
-  renderAllVoiceLists();
-  updateVoiceButtons();
+  if(fullStop){micWanted=false;setMicUi('idle','Mikrofon neaktivan');}
+  renderAllVoiceLists();updateVoiceButtons();
 }
-
 function bindMicTrackLifecycle(stream){
   stream.getAudioTracks().forEach(track=>{
-    track.onended=()=>{setMicUi('idle','Mikrofon prekinut — ponovno spajanje...'); if(micWanted) scheduleMicEnsure(300);};
+    track.onended=()=>{setMicUi('idle','Mikrofon prekinut — ponovno spajanje...');if(micWanted)scheduleMicEnsure(300);};
     track.onmute=()=>{setMicUi('idle','Mikrofon utišan ili nedostupan...');};
-    track.onunmute=()=>{if(hasLiveMic()) setMicUi('live','Mikrofon aktivan · Svi se čuju');};
+    track.onunmute=()=>{if(hasLiveMic())setMicUi('live','Mikrofon aktivan · Svi se čuju');};
   });
 }
 async function initMic({force=false}={}){
-  if(micInitPromise) return micInitPromise;
-  if(!force && hasLiveMic()) return micStream;
-
+  if(micInitPromise)return micInitPromise;
+  if(!force&&hasLiveMic())return micStream;
   micInitPromise=(async()=>{
-    if(force && micStream) stopMic({fullStop:false});
+    if(force&&micStream)stopMic({fullStop:false});
     setMicUi('pending','Spajanje mikrofona...');
     try{
-      const stream=await navigator.mediaDevices.getUserMedia({
-        audio:{
-          echoCancellation:true,
-          noiseSuppression:true,
-          autoGainControl:true,
-          channelCount:1
-        },
-        video:false
-      });
-      micStream=stream;
-      bindMicTrackLifecycle(stream);
-      applySelfMute();
-      if(!selfMuted) setMicUi('live','Mikrofon aktivan · Svi se čuju');
-      monitorMic();
-      renderAllVoiceLists();
-      teardownPeerGraph();
-      ensurePeerLinks();
+      const stream=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true,autoGainControl:true,channelCount:1},video:false});
+      micStream=stream;bindMicTrackLifecycle(stream);applySelfMute();
+      if(!selfMuted)setMicUi('live','Mikrofon aktivan · Svi se čuju');
+      monitorMic();renderAllVoiceLists();teardownPeerGraph();ensurePeerLinks();
       const queued=[...pendingOffers];pendingOffers=[];
-      for(const {from,offer} of queued) await handleOffer(from,offer);
+      for(const {from,offer} of queued)await handleOffer(from,offer);
       return stream;
-    }catch(e){
-      console.error('Mic init failed',e);
-      setMicUi('idle','Mikrofon nedostupan — pričajte uživo');
-      toast('⚠ Mikrofon nije dostupan');
-      throw e;
-    }finally{
-      micInitPromise=null;
-    }
+    }catch(e){setMicUi('idle','Mikrofon nedostupan — pričajte uživo');toast('⚠ Mikrofon nije dostupan');throw e;}
+    finally{micInitPromise=null;}
   })();
-
   return micInitPromise;
 }
-function wantMic(enabled){
-  micWanted=enabled;
-  if(enabled) initMic({force:!hasLiveMic()}).catch(()=>{});
-  else stopMic({fullStop:true});
-}
+function wantMic(enabled){micWanted=enabled;if(enabled)initMic({force:!hasLiveMic()}).catch(()=>{});else stopMic({fullStop:true});}
 function monitorMic(){
   if(!micStream)return;
   try{
@@ -974,92 +986,61 @@ function monitorMic(){
     an.fftSize=128;src.connect(an);
     const buf=new Uint8Array(an.frequencyBinCount);
     let alive=true;
-    localMeterStop=()=>{alive=false; try{src.disconnect();an.disconnect();}catch(e){}; setVoiceLevel(socket.id,0);};
+    localMeterStop=()=>{alive=false;try{src.disconnect();an.disconnect();}catch(e){};setVoiceLevel(socket.id,0);};
     micStream._stopMon=localMeterStop;
     (function tick(){
       if(!alive||!micStream)return;
       an.getByteFrequencyData(buf);
       const avg=buf.reduce((s,v)=>s+v,0)/buf.length;
       $('mled').style.background=selfMuted?'var(--tx3)':(avg>12?'var(--red)':'var(--teal)');
-      setVoiceLevel(socket.id, selfMuted?0:(avg*1.8));
+      setVoiceLevel(socket.id,selfMuted?0:(avg*1.8));
       requestAnimationFrame(tick);
     })();
   }catch(e){}
 }
-
-function isPolitePeerTo(pid){ return socket.id < pid; }
-function shouldInitiatePeerTo(pid){ return !isPolitePeerTo(pid); }
-function ensurePeerLinks(){
-  if(!hasLiveMic()) return;
-  G.players?.forEach(p=>{ if(p.id!==socket.id && !pcs[p.id]) initPC(p.id); });
-}
-
+function isPolitePeerTo(pid){return socket.id<pid;}
+function shouldInitiatePeerTo(pid){return !isPolitePeerTo(pid);}
+function ensurePeerLinks(){if(!hasLiveMic())return;G.players?.forEach(p=>{if(p.id!==socket.id&&!pcs[p.id])initPC(p.id);});}
 function initPC(pid){
   if(!hasLiveMic()||pcs[pid]||!shouldInitiatePeerTo(pid))return;
   const ICE={iceServers:[{urls:'stun:stun.l.google.com:19302'},{urls:'stun:stun1.l.google.com:19302'}]};
   const pc=new RTCPeerConnection(ICE);pcs[pid]=pc;
   micStream.getTracks().forEach(t=>pc.addTrack(t,micStream));
   pc.onicecandidate=e=>{if(e.candidate)socket.emit('rtc-ice',{to:pid,candidate:e.candidate});};
-  pc.ontrack=e=>{const au=makeAudio(pid); au.srcObject=e.streams[0]; au.play?.().catch(()=>{}); monitorRemoteStream(pid,e.streams[0]); renderAllVoiceLists();};
-  pc.onconnectionstatechange=()=>{
-    if(['failed','disconnected','closed'].includes(pc.connectionState)){
-      removeAudio(pid);
-      if(micWanted && pc.connectionState!=='closed'){ try{pc.close();}catch(e){} delete pcs[pid]; scheduleMicEnsure(700); }
-    }
-  };
+  pc.ontrack=e=>{const au=makeAudio(pid);au.srcObject=e.streams[0];au.play?.().catch(()=>{});monitorRemoteStream(pid,e.streams[0]);renderAllVoiceLists();};
+  pc.onconnectionstatechange=()=>{if(['failed','disconnected','closed'].includes(pc.connectionState)){removeAudio(pid);if(micWanted&&pc.connectionState!=='closed'){try{pc.close();}catch(e){}delete pcs[pid];scheduleMicEnsure(700);}};};
   pc.createOffer().then(async o=>{await pc.setLocalDescription(o);socket.emit('rtc-offer',{to:pid,offer:o});}).catch(()=>{});
 }
 async function handleOffer(from,offer){
-  if(!hasLiveMic()){ pendingOffers.push({from,offer}); if(micWanted) initMic().catch(()=>{}); return; }
+  if(!hasLiveMic()){pendingOffers.push({from,offer});if(micWanted)initMic().catch(()=>{});return;}
   const polite=isPolitePeerTo(from);
-  if(pcs[from]){
-    if(!polite) return; // impolite — ignorira incoming, moja konekcija ima prednost
-    try{pcs[from].close();}catch(e){} delete pcs[from];
-  }
+  if(pcs[from]){if(!polite)return;try{pcs[from].close();}catch(e){}delete pcs[from];}
   const ICE={iceServers:[{urls:'stun:stun.l.google.com:19302'},{urls:'stun:stun1.l.google.com:19302'}]};
   const pc=new RTCPeerConnection(ICE);pcs[from]=pc;
   micStream.getTracks().forEach(t=>pc.addTrack(t,micStream));
   pc.onicecandidate=e=>{if(e.candidate)socket.emit('rtc-ice',{to:from,candidate:e.candidate});};
-  pc.ontrack=e=>{const au=makeAudio(from); au.srcObject=e.streams[0]; au.play?.().catch(()=>{}); monitorRemoteStream(from,e.streams[0]); renderAllVoiceLists();};
-  pc.onconnectionstatechange=()=>{
-    if(['failed','disconnected','closed'].includes(pc.connectionState)){
-      removeAudio(from);
-      if(micWanted && pc.connectionState!=='closed'){ try{pc.close();}catch(e){} delete pcs[from]; scheduleMicEnsure(700); }
-    }
-  };
-  try{
-    await pc.setRemoteDescription(offer);
-    const ans=await pc.createAnswer();
-    await pc.setLocalDescription(ans);
-    socket.emit('rtc-answer',{to:from,answer:ans});
-  }catch(e){}
+  pc.ontrack=e=>{const au=makeAudio(from);au.srcObject=e.streams[0];au.play?.().catch(()=>{});monitorRemoteStream(from,e.streams[0]);renderAllVoiceLists();};
+  pc.onconnectionstatechange=()=>{if(['failed','disconnected','closed'].includes(pc.connectionState)){removeAudio(from);if(micWanted&&pc.connectionState!=='closed'){try{pc.close();}catch(e){}delete pcs[from];scheduleMicEnsure(700);}};};
+  try{await pc.setRemoteDescription(offer);const ans=await pc.createAnswer();await pc.setLocalDescription(ans);socket.emit('rtc-answer',{to:from,answer:ans});}catch(e){}
 }
-socket.on('rtc-offer',({from,offer})=>{
-  if(!hasLiveMic()){pendingOffers.push({from,offer}); if(micWanted) initMic().catch(()=>{});}
-  else handleOffer(from,offer);
-});
+socket.on('rtc-offer',({from,offer})=>{if(!hasLiveMic()){pendingOffers.push({from,offer});if(micWanted)initMic().catch(()={});}else handleOffer(from,offer);});
 socket.on('rtc-answer',({from,answer})=>pcs[from]?.setRemoteDescription(answer).catch(()=>{}));
 socket.on('rtc-ice',({from,candidate})=>pcs[from]?.addIceCandidate(candidate).catch(()=>{}));
 
 function safeMobileResume(){
-  if(mobileResumeLock) return;
-  mobileResumeLock=true;
+  if(mobileResumeLock)return;mobileResumeLock=true;
   setTimeout(()=>{
-    if(socket.disconnected){ try{ socket.connect(); }catch(e){} }
-    if(micWanted){ initMic({force:!hasLiveMic()}).catch(()=>{}); }
-    if((G?.state==='DISCUSSION' || G?.state==='RESULTS')) setTimeout(()=>ensurePeerLinks(),250);
+    if(socket.disconnected){try{socket.connect();}catch(e){}}
+    if(micWanted){initMic({force:!hasLiveMic()}).catch(()=>{});}
+    if(G?.state==='DISCUSSION'||G?.state==='RESULTS')setTimeout(()=>ensurePeerLinks(),250);
     mobileResumeLock=false;
-  }, 900);
+  },900);
 }
 window.addEventListener('focus',safeMobileResume);
 window.addEventListener('pageshow',safeMobileResume);
-document.addEventListener('visibilitychange',()=>{
-  if(document.visibilityState==='visible') safeMobileResume();
-});
-if(navigator.mediaDevices?.addEventListener){
-  navigator.mediaDevices.addEventListener('devicechange',()=>{if(micWanted) safeMobileResume();});
-}
-window.addEventListener('online',()=>{if(micWanted) safeMobileResume();});
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')safeMobileResume();});
+if(navigator.mediaDevices?.addEventListener)navigator.mediaDevices.addEventListener('devicechange',()=>{if(micWanted)safeMobileResume();});
+window.addEventListener('online',()=>{if(micWanted)safeMobileResume();});
 
 // ── TIMER ─────────────────────────────────────────────────────────────────────
 socket.on('timer',({phase,remaining})=>{
@@ -1067,14 +1048,14 @@ socket.on('timer',({phase,remaining})=>{
     const pct=Math.max(0,remaining/discTotal*100);
     const bar=$('disc-tf'),val=$('disc-tv');
     if(bar){bar.style.width=pct+'%';bar.style.background=pct<25?'var(--red)':pct<50?'var(--amb)':'var(--teal)';}
-    if(val){val.textContent=fmt(remaining);val.style.color=remaining<=10?'var(--red)':remaining<=30?'var(--amb)':'var(--tx2)';}
+    if(val){val.textContent=fmt(remaining);val.style.color=remaining<=10?'var(--red)':remaining<=30?'var(--amb)':'var(--tx)';}
     if(remaining===30||remaining===10)SFX.warn();
     if(remaining>0&&remaining<=5)SFX.tick();
   } else if(phase==='voting'){
     const pct=Math.max(0,remaining/voteTotal*100);
     const bar=$('vote-tf'),val=$('vote-tv');
     if(bar){bar.style.width=pct+'%';bar.style.background=pct<25?'var(--red)':pct<50?'var(--amb)':'var(--red)';}
-    if(val){val.textContent=fmt(remaining);val.style.color=remaining<=10?'var(--red)':'var(--tx2)';}
+    if(val){val.textContent=fmt(remaining);val.style.color=remaining<=10?'var(--red)':'var(--tx)';}
     if(remaining===10)SFX.warn();
     if(remaining>0&&remaining<=5){SFX.tick();toast(`⚠ Glasanje završava za ${remaining}s`);}
   }
@@ -1082,11 +1063,8 @@ socket.on('timer',({phase,remaining})=>{
 
 // ── VOTING ────────────────────────────────────────────────────────────────────
 function renderVoting(){
-  selVote=null;
-  $('cfm').classList.remove('on');
-  $('vsent').style.display='none';
-  $('vgrid').style.opacity='1';
-  $('vgrid').style.pointerEvents='auto';
+  selVote=null;$('cfm').classList.remove('on');$('vsent').style.display='none';
+  $('vgrid').style.opacity='1';$('vgrid').style.pointerEvents='auto';
   const isImp=myRole==='IMPOSTOR';
   $('igbox').className=`igbox${isImp?' on':''}`;
   const grid=$('vgrid');grid.innerHTML='';
@@ -1097,8 +1075,7 @@ function renderVoting(){
       document.querySelectorAll('.vc').forEach(x=>{x.classList.remove('sel');x.querySelector('.vchk')?.remove();});
       c.classList.add('sel');
       const ch=document.createElement('div');ch.className='vchk';ch.textContent='✓';c.appendChild(ch);
-      selVote=p.id;$('vtname').textContent=p.name;$('cfm').classList.add('on');
-      SFX.vote();
+      selVote=p.id;$('vtname').textContent=p.name;$('cfm').classList.add('on');SFX.vote();
     };
     grid.appendChild(c);
   });
@@ -1108,21 +1085,16 @@ $('btn-cfm').onclick=()=>{
   socket.emit('castVote',{code:G.code,targetId:selVote});
   $('cfm').classList.remove('on');
   $('vgrid').style.opacity='.4';$('vgrid').style.pointerEvents='none';
-  $('igbox').style.display='none';
-  $('vsent').style.display='block';
+  $('igbox').style.display='none';$('vsent').style.display='block';
 };
-$('ig-sub').onclick=()=>{
-  const g=$('ig-in').value.trim();if(!g)return;
-  socket.emit('impostorGuess',{code:G.code,guess:g});
-  $('ig-in').value='';toast('Pogodak poslan...');
-};
+$('ig-sub').onclick=()=>{const g=$('ig-in').value.trim();if(!g)return;socket.emit('impostorGuess',{code:G.code,guess:g});$('ig-in').value='';toast('Pogodak poslan...');};
 socket.on('impostorGuessFailed',({guess})=>{toast(`❌ "${guess}" nije točno!`);SFX.warn();});
 socket.on('voteCast',data=>{$('vcnt').textContent=`${data.total} od ${data.max} glasova`;});
 
 // ── RESULTS ───────────────────────────────────────────────────────────────────
 function renderResults(){
   const res=G.results,b=$('rbanner');
-  if(res.isTie){b.className='rbanner tie';$('rtitle').textContent='NERIJEŠENO!';$('remoji').textContent='🤝';$('rsub').textContent='Nitko nije izbačen.';SFX.warn();}
+  if(res.isTie){b.className='rbanner tie';$('rtitle').textContent='NERIJEŠENO!';$('remoji').textContent='🤝';$('rsub').textContent='Nitko nije izbačen — impostor pobijedio.';SFX.warn();}
   else if(res.winner==='CITIZENS'){b.className='rbanner win';$('rtitle').textContent='IMPOSTOR UHVAĆEN!';$('remoji').textContent='✅';$('rsub').textContent=`${esc(res.votedOutName)} je bio impostor.`;SFX.win();}
   else if(res.impostorGuessedCorrectly){b.className='rbanner lose';$('rtitle').textContent='IMPOSTOR POBIJEDIO!';$('remoji').textContent='🧠';$('rsub').textContent='Pogodio je pravu riječ!';SFX.lose();}
   else{b.className='rbanner lose';$('rtitle').textContent='MISIJA KOMPROMITIRANA!';$('remoji').textContent='💀';$('rsub').textContent=`${esc(res.votedOutName||'?')} nije bio impostor.`;SFX.lose();}
@@ -1130,9 +1102,10 @@ function renderResults(){
   $('rw-i').textContent=G.words?.impostor||'—';
   // Scoreboard
   const sb=$('scoreboard');sb.innerHTML='';
-  [...G.players].sort((a,b)=>(b.score||0)-(a.score||0)).forEach((p,i)=>{
+  const sorted=[...G.players].sort((a,b)=>(b.score||0)-(a.score||0));
+  sorted.forEach((p,i)=>{
     const pts=p.score||0,isImp=p.role==='IMPOSTOR';
-    const delta=G.scoreDeltas?.[p.playerToken||p.id] ?? G.scoreDeltas?.[p.id] ?? 0;
+    const delta=G.scoreDeltas?.[p.playerToken||p.id]??G.scoreDeltas?.[p.id]??0;
     const rk=i===0?'g':i===1?'s':i===2?'b':'';
     const d=document.createElement('div');d.className='srow';
     d.innerHTML=`<span class="srk ${rk}">${i+1}</span><div class="av ${isImp?'r':'t'}">${ini(p.name)}</div><div class="pi"><div class="pn">${esc(p.name)}</div><div class="ps">${isImp?'IMPOSTOR':'CITIZEN'}</div></div><div class="spt">${pts}<span class="sdelta ${delta>0?'up':'z'}">+${delta}</span></div>`;
@@ -1142,112 +1115,79 @@ function renderResults(){
   const rl=$('rlist');rl.innerHTML='';
   G.players.forEach(p=>{
     const isImp=p.role==='IMPOSTOR',vf=G.players.find(v=>v.id===G.votes?.[p.id]);
-    const wordLabel=p.word ? `<span style="font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:1px;color:${isImp?'var(--rdim)':'var(--teal)'};background:${isImp?'var(--rbg)':'var(--tbg)'};border:1px solid ${isImp?'var(--rb)':'var(--tb)'};border-radius:6px;padding:2px 8px;">${esc(p.word)}</span>` : '';
+    const wordLabel=p.word?`<span style="font-family:'Bebas Neue',sans-serif;font-size:12px;letter-spacing:1px;color:${isImp?'var(--rdim)':'var(--teal)'};background:${isImp?'var(--rbg)':'var(--tbg)'};border:1px solid ${isImp?'var(--rb)':'var(--tb)'};border-radius:5px;padding:2px 7px;">${esc(p.word)}</span>`:'';
     const d=document.createElement('div');d.className=`rrow${isImp?' ir':''}`;
     d.innerHTML=`<div class="av ${isImp?'r':'t'}">${ini(p.name)}</div><div class="pi"><div class="pn">${esc(p.name)} ${wordLabel}</div><div class="ps">Glasao za: ${vf?esc(vf.name):'—'}</div></div><span class="rtag ${isImp?'imp':'cit'}">${isImp?'IMPOSTOR':'CITIZEN'}</span>`;
     rl.appendChild(d);
   });
   $('btn-rst').style.display=me&&me.isHost?'flex':'none';
-  renderAllVoiceLists();
-  updateVoiceButtons();
+  renderAllVoiceLists();updateVoiceButtons();
 }
-
 $('btn-again').onclick=()=>socket.emit('playAgain',{code:G.code});
 $('btn-quit').onclick=()=>{clearSession();location.reload();};
 $('btn-rst').onclick=()=>{socket.emit('resetScores',{code:G.code});toast('Bodovi resetirani');};
-
-
-['btn-self-mute','btn-self-mute-res'].forEach(id=>{ const el=$(id); if(el) el.onclick=()=>toggleSelfMute(); });
-['btn-audio-unlock','btn-audio-unlock-res'].forEach(id=>{ const el=$(id); if(el) el.onclick=()=>unlockAudio(); });
+['btn-self-mute','btn-self-mute-res'].forEach(id=>{const el=$(id);if(el)el.onclick=()=>toggleSelfMute();});
+['btn-audio-unlock','btn-audio-unlock-res'].forEach(id=>{const el=$(id);if(el)el.onclick=()=>unlockAudio();});
 
 // ── SOCKET EVENTS ─────────────────────────────────────────────────────────────
 socket.on('roomCreated',room=>{G=room;me=room.players[0];saveSession({code:room.code,name:me?.name,playerToken:room.playerToken});badge();show('s-lobby');renderLobby();SFX.join();});
 socket.on('roomJoined',room=>{G=room;me=meNow();saveSession({code:room.code,name:me?.name||$('j-name').value.trim(),playerToken:room.playerToken});badge();show('s-lobby');renderLobby();SFX.join();});
-socket.on('sessionResumed',room=>{G=room;me=meNow();myWord=room.myWord;myRole=room.myRole;saveSession({code:room.code,name:me?.name||$('j-name').value.trim(),playerToken:room.playerToken});badge();
+socket.on('sessionResumed',room=>{
+  G=room;me=meNow();myWord=room.myWord;myRole=room.myRole;
+  saveSession({code:room.code,name:me?.name||$('j-name').value.trim(),playerToken:room.playerToken});
+  badge();
   if(G.state==='LOBBY'){show('s-lobby');renderLobby();}
   else if(G.state==='REVEAL'){show('s-reveal');setupReveal();}
-  else if(G.state==='DISCUSSION'){show('s-disc');setupDisc(room); wantMic(true); setTimeout(()=>ensurePeerLinks(),400);}
-  else if(G.state==='VOTING'){show('s-vote');renderVoting(); wantMic(false);}
-  else if(G.state==='RESULTS'){show('s-res');renderResults(); wantMic(true); unlockAudio();}
+  else if(G.state==='DISCUSSION'){show('s-disc');setupDisc(room);wantMic(true);setTimeout(()=>ensurePeerLinks(),400);}
+  else if(G.state==='VOTING'){show('s-vote');renderVoting();}
+  else if(G.state==='RESULTS'){show('s-res');renderResults();wantMic(true);unlockAudio();}
   toast('✅ Veza obnovljena');
 });
 socket.on('resumeFailed',()=>{clearSession();});
-socket.on('connect',()=>{loadAudioPrefs();
-updateVoiceButtons();
-maybeResumeSession();});
+socket.on('connect',()=>{loadAudioPrefs();updateVoiceButtons();maybeResumeSession();});
 
 socket.on('roomUpdated',room=>{
   G=room;me=meNow();
-  if (G.state === 'LOBBY' && me?.isHost) {
-    $('cfg-cat').value = G.category;
-    $('cfg-disc').value = G.discussionTime || 120;
-    $('cfg-vote').value = G.votingTime || 60;
-    impCount = G.impostorCount || 1;
-    $('imp-v').textContent = impCount;
+  if(G.state==='LOBBY'&&me?.isHost){
+    $('cfg-cat').value=G.category;
+    $('cfg-disc').value=G.discussionTime||120;
+    $('cfg-vote').value=G.votingTime||60;
+    impCount=G.impostorCount||1;
+    $('imp-v').textContent=impCount;
   }
   saveSession({code:G.code,name:me?.name||getSession().name||$('j-name').value.trim()});
-  if((G.state==='DISCUSSION' || G.state==='RESULTS') && micWanted){ scheduleMicEnsure(200); setTimeout(()=>ensurePeerLinks(),350); }
+  if((G.state==='DISCUSSION'||G.state==='RESULTS')&&micWanted){scheduleMicEnsure(200);setTimeout(()=>ensurePeerLinks(),350);}
   renderAllVoiceLists();
-  if(G.state==='LOBBY'){
-    wantMic(false);
-    if(!$('s-lobby').classList.contains('on'))show('s-lobby');
-    renderLobby();
-  }
+  if(G.state==='LOBBY'){wantMic(false);if(!$('s-lobby').classList.contains('on'))show('s-lobby');renderLobby();}
 });
 
 socket.on('gameStarted',room=>{
-  // Server sends myWord and myRole privately to each player
-  myWord=room.myWord;
-  myRole=room.myRole;
-  G=room;
-  me=meNow();
-  // Patch our word/role into our player entry (for display in debrief etc.)
+  myWord=room.myWord;myRole=room.myRole;G=room;me=meNow();
   if(me){me.word=myWord;me.role=myRole;}
   $('rnd').textContent=`R${G.roundNumber}`;
-  wantMic(false);
-  show('s-reveal');
-  setupReveal();
+  wantMic(false);show('s-reveal');setupReveal();
 });
-
 socket.on('revealProgress',({readyCount,total})=>{
   updateRevealProgress(readyCount,total);
-  if(readyCount===total) toast('Svi su potvrdili — počinjemo!');
+  if(readyCount===total)toast('Svi su potvrdili — počinjemo!');
 });
-
 socket.on('startDiscussion',room=>{
-  G=room;me=meNow();
-  if(me){me.word=myWord;me.role=myRole;}
-  discTotal=room.discussionTime||120;
-  voteTotal=room.votingTime||60;
-  show('s-disc');
-  setupDisc(room);
+  G=room;me=meNow();if(me){me.word=myWord;me.role=myRole;}
+  discTotal=room.discussionTime||120;voteTotal=room.votingTime||60;
+  show('s-disc');setupDisc(room);
+  if(room.firstSpeakerName)spinner(room.firstSpeakerName,null);
   setTimeout(()=>ensurePeerLinks(),400);
 });
-
 socket.on('votingStarted',room=>{
-  G=room;me=meNow();
-  if(me){me.word=myWord;me.role=myRole;}
-  voteTotal=room.votingTime||60;
-  wantMic(false);
-  show('s-vote');
-  renderVoting();
+  G=room;me=meNow();if(me){me.word=myWord;me.role=myRole;}
+  voteTotal=room.votingTime||60;wantMic(false);show('s-vote');renderVoting();
 });
-
 socket.on('gameEnded',room=>{
-  G=room;me=meNow();
-  if(me){me.word=myWord;me.role=myRole;}
-  show('s-res');
-  renderResults();
-  wantMic(true);
-  setTimeout(()=>ensurePeerLinks(),400);
-  unlockAudio();
+  G=room;me=meNow();if(me){me.word=myWord;me.role=myRole;}
+  show('s-res');renderResults();wantMic(true);
+  setTimeout(()=>ensurePeerLinks(),400);unlockAudio();
 });
-
-socket.on('error',msg=>{
-  $('j-err').textContent=msg;
-  $('l-err').textContent=msg;
-  toast('⚠ '+msg);
-});
+socket.on('error',msg=>{$('j-err').textContent=msg;$('l-err').textContent=msg;toast('⚠ '+msg);});
 maybeResumeSession();
 </script>
 </body>
