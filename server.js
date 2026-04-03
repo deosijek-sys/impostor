@@ -15,37 +15,149 @@ const PORT = process.env.PORT || 3000;
 // ── WORD DATABASE ─────────────────────────────────────────────────────────────
 const WORDS = {
   "Hrana": [
-    ["Kruh", "Pecivo"],["Mlijeko", "Jogurt"],["Sir", "Vrhnje"],["Jaje", "Omlet"],["Juha", "Varivo"],["Sendvič", "Tost"],["Pizza", "Burger"],["Pomfrit", "Pire"],["Riža", "Tjestenina"],["Piletina", "Puretina"],["Kobasica", "Hrenovka"],["Salata", "Kupus"],["Jabuka", "Kruška"],["Banana", "Mandarina"],["Limun", "Naranča"],["Čokolada", "Keks"],["Sladoled", "Puding"],["Kava", "Čaj"],["Sok", "Voda"],["Burek", "Pita"],["Palačinke", "Vafli"],["Gulaš", "Paprikaš"],["Sarma", "Punjene paprike"],["Krafna", "Mafini"]
+    ["Pizza","Burek"],["Sushi","Ceviche"],["Hamburger","Ćevapi"],["Lazanje","Musaka"],
+    ["Rižoto","Paella"],["Tacos","Shawarma"],["Croissant","Bagel"],["Cheesecake","Baklava"],
+    ["Ramen","Gulaš"],["Hummus","Guacamole"],["Pancake","Palačinka"],["Steak","Roštilj"],
+    ["Sladoled","Sorbet"],["Fondue","Raclette"],["Tempura","Karaage"],
+    ["Gazpacho","Borscht"],["Crème brûlée","Tiramisu"],["Macaron","Eclair"],
+    ["Baguette","Focaccia"],["Gnocchi","Njoki"],["Couscous","Bulgur"],
+    ["Tagine","Curry"],["Bibimbap","Pad thai"],["Rendang","Jerk chicken"],
+    ["Osso buco","Coq au vin"],["Cacio e pepe","Carbonara"],["Biryani","Pilav"],
+    ["Dim sum","Pierogi"],["Miso juha","Pho"],["Banh mi","Doner kebab"],
+    ["Pretzel","Pita"],["Churros","Loukoumades"],["Gelato","Kulfi"],
+    ["Kimchi","Sauerkraut"],["Falafel","Köfte"],["Gyros","Döner"],
+    ["Spring roll","Samosa"],["Nasi goreng","Jollof rice"],["Ceviche","Tartare"],
+    ["Soufflé","Clafoutis"],["Bruschetta","Crostini"],["Shakshuka","Menemen"]
   ],
   "Sport": [
-    ["Nogomet", "Košarka"],["Tenis", "Stolni tenis"],["Odbojka", "Rukomet"],["Trčanje", "Hodanje"],["Bicikl", "Romobil"],["Skijanje", "Snowboard"],["Teretana", "Fitness"],["Sudac", "Trener"],["Golman", "Napadač"],["Prvenstvo", "Turnir"],["Medalja", "Pehar"],["Stadion", "Dvorana"],["Zagrijavanje", "Istezanje"],["Plivanje", "Ronjenje"],["Boks", "Hrvanje"],["Badminton", "Squash"],["Golf", "Kuglanje"],["Dres", "Kopačke"],["Start", "Cilj"],["Lopta", "Mreža"]
+    ["Nogomet","Ragbi"],["Košarka","Odbojka"],["Tenis","Badminton"],
+    ["Plivanje","Vaterpolo"],["Boks","Karate"],["Judo","Aikido"],
+    ["MMA","Muay thai"],["Gimnastika","Akrobatika"],["Atletika","Triatlon"],
+    ["Alpsko skijanje","Snowboard"],["Hokej na ledu","Curling"],
+    ["Veslanje","Kajak"],["Surfanje","Kitesurfing"],["Penjanje","Bouldering"],
+    ["CrossFit","Powerlifting"],["Golf","Kriket"],["Baseball","Softball"],
+    ["Lacrosse","Hokej na travi"],["Streljaštvo","Streličarstvo"],
+    ["Paragliding","Skydiving"],["Darts","Biljar"],["Rukomet","Futsal"],
+    ["Maraton","Ultramaraton"],["Biciklizam","Triatlonski biciklizam"],
+    ["Bob","Skeleton"],["Biatlon","Skijaški kros"],["Sumo","Hrvanje"],
+    ["Fencing","Mačevanje"],["Skateboard","Parkour"],["Polo","Lacrosse"],
+    ["Trčanje","Hodanje na duge staze"],["Plivanje","Sinkrono plivanje"]
   ],
   "Životinje": [
-    ["Pas", "Mačka"],["Štene", "Mačić"],["Krava", "Bik"],["Konj", "Magarac"],["Ovca", "Koza"],["Svinja", "Vepar"],["Lav", "Tigar"],["Vuk", "Lisica"],["Medvjed", "Panda"],["Zec", "Kunić"],["Miš", "Štakor"],["Ptica", "Golub"],["Patka", "Guska"],["Pijetao", "Kokoš"],["Riba", "Morski pas"],["Dupin", "Kit"],["Pčela", "Osa"],["Mrav", "Pauk"],["Žaba", "Gušter"],["Zmija", "Kornjača"]
+    ["Lav","Gepard"],["Tigar","Jaguar"],["Medvjed","Vuk"],
+    ["Slon","Nosorog"],["Žirafa","Zebra"],["Gorila","Orangutan"],
+    ["Delfin","Orka"],["Morski pas","Raža"],["Hobotnica","Lignja"],
+    ["Krokodil","Gavijal"],["Orao","Kondor"],["Sova","Sokol"],
+    ["Flamingo","Pelikan"],["Pingvin","Tukan"],["Koala","Vombat"],
+    ["Klokain","Tapir"],["Alpaka","Ljama"],["Kamila","Dromedар"],
+    ["Polarni medvjed","Arktička lisica"],["Meerkat","Mangusta"],
+    ["Vidra","Dabar"],["Foka","Morž"],["Narval","Beluga"],
+    ["Piton","Boa constrictor"],["Komodo zmaj","Nil monitor"],
+    ["Papiga","Kakadu"],["Kolibri","Sunptica"],["Leptir","Moljac"],
+    ["Pčela","Stršljen"],["Termit","Mrav"],["Škorpion","Tarantula"],
+    ["Jegulja","Murena"],["Srdela","Skuša"]
   ],
   "Mjesta": [
-    ["Škola", "Fakultet"],["Bolnica", "Ambulanta"],["Ljekarna", "Drogerija"],["Trgovina", "Supermarket"],["Pekara", "Slastičarnica"],["Kafić", "Restoran"],["Park", "Igralište"],["Kino", "Kazalište"],["Bazen", "Plaža"],["Stadion", "Dvorana"],["Kolodvor", "Aerodrom"],["Hotel", "Apartman"],["Banka", "Pošta"],["Knjižnica", "Čitaonica"],["Crkva", "Samostan"],["Muzej", "Galerija"],["Frizer", "Kozmetički salon"],["Benzinska", "Punjačnica"],["Tržnica", "Sajam"],["Most", "Tunel"]
+    ["Tokio","Seoul"],["Pariz","Berlin"],["New York","Los Angeles"],
+    ["London","Dublin"],["Dubai","Doha"],["Sydney","Auckland"],
+    ["Barcelona","Lisabon"],["Rim","Atena"],["Istanbul","Kairo"],
+    ["Moskva","Varšava"],["Peking","Bangkok"],["Mumbai","Karachi"],
+    ["Singapur","Kuala Lumpur"],["Beč","Prag"],["Amsterdam","Bruxelles"],
+    ["Stockholm","Oslo"],["Toronto","Vancouver"],["Buenos Aires","Santiago"],
+    ["Lagos","Nairobi"],["Casablanca","Tunis"],["Havana","San Jose"],
+    ["Zagreb","Ljubljana"],["Dubrovnik","Kotor"],["Sarajevo","Banja Luka"],
+    ["Sahara","Gobi"],["Himalaja","Andi"],["Amazon","Kongo prašuma"],
+    ["Grand Canyon","Bryce Canyon"],["Galapagos","Komodo"],
+    ["Santorini","Mykonos"],["Machu Picchu","Angkor Wat"],
+    ["Pompeji","Petra"],["Plitvička jezera","Niagara"],
+    ["Sahara","Namib pustinja"],["Arktik","Antarktika"]
   ],
   "Predmeti": [
-    ["Stol", "Stolica"],["Krevet", "Kauč"],["Ormar", "Komoda"],["Jastuk", "Deka"],["Čaša", "Šalica"],["Tanjur", "Zdjelica"],["Vilica", "Žlica"],["Nož", "Škare"],["Olovka", "Kemijska"],["Bilježnica", "Knjiga"],["Torba", "Ruksak"],["Novčanik", "Torbica"],["Ključ", "Brava"],["Sat", "Budilica"],["Četkica", "Pasta"],["Ručnik", "Maramica"],["Kišobran", "Kabanica"],["Daljinski", "Punjač"],["Televizor", "Radio"],["Lampa", "Svjetiljka"],["Perilica", "Sušilica"],["Usisavač", "Metla"],["Mobitel", "Tablet"],["Laptop", "Računalo"]
+    ["Mobitel","Pametni sat"],["Laptop","Tablet"],["Slušalice","Zvučnik"],
+    ["Fotoaparat","Videokamera"],["Teleskop","Mikroskop"],
+    ["Dalekozor","Periskop"],["Gitara","Bas gitara"],["Klavir","Orgulje"],
+    ["Violina","Viola"],["Saksofon","Klarinet"],["Truba","Trombon"],
+    ["Bubnjevi","Marimba"],["Dron","RC helikopter"],["Skateboard","Romobil"],
+    ["Šator","Vreća za spavanje"],["Kompas","GPS uređaj"],
+    ["Skalpel","Pinceta"],["Kist","Airbrush"],["Nalivpero","Kaligrafsko pero"],
+    ["Šestar","Kutomjer"],["Espresso aparat","Mokka lonac"],
+    ["Blender","Multipraktik"],["Wok","Tajin"],["Lampa","Luster"],
+    ["Ruksak","Kovčeg"],["Kišobran","Poncho"],["Naočale","Kontaktne leće"],
+    ["Printer","Ploter"],["Hard disk","Flash memorija"],["Router","Modem"]
   ],
   "Filmovi i serije": [
-    ["Film", "Serija"],["Kino", "Netflix"],["Glumac", "Pjevač"],["Redatelj", "Scenarist"],["Trailer", "Najava"],["Kokice", "Piće"],["Epizoda", "Sezona"],["Horor", "Triler"],["Komedija", "Romansa"],["Akcija", "Avantura"],["Dokumentarac", "Reportaža"],["Superheroj", "Negativac"],["Policajac", "Detektiv"],["Zatvor", "Sudnica"],["Vjenčanje", "Maturalna"],["Brod", "Avion"],["Škola", "Kampus"],["Bolnica", "Hitna"],["Obitelj", "Susjedi"],["Kralj", "Kraljica"]
+    ["The Godfather","Scarface"],["Inception","The Matrix"],
+    ["The Dark Knight","Watchmen"],["Pulp Fiction","Reservoir Dogs"],
+    ["Silence of the Lambs","Zodiac"],["Shutter Island","Gone Girl"],
+    ["Game of Thrones","The Witcher"],["Breaking Bad","Ozark"],
+    ["Peaky Blinders","Boardwalk Empire"],["Narcos","Sicario"],
+    ["Stranger Things","Dark"],["Black Mirror","Westworld"],
+    ["Chernobyl","The Terror"],["Succession","Billions"],
+    ["True Detective","Mindhunter"],["The Wire","The Shield"],
+    ["Euphoria","Skins"],["Squid Game","Hunger Games"],
+    ["Dune","Foundation"],["Arrival","Annihilation"],
+    ["Parasite","Oldboy"],["La La Land","Whiplash"],
+    ["Midsommar","Hereditary"],["Oppenheimer","Dunkirk"],
+    ["Mad Max: Fury Road","Children of Men"],["1917","Hacksaw Ridge"],
+    ["Interstellar","Gravity"],["No Country for Old Men","There Will Be Blood"],
+    ["The Grand Budapest Hotel","Moonrise Kingdom"],["Drive","Nightcrawler"]
   ],
   "Profesije": [
-    ["Doktor", "Medicinska sestra"],["Učitelj", "Profesor"],["Vozač", "Kondukter"],["Kuhar", "Konobar"],["Policajac", "Vatrogasac"],["Zidar", "Stolar"],["Automehaničar", "Vulkanizer"],["Frizer", "Brijač"],["Prodavač", "Blagajnik"],["Poštar", "Dostavljač"],["Novinar", "Voditelj"],["Pjevač", "Glumac"],["Fotograf", "Snimatelj"],["Električar", "Vodoinstalater"],["Odvjetnik", "Sudac"],["Programer", "Dizajner"],["Trener", "Sudac"],["Domar", "Zaštitar"],["Pilot", "Stjuardesa"],["Poljoprivrednik", "Vrtlar"]
+    ["Kirurg","Anesteziolog"],["Kardiolog","Neurolog"],["Psihijatar","Psiholog"],
+    ["Arhitekt","Urbanist"],["Softverski inženjer","Data scientist"],
+    ["UI dizajner","Grafički dizajner"],["Redatelj","Producent"],
+    ["Chef","Slastičar"],["Sommelier","Barista"],["Pilot","Kontrolor letenja"],
+    ["Meteorolog","Oceanograf"],["Astrofizičar","Kosmolog"],
+    ["Biokemičar","Genetičar"],["Paleontolog","Arheolog"],
+    ["Lingvist","Prevodilac"],["Odvjetnik","Tužilac"],["Sudac","Javni bilježnik"],
+    ["Diplomata","Konzul"],["Forenzičar","Kriminalist"],
+    ["Cyber security","Etički haker"],["Burzovni broker","Investicijski analitičar"],
+    ["Personal trainer","Fizioterapeut"],["Nutricionist","Dijetetičar"],
+    ["Glazbeni producent","Tonski tehničar"],["Makeup artist","Kostimograf"],
+    ["Hortikulturist","Pejzažni arhitekt"],["Pomorski biolog","Ekolog"],
+    ["Sudski tumač","Lokalizator"],["Brand manager","Product manager"],
+    ["Demograf","Sociolog"]
   ],
   "Glazba": [
-    ["Pjesma", "Album"],["Pjevač", "Bend"],["Gitara", "Klavir"],["Bubnjevi", "Mikrofon"],["Koncert", "Festival"],["Publika", "Pozornica"],["Refren", "Strofa"],["Radio", "Playlist"],["Slušalice", "Zvučnik"],["Takt", "Ritam"],["Note", "Tekst"],["DJ", "Producent"],["Rock", "Pop"],["Rap", "Trap"],["Narodna", "Zabavna"],["Violina", "Violončelo"],["Truba", "Saksofon"],["Klub", "Diskoteka"],["Aplauz", "Bis"],["Proba", "Nastup"]
+    ["Hip-hop","R&B"],["Jazz","Blues"],["Klasična glazba","Opera"],
+    ["Rock","Metal"],["Punk","Grunge"],["Pop","Indie pop"],
+    ["Funk","Soul"],["Electronic","Techno"],["House","Trance"],
+    ["Drum and bass","Dubstep"],["Reggae","Ska"],["Bossa nova","Fado"],
+    ["Flamenco","Samba"],["Country","Folk"],["Afrobeats","Highlife"],
+    ["K-pop","J-pop"],["Shoegaze","Dream pop"],["Math rock","Post-rock"],
+    ["Death metal","Black metal"],["Minimal techno","Ambient techno"],
+    ["Gitara","Bas gitara"],["Električna gitara","Akustična gitara"],
+    ["Klavir","Sintesajzer"],["Violina","Violončelo"],
+    ["Saksofon","Klarinet"],["Flauta","Oboa"],["Harfa","Lira"],
+    ["Studijski album","Live album"],["Grammy","Brit Awards"],
+    ["Glastonbury","Coachella"],["Sampling","Remixing"]
   ],
   "Priroda i znanosti": [
-    ["Sunce", "Mjesec"],["Kiša", "Snijeg"],["More", "Jezero"],["Rijeka", "Potok"],["Planina", "Brdo"],["Šuma", "Livada"],["Oblak", "Magla"],["Vjetar", "Oluja"],["Munja", "Grom"],["Cvijet", "Drvo"],["List", "Grana"],["Kamen", "Pijesak"],["Zemlja", "Blato"],["Zvijezda", "Planet"],["Teleskop", "Mikroskop"],["Baterija", "Žarulja"],["Magneta", "Kompas"],["Kemija", "Fizika"],["Pokus", "Mjerenje"],["Laboratorij", "Učionica"]
+    ["Vulkan","Gejzir"],["Potres","Tsunami"],["Tornado","Hurikan"],
+    ["Polarna svjetlost","Zodijačka svjetlost"],["Crna rupa","Neutronska zvijezda"],
+    ["Galaktika","Maglica"],["Egzoplaneta","Asteroid"],
+    ["Klif","Fjord"],["Atol","Koraljni greben"],["Delta","Estuarij"],
+    ["Tundra","Tajga"],["Savana","Prerija"],["Tropska prašuma","Mangrovska šuma"],
+    ["Stalagmit","Stalaktit"],["Fotosinteza","Kemosinteza"],
+    ["Simbioza","Komensalizam"],["Migracija","Hibernacija"],
+    ["DNA","RNA"],["Mutacija","Selekcija"],
+    ["Kvantna mehanika","Relativnost"],["Tamna materija","Tamna energija"],
+    ["Nuklearna fuzija","Nuklearna fisija"],["Osmoza","Difuzija"],
+    ["Polimeri","Monomeri"],["El Niño","Monsun"]
   ],
   "Tehnologija": [
-    ["Mobitel", "Tablet"],["Laptop", "Računalo"],["Tipkovnica", "Miš"],["Ekran", "Monitor"],["Punjač", "Kabel"],["Internet", "Wi-Fi"],["Lozinka", "PIN"],["Aplikacija", "Program"],["Fotografija", "Video"],["Kamera", "Selfie"],["Poruka", "Poziv"],["Email", "Chat"],["Printer", "Skener"],["USB", "Memorijska kartica"],["Televizor", "Projektor"],["Sat", "Pametna narukvica"],["Mapa", "Navigacija"],["Tražilica", "Preglednik"],["Cloud", "Backup"],["Bluetooth", "Slušalice"]
-  ],
-  "Svakodnevica": [
-    ["Jutro", "Večer"],["Doručak", "Večera"],["Posao", "Smjena"],["Plaća", "Račun"],["Kupovina", "Račun"],["Vikend", "Godišnji"],["Odmor", "Pauza"],["Tuš", "Kupka"],["Pranje", "Čišćenje"],["Spavanje", "Buđenje"],["Autobus", "Tramvaj"],["Lift", "Stepenice"],["Red", "Gužva"],["Ključevi", "Novčanik"],["Vrata", "Prozor"],["Susjed", "Prijatelj"],["Poruka", "Obavijest"],["Rođendan", "Slavlje"],["Poklon", "Čestitka"],["Kiša", "Suncobran"],["Kupon", "Popust"],["Pijaca", "Tržnica"],["Radni stol", "Kuhinjski stol"],["Perilica posuđa", "Perilica rublja"]
+    ["Blockchain","Smart contract"],["Bitcoin","Ethereum"],
+    ["AI","Machine learning"],["Neural network","Reinforcement learning"],
+    ["VR","AR"],["Cloud computing","Edge computing"],
+    ["Cybersecurity","Kriptografija"],["Quantum computing","Neuromorhpic chip"],
+    ["5G","Satelitski internet"],["IoT","Smart home"],
+    ["Autonomno vozilo","Dron dostava"],["3D printing","CNC obrada"],
+    ["CRISPR","Genska terapija"],["Solarne ćelije","Fuzijski reaktor"],
+    ["GPS","LIDAR"],["REST API","GraphQL"],
+    ["Open source","Proprietary software"],["Agile","Scrum"],
+    ["Microservices","Monolith"],["Kubernetes","Docker Swarm"],
+    ["SQL","NoSQL"],["React","Vue.js"],["Python","Rust"],
+    ["PostgreSQL","MongoDB"],["Kafka","RabbitMQ"],["gRPC","WebSockets"]
   ]
 };
 
@@ -71,8 +183,7 @@ function cancelDisconnectRemoval(code, playerToken) {
 }
 
 function getRandomWord(category, roomCode) {
-  const actualCategory = category === 'Random' ? randomCategory(roomCode) : category;
-  const list = WORDS[actualCategory] || WORDS['Hrana'];
+  const list = WORDS[category] || WORDS["Hrana"];
   if (!recentWords.has(roomCode)) recentWords.set(roomCode, []);
   const recent = recentWords.get(roomCode);
   const pool = list.map((_, i) => i).filter(i => !recent.includes(i));
@@ -82,22 +193,9 @@ function getRandomWord(category, roomCode) {
   if (recent.length > 15) recent.shift();
   const pair = list[idx];
   // Randomly swap which word is citizen/impostor
-  const words = Math.random() > 0.5
+  return Math.random() > 0.5
     ? { citizen: pair[0], impostor: pair[1] }
     : { citizen: pair[1], impostor: pair[0] };
-  return { ...words, category: actualCategory };
-}
-
-function randomCategory(roomCode) {
-  const categories = Object.keys(WORDS);
-  if (!recentWords.has(roomCode + ':cat')) recentWords.set(roomCode + ':cat', []);
-  const recentCats = recentWords.get(roomCode + ':cat');
-  const pool = categories.filter(c => !recentCats.includes(c));
-  const available = pool.length ? pool : categories;
-  const picked = available[Math.floor(Math.random() * available.length)];
-  recentCats.push(picked);
-  if (recentCats.length > 4) recentCats.shift();
-  return picked;
 }
 
 // ── ROOMS ─────────────────────────────────────────────────────────────────────
@@ -141,8 +239,7 @@ function safeRoom(room) {
       voted: !!p.voted,
       isConnected: p.isConnected !== false,
       score: room.scores?.[scoreKey(p)] || 0
-    })),
-    activeCategory: room.activeCategory || room.category
+    }))
   };
 }
 
@@ -173,21 +270,20 @@ io.on('connection', (socket) => {
 
   // ── joinRoom
   socket.on('joinRoom', ({ code, playerName, playerToken }) => {
-    const normalizedCode = String(code || '').toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 6);
-    const room = rooms.get(normalizedCode);
+    const room = rooms.get(code.toUpperCase());
     if (!room) return socket.emit('error', 'Soba nije pronađena.');
     if (room.state !== 'LOBBY') return socket.emit('error', 'Igra je već počela.');
 
     const existingByToken = playerToken ? room.players.find(p => p.playerToken === playerToken) : null;
     if (existingByToken) {
-      cancelDisconnectRemoval(normalizedCode, existingByToken.playerToken);
+      cancelDisconnectRemoval(code.toUpperCase(), existingByToken.playerToken);
       existingByToken.id = socket.id;
       existingByToken.name = playerName || existingByToken.name;
       existingByToken.isConnected = true;
       existingByToken.disconnectedAt = null;
-      socket.join(normalizedCode);
+      socket.join(code.toUpperCase());
       socket.emit('sessionResumed', buildPlayerPayload(room, existingByToken));
-      io.to(normalizedCode).emit('roomUpdated', safeRoom(room));
+      io.to(code.toUpperCase()).emit('roomUpdated', safeRoom(room));
       return;
     }
 
@@ -197,7 +293,7 @@ io.on('connection', (socket) => {
 
     const token = playerToken || makePlayerToken();
     room.players.push({ id: socket.id, name: playerName, isHost: false, isReady: false, playerToken: token, isConnected: true, disconnectedAt: null });
-    socket.join(normalizedCode);
+    socket.join(code.toUpperCase());
     socket.emit('roomJoined', { ...safeRoom(room), playerToken: token });
     io.to(code.toUpperCase()).emit('roomUpdated', safeRoom(room));
   });
@@ -222,7 +318,7 @@ io.on('connection', (socket) => {
   socket.on('updateConfig', ({ code, category, impostors, discussionTime, votingTime }) => {
     const room = rooms.get((code || '').toUpperCase());
     if (!room || room.state !== 'LOBBY' || !room.players.find(p => p.id === socket.id && p.isHost)) return;
-    if (category === 'Random' || WORDS[category]) room.category = category;
+    if (WORDS[category]) room.category = category;
     room.impostorCount = Math.max(1, Math.min(3, parseInt(impostors) || 1));
     if (discussionTime) room.discussionTime = Math.max(30, Math.min(300, parseInt(discussionTime)));
     if (votingTime) room.votingTime = Math.max(20, Math.min(120, parseInt(votingTime)));
@@ -251,8 +347,6 @@ io.on('connection', (socket) => {
 
     room.roundNumber++;
     room.words = getRandomWord(room.category, code);
-    room.activeCategory = room.words.category || room.category;
-    room.activeCategory = room.words.category || room.category;
     room.state = 'REVEAL';
     room.votes = {};
     room.impostorGuess = null;
@@ -310,7 +404,6 @@ io.on('connection', (socket) => {
     if (!room || room.state !== 'REVEAL') return;
     if (!room.players.find(p => p.id === socket.id && p.isHost)) return;
     room.words = getRandomWord(room.category, code);
-    room.activeCategory = room.words.category || room.category;
     room.players.forEach(p => {
       p.word = p.role === 'IMPOSTOR' ? room.words.impostor : room.words.citizen;
       p.hasRevealed = false;
@@ -409,12 +502,13 @@ io.on('connection', (socket) => {
         let delta = 0;
         if (p.role === 'CITIZEN') {
           const votedPlayer = room.players.find(x => x.id === room.votes[p.id]);
-          delta = votedPlayer?.role === 'IMPOSTOR' ? 2 : 1;
+          delta = votedPlayer?.role === 'IMPOSTOR' ? 2 : 0; // netočan glas = 0
         }
         room.scores[key] = (room.scores[key] || 0) + delta;
         room.scoreDeltas[key] = delta;
       });
     } else {
+      // Impostor wins — samo impostori dobivaju bodove
       room.players.forEach(p => {
         const key = scoreKey(p);
         let delta = 0;
@@ -466,7 +560,7 @@ io.on('connection', (socket) => {
     if (!room) return;
     clearTimer(code);
     room.state = 'LOBBY';
-    room.votes = {}; room.results = null; room.words = null; room.activeCategory = room.category; room.scoreDeltas = {};
+    room.votes = {}; room.results = null; room.words = null; room.scoreDeltas = {};
     room.speakOrder = []; room.currentSpeakerIdx = 0; room.impostorGuess = null;
     room.players.forEach(p => {
       p.isReady = p.isHost;
@@ -482,44 +576,6 @@ io.on('connection', (socket) => {
     room.scores = {}; room.roundNumber = 0;
     io.to(code).emit('roomUpdated', safeRoom(room));
   });
-
-
-// ── leaveRoom
-socket.on('leaveRoom', ({ code, playerToken }) => {
-  const normalizedCode = String(code || '').toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 6);
-  const room = rooms.get(normalizedCode);
-  if (!room) return socket.emit('roomLeft');
-
-  const idx = room.players.findIndex(p => p.id === socket.id || (playerToken && p.playerToken === playerToken));
-  if (idx === -1) return socket.emit('roomLeft');
-
-  const leaving = room.players[idx];
-  cancelDisconnectRemoval(normalizedCode, leaving.playerToken);
-  room.players.splice(idx, 1);
-  try { socket.leave(normalizedCode); } catch {}
-
-  if (room.players.length === 0) {
-    clearTimer(normalizedCode);
-    recentWords.delete(normalizedCode);
-    rooms.delete(normalizedCode);
-    socket.emit('roomLeft');
-    return;
-  }
-
-  if (leaving.isHost || !room.players.some(p => p.isHost)) {
-    room.players.forEach(p => { p.isHost = false; });
-    room.players[0].isHost = true;
-    room.players[0].isReady = true;
-  }
-
-  room.players.forEach(p => {
-    if (p.id === socket.id) return;
-    if (room.state === 'LOBBY' && p.isHost) p.isReady = true;
-  });
-
-  socket.emit('roomLeft');
-  io.to(normalizedCode).emit('roomUpdated', safeRoom(room));
-});
 
   // ── disconnect
   socket.on('disconnect', () => {
