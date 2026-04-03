@@ -747,6 +747,7 @@ select{appearance:none;cursor:pointer;}
 </div>
 
 <!-- ONBOARDING OVERLAY -->
+<script>if(localStorage.getItem('impostor.onboarded.v1')){document.write('<style>#ob-ov{display:none!important}</style>');}</script>
 <div class="ob-ov" id="ob-ov">
   <div class="ob-canvas" id="ob-canvas">
 
@@ -1474,26 +1475,32 @@ socket.on('error',msg=>{$('j-err').textContent=msg;$('l-err').textContent=msg;to
 
   function closeOnboarding(){
     localStorage.setItem(OB_KEY, '1');
-    const ov = $('ob-ov');
+    const ov = document.getElementById('ob-ov');
+    ov.style.pointerEvents = 'none'; // odmah, bez čekanja
     ov.classList.add('hidden');
     try{ SFX.join(); }catch(e){}
     setTimeout(()=>{ ov.style.display='none'; }, 450);
   }
 
   function initOnboarding(){
+    const ov = document.getElementById('ob-ov');
+    if(!ov) return;
     if(localStorage.getItem(OB_KEY)){
-      const ov = $('ob-ov');
-      if(ov) ov.style.display = 'none';
+      ov.style.display = 'none';
       return;
     }
-    $('ob-next').onclick = ()=>{ cur < TOTAL-1 ? goTo(cur+1) : closeOnboarding(); };
-    $('ob-skip').onclick = closeOnboarding;
+    const btnNext = document.getElementById('ob-next');
+    const btnSkip = document.getElementById('ob-skip');
+    if(!btnNext || !btnSkip) return;
+
+    btnNext.onclick = ()=>{ cur < TOTAL-1 ? goTo(cur+1) : closeOnboarding(); };
+    btnSkip.onclick = closeOnboarding;
 
     document.querySelectorAll('.ob-dot').forEach((d,i)=>{ d.onclick = ()=>goTo(i); });
 
     // swipe
     let tx0 = null;
-    const canvas = $('ob-canvas');
+    const canvas = document.getElementById('ob-canvas');
     canvas.addEventListener('touchstart', e=>{ tx0 = e.touches[0].clientX; }, {passive:true});
     canvas.addEventListener('touchend',   e=>{
       if(tx0===null) return;
