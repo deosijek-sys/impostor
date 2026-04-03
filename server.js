@@ -47,7 +47,7 @@ const WORDS = {
   "Svakodnevica": [
     ["Jutro", "Večer"],["Doručak", "Večera"],["Posao", "Smjena"],["Plaća", "Račun"],["Kupovina", "Račun"],["Vikend", "Godišnji"],["Odmor", "Pauza"],["Tuš", "Kupka"],["Pranje", "Čišćenje"],["Spavanje", "Buđenje"],["Autobus", "Tramvaj"],["Lift", "Stepenice"],["Red", "Gužva"],["Ključevi", "Novčanik"],["Vrata", "Prozor"],["Susjed", "Prijatelj"],["Poruka", "Obavijest"],["Rođendan", "Slavlje"],["Poklon", "Čestitka"],["Kiša", "Suncobran"],["Kupon", "Popust"],["Pijaca", "Tržnica"],["Radni stol", "Kuhinjski stol"],["Perilica posuđa", "Perilica rublja"]
   ]
-};};
+};
 
 const recentWords = new Map();
 const disconnectTimers = new Map();
