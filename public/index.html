@@ -574,6 +574,7 @@ const socket=io();
 let G={},me=null,myWord=null,myRole=null,selVote=null,impCount=1,discTotal=120,voteTotal=60;
 let micStream=null,pcs={},pendingOffers=[],rulesFrom='s-join';
 let micWanted=false,micInitPromise=null,micRestartTimer=null,resumeTried=false;
+let mobileResumeLock=false;
 const SESSION_KEY='impostor.session.v1';
 const AUDIO_PREFS_KEY='impostor.audioPrefs.v2';
 let selfMuted=false, remoteMuted={}, remoteMeters={}, localMeterStop=null;
@@ -953,6 +954,20 @@ function monitorMic(){
       requestAnimationFrame(tick);
     })();
   }catch(e){}
+}
+
+// Svaki peer inicira konekciju prema svima — handleOffer zatvori duplikate
+function shouldInitiatePeerTo(pid){
+  return true;
+}
+
+// Osigurava da postoji konekcija prema svakom aktivnom igraču
+function ensurePeerLinks(){
+  if(!hasLiveMic()) return;
+  G.players?.forEach(p=>{
+    if(p.id===socket.id) return;
+    if(!pcs[p.id]) initPC(p.id);
+  });
 }
 
 function initPC(pid){
