@@ -143,40 +143,76 @@ select{appearance:none;cursor:pointer;}
 /* ═══════════════════════════════════════════════════════════════
    PREMIUM FLIP CARD
 ═══════════════════════════════════════════════════════════════ */
-.fwrap{perspective:1400px;cursor:pointer;margin-bottom:20px;user-select:none;-webkit-user-select:none;}
-.finnr{width:100%;height:290px;position:relative;transform-style:preserve-3d;transition:transform .8s cubic-bezier(.23,.86,.39,.97);}
-.fwrap.flip .finnr{transform:rotateY(180deg);}
+.fwrap{perspective:1400px;cursor:pointer;margin-bottom:20px;user-select:none;-webkit-user-select:none;position:relative;}
+.finnr{width:100%;height:290px;position:relative;transform-style:preserve-3d;}
 .ff,.fb{
   position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;
   border-radius:22px;display:flex;flex-direction:column;align-items:center;justify-content:center;
   padding:28px 24px;overflow:hidden;
 }
 .ff{
-  background:linear-gradient(155deg,#06060f 0%,#0c0c1c 50%,#060612 100%);
-  border:1px solid rgba(255,255,255,.05);
-  box-shadow:0 4px 60px rgba(0,0,0,.8),inset 0 1px 0 rgba(255,255,255,.03);
+  background:linear-gradient(155deg,#07071a 0%,#0d0d22 45%,#08081a 100%);
+  border:1px solid rgba(196,152,48,.18);
+  box-shadow:0 4px 60px rgba(0,0,0,.85),inset 0 1px 0 rgba(196,152,48,.08),0 0 0 1px rgba(0,0,0,.4);
+}
+.ff::before{
+  content:'';position:absolute;inset:0;border-radius:22px;pointer-events:none;
+  background:radial-gradient(ellipse 80% 60% at 50% 0%,rgba(196,152,48,.09) 0%,transparent 65%);
 }
 .ff::after{
   content:'';position:absolute;inset:0;border-radius:22px;pointer-events:none;
   background:
-    radial-gradient(ellipse 60% 40% at 50% 0%,rgba(168,129,58,.035) 0%,transparent 70%),
-    repeating-linear-gradient(0deg,transparent,transparent 32px,rgba(255,255,255,.008) 32px,rgba(255,255,255,.008) 33px);
+    repeating-linear-gradient(0deg,transparent,transparent 32px,rgba(255,255,255,.006) 32px,rgba(255,255,255,.006) 33px),
+    linear-gradient(135deg,transparent 40%,rgba(196,152,48,.03) 50%,transparent 60%);
+  animation:ffShimmer 4s ease-in-out infinite;
+  background-size:100% 100%,200% 200%;
 }
-.ff-corners span{position:absolute;width:36px;height:36px;border-color:rgba(168,129,58,.14);border-style:solid;}
-.ff-corners span:nth-child(1){top:16px;left:16px;border-width:1px 0 0 1px;border-radius:8px 0 0 0;}
-.ff-corners span:nth-child(2){top:16px;right:16px;border-width:1px 1px 0 0;border-radius:0 8px 0 0;}
-.ff-corners span:nth-child(3){bottom:16px;left:16px;border-width:0 0 1px 1px;border-radius:0 0 0 8px;}
-.ff-corners span:nth-child(4){bottom:16px;right:16px;border-width:0 1px 1px 0;border-radius:0 0 8px 0;}
+@keyframes ffShimmer{
+  0%{background-position:0 0,0% 50%;}
+  50%{background-position:0 0,100% 50%;}
+  100%{background-position:0 0,0% 50%;}
+}
+.ff-corners span{position:absolute;width:40px;height:40px;border-color:rgba(196,152,48,.28);border-style:solid;}
+.ff-corners span:nth-child(1){top:14px;left:14px;border-width:1px 0 0 1px;border-radius:8px 0 0 0;}
+.ff-corners span:nth-child(2){top:14px;right:14px;border-width:1px 1px 0 0;border-radius:0 8px 0 0;}
+.ff-corners span:nth-child(3){bottom:14px;left:14px;border-width:0 0 1px 1px;border-radius:0 0 0 8px;}
+.ff-corners span:nth-child(4){bottom:14px;right:14px;border-width:0 1px 1px 0;border-radius:0 0 8px 0;}
 .ff-eye{
-  width:68px;height:68px;border-radius:50%;
-  border:1px solid rgba(168,129,58,.15);
-  background:radial-gradient(circle at 38% 38%,rgba(168,129,58,.06),transparent 65%);
-  display:flex;align-items:center;justify-content:center;margin-bottom:20px;
+  width:72px;height:72px;border-radius:50%;
+  border:1px solid rgba(196,152,48,.3);
+  background:radial-gradient(circle at 38% 38%,rgba(196,152,48,.12),transparent 65%);
+  display:flex;align-items:center;justify-content:center;margin-bottom:22px;
   animation:eyePulse 3.5s ease-in-out infinite;
+  box-shadow:0 0 20px rgba(196,152,48,.06);
 }
-@keyframes eyePulse{0%,100%{box-shadow:0 0 0 0 rgba(168,129,58,0),0 0 0 0 rgba(168,129,58,0);}50%{box-shadow:0 0 0 6px rgba(168,129,58,.04),0 0 24px rgba(168,129,58,.05);}}
-.ff-hint{font-family:var(--ff-serif);font-size:20px;letter-spacing:1px;color:rgba(255,255,255,.22);margin-bottom:5px;font-style:italic;font-weight:300;}
-.ff-sub{font-size:10px;letter-spacing:2px;color:var(--t3);text-transform:uppercase;}
+@keyframes eyePulse{
+  0%,100%{box-shadow:0 0 0 0 rgba(196,152,48,0),0 0 20px rgba(196,152,48,.06);}
+  50%{box-shadow:0 0 0 8px rgba(196,152,48,.06),0 0 32px rgba(196,152,48,.12);}
+}
+.ff-hint{
+  font-family:var(--ff-serif);font-size:22px;letter-spacing:1.5px;
+  color:rgba(255,255,255,.82);
+  margin-bottom:8px;font-style:italic;font-weight:400;
+  text-shadow:0 0 24px rgba(196,152,48,.35),0 1px 0 rgba(0,0,0,.6);
+}
+.ff-sub{
+  font-size:10px;letter-spacing:2.5px;
+  color:rgba(196,152,48,.55);
+  text-transform:uppercase;
+  text-shadow:0 0 12px rgba(196,152,48,.2);
+}
+/* premium flip animation */
+.finnr{transition:transform .72s cubic-bezier(.22,.8,.35,1),box-shadow .72s ease;}
+.fwrap:not(.flip):hover .finnr{box-shadow:0 8px 40px rgba(196,152,48,.08);}
+.fwrap.flip .finnr{transform:rotateY(180deg);}
+@keyframes flipGlow{
+  0%{opacity:0;}40%{opacity:1;}100%{opacity:0;}
+}
+.fwrap.flip-active::after{
+  content:'';position:absolute;inset:0;border-radius:22px;pointer-events:none;
+  background:radial-gradient(ellipse 70% 50% at 50% 50%,rgba(196,152,48,.06),transparent 70%);
+  animation:flipGlow .72s ease forwards;
+}
 
 .fb{transform:rotateY(180deg);}
 .fb.cit-back{
@@ -676,7 +712,7 @@ select{appearance:none;cursor:pointer;}
           <div class="ff">
             <div class="ff-corners"><span></span><span></span><span></span><span></span></div>
             <div class="ff-eye">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="rgba(196,154,60,.55)" stroke-width="1.4"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="rgba(196,154,60,.85)" stroke-width="1.5"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3" fill="rgba(196,154,60,.2)"/></svg>
             </div>
             <div class="ff-hint">Tapni za otkrivanje</div>
             <div class="ff-sub">Osigurajte privatnost</div>
