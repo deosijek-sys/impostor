@@ -5,33 +5,35 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="theme-color" content="#080808">
+<meta name="theme-color" content="#060608">
 <title>IMPOSTOR</title>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <script src="/socket.io/socket.io.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
 :root{
-  --red:#E63946;--rdim:#ff6b75;--rbg:rgba(230,57,70,.08);--rb:rgba(230,57,70,.25);
-  --teal:#52b788;--tbg:rgba(82,183,136,.08);--tb:rgba(82,183,136,.25);
-  --amb:#f4a261;--abg:rgba(244,162,97,.08);--ab:rgba(244,162,97,.25);
-  --bg:#080808;--bg2:#111;--bg3:#181818;--bg4:#222;--bg5:#2a2a2a;
-  --ln:rgba(255,255,255,.05);--ln2:rgba(255,255,255,.09);--ln3:rgba(255,255,255,.16);
-  --tx:#f0eeeb;--tx2:#888;--tx3:#444;
-  --r:16px;--rs:10px;
+  --red:#C8384A;--rdim:#e05565;--rbg:rgba(200,56,74,.07);--rb:rgba(200,56,74,.22);
+  --gold:#C4A35A;--gbg:rgba(196,163,90,.07);--gb:rgba(196,163,90,.22);
+  --teal:#4A9E7A;--tbg:rgba(74,158,122,.07);--tb:rgba(74,158,122,.22);
+  --bg:#060608;--bg2:#0d0d10;--bg3:#131317;--bg4:#1a1a1f;--bg5:#222228;
+  --ln:rgba(255,255,255,.04);--ln2:rgba(255,255,255,.08);--ln3:rgba(255,255,255,.14);
+  --tx:#ece9e3;--tx2:#888;--tx3:#444;--tx4:#2a2a30;
+  --r:14px;--rs:10px;
   --safe-b:env(safe-area-inset-bottom,0px);
+  --gold-glow:rgba(196,163,90,.15);
+  --red-glow:rgba(200,56,74,.15);
 }
-html,body{height:100%;background:var(--bg);color:var(--tx);font-family:'DM Sans',sans-serif;overflow:hidden;}
+html,body{height:100%;background:var(--bg);color:var(--tx);font-family:'Space Grotesk',sans-serif;overflow:hidden;}
 .app{height:100dvh;max-width:430px;margin:0 auto;display:flex;flex-direction:column;}
 
 /* ── BAR */
-.bar{flex-shrink:0;height:52px;display:flex;align-items:center;justify-content:space-between;padding:0 16px;border-bottom:1px solid var(--ln);background:rgba(8,8,8,.95);backdrop-filter:blur(12px);position:relative;z-index:10;}
-.logo{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:4px;color:var(--red);}
-.bar-r{display:flex;align-items:center;gap:6px;}
-.pb{display:none;align-items:center;gap:7px;background:var(--bg3);border:1px solid var(--ln2);border-radius:999px;padding:4px 12px 4px 4px;font-size:11px;font-weight:500;color:var(--tx2);letter-spacing:.3px;}
+.bar{flex-shrink:0;height:54px;display:flex;align-items:center;justify-content:space-between;padding:0 18px;border-bottom:1px solid var(--ln);background:rgba(6,6,8,.97);backdrop-filter:blur(16px);position:relative;z-index:10;}
+.logo{font-family:'Cormorant Garamond',serif;font-size:18px;letter-spacing:6px;color:var(--gold);font-weight:600;text-transform:uppercase;}
+.bar-r{display:flex;align-items:center;gap:8px;}
+.pb{display:none;align-items:center;gap:8px;background:var(--bg3);border:1px solid var(--ln2);border-radius:999px;padding:4px 12px 4px 4px;font-size:11px;font-weight:500;color:var(--tx2);letter-spacing:.3px;}
 .pb.on{display:flex;}
-.pbav{width:26px;height:26px;border-radius:50%;background:var(--rbg);border:1px solid var(--rb);display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:9px;letter-spacing:1px;color:var(--rdim);}
-.rndbdg{font-family:'Bebas Neue',sans-serif;font-size:11px;color:var(--tx3);letter-spacing:1px;}
+.pbav{width:26px;height:26px;border-radius:50%;background:var(--rbg);border:1px solid var(--rb);display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:11px;letter-spacing:1px;color:var(--rdim);}
+.rndbdg{font-family:'Cormorant Garamond',serif;font-size:12px;color:var(--tx3);letter-spacing:2px;}
 .ibtn{width:32px;height:32px;border-radius:50%;border:1px solid var(--ln2);background:none;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--tx3);flex-shrink:0;transition:border-color .15s,color .15s;}
 .ibtn:hover{color:var(--tx2);border-color:var(--ln3);}
 
@@ -40,62 +42,62 @@ html,body{height:100%;background:var(--bg);color:var(--tx);font-family:'DM Sans'
 .scroll::-webkit-scrollbar{display:none;}
 
 /* ── SCREENS */
-.sc{display:none;padding:24px 16px calc(60px + var(--safe-b));animation:up .25s cubic-bezier(.16,1,.3,1);}
+.sc{display:none;padding:28px 18px calc(60px + var(--safe-b));animation:fadeUp .3s cubic-bezier(.16,1,.3,1);}
 .sc.on{display:block;}
-@keyframes up{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:translateY(0);}}
 
 /* ── TYPOGRAPHY */
-.lbl{font-size:10px;font-weight:600;letter-spacing:2.5px;text-transform:uppercase;color:var(--tx3);display:block;margin-bottom:6px;}
-.lr{color:rgba(230,57,70,.45);}
-.lt{color:rgba(82,183,136,.45);}
-.la{color:rgba(244,162,97,.45);}
-.disp{font-family:'Bebas Neue',sans-serif;font-size:64px;letter-spacing:5px;color:var(--red);line-height:.9;}
-.ttl{font-family:'Bebas Neue',sans-serif;font-size:36px;letter-spacing:2px;line-height:1.05;color:var(--tx);}
+.lbl{font-size:9px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:var(--tx3);display:block;margin-bottom:7px;}
+.lr{color:rgba(200,56,74,.5);}
+.lt{color:rgba(74,158,122,.4);}
+.la{color:rgba(196,163,90,.45);}
+.disp{font-family:'Cormorant Garamond',serif;font-size:68px;letter-spacing:4px;color:var(--gold);line-height:.9;font-weight:600;}
+.ttl{font-family:'Cormorant Garamond',serif;font-size:38px;letter-spacing:1px;line-height:1.05;color:var(--tx);font-weight:500;}
 
 /* ── INPUTS */
 input[type=text],input[type=number],select{
   width:100%;background:var(--bg3);border:1px solid var(--ln2);border-radius:var(--rs);
-  color:var(--tx);font-family:'DM Sans',sans-serif;font-size:15px;font-weight:500;
+  color:var(--tx);font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:400;
   padding:13px 14px;outline:none;transition:border-color .2s,background .2s;
 }
-input:focus,select:focus{border-color:rgba(230,57,70,.5);background:var(--bg2);}
+input:focus,select:focus{border-color:var(--gb);background:var(--bg2);}
 input::placeholder{color:var(--tx3);}
 select{appearance:none;cursor:pointer;}
 .sw{position:relative;}
 .sw::after{content:'▾';position:absolute;right:13px;top:50%;transform:translateY(-50%);color:var(--tx3);pointer-events:none;font-size:11px;}
 
 /* ── BUTTONS */
-.btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:15px;border-radius:var(--r);border:none;font-family:'Bebas Neue',sans-serif;font-size:17px;letter-spacing:1.5px;cursor:pointer;transition:transform .12s,opacity .12s,background .15s;}
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:15px;border-radius:var(--r);border:none;font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:600;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:transform .12s,opacity .12s,background .15s;}
 .btn:active{transform:scale(.97);}
-.bp{background:var(--red);color:#fff;}
-.bp:hover{opacity:.88;}
+.bp{background:var(--gold);color:#060608;}
+.bp:hover{opacity:.9;}
 .bo{background:transparent;border:1px solid var(--ln2);color:var(--tx2);}
 .bo:hover{border-color:var(--ln3);color:var(--tx);}
 .bt{background:var(--tbg);border:1px solid var(--tb);color:var(--teal);}
-.ba{background:var(--abg);border:1px solid var(--ab);color:var(--amb);}
-.bdng{background:rgba(230,57,70,.12);border:1px solid var(--rb);color:var(--rdim);}
-.bsm{padding:10px 16px;font-size:13px;border-radius:var(--rs);}
+.ba{background:var(--gbg);border:1px solid var(--gb);color:var(--gold);}
+.bdng{background:var(--rbg);border:1px solid var(--rb);color:var(--rdim);}
+.bsm{padding:10px 16px;font-size:11px;border-radius:var(--rs);}
 .mb{margin-bottom:10px;}
 
 /* ── CARDS */
 .card{background:var(--bg2);border:1px solid var(--ln);border-radius:var(--r);padding:16px;}
 .cr{background:var(--rbg);border-color:var(--rb);}
 .ct{background:var(--tbg);border-color:var(--tb);}
-.ca{background:var(--abg);border-color:var(--ab);}
+.ca{background:var(--gbg);border-color:var(--gb);}
 
 /* ── DIVIDER */
 .div-l{display:flex;align-items:center;gap:12px;margin:16px 0;}
 .div-l::before,.div-l::after{content:'';flex:1;height:1px;background:var(--ln);}
-.div-l span{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--tx3);}
+.div-l span{font-size:9px;letter-spacing:2.5px;text-transform:uppercase;color:var(--tx3);}
 
 /* ── PLAYER ROW */
-.pr{display:flex;align-items:center;gap:10px;padding:11px 13px;background:var(--bg2);border:1px solid var(--ln);border-radius:var(--rs);margin-bottom:6px;animation:up .18s ease;}
-.av{width:36px;height:36px;border-radius:10px;background:var(--bg4);border:1px solid var(--ln2);display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:11px;letter-spacing:1px;color:var(--tx2);flex-shrink:0;}
+.pr{display:flex;align-items:center;gap:10px;padding:11px 13px;background:var(--bg2);border:1px solid var(--ln);border-radius:var(--rs);margin-bottom:6px;animation:fadeUp .18s ease;}
+.av{width:36px;height:36px;border-radius:10px;background:var(--bg4);border:1px solid var(--ln2);display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:11px;letter-spacing:1px;color:var(--tx2);flex-shrink:0;}
 .av.r{background:var(--rbg);border-color:var(--rb);color:var(--rdim);}
 .av.t{background:var(--tbg);border-color:var(--tb);color:var(--teal);}
-.av.a{background:var(--abg);border-color:var(--ab);color:var(--amb);}
+.av.g{background:var(--gbg);border-color:var(--gb);color:var(--gold);}
 .pi{flex:1;min-width:0;}
-.pn{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.pn{font-size:13px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .ps{font-size:10px;color:var(--tx3);margin-top:2px;letter-spacing:.3px;}
 .dot{width:7px;height:7px;border-radius:50%;background:var(--bg5);flex-shrink:0;}
 .dot.on{background:var(--teal);}
@@ -104,55 +106,137 @@ select{appearance:none;cursor:pointer;}
 .ctr{display:flex;align-items:center;background:var(--bg3);border:1px solid var(--ln2);border-radius:var(--rs);overflow:hidden;}
 .cbtn{width:44px;height:44px;display:flex;align-items:center;justify-content:center;background:none;border:none;color:var(--tx2);font-size:22px;cursor:pointer;transition:background .1s;}
 .cbtn:hover{background:var(--bg4);color:var(--tx);}
-.cval{flex:1;text-align:center;font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:2px;}
+.cval{flex:1;text-align:center;font-family:'Cormorant Garamond',serif;font-size:24px;letter-spacing:2px;}
 
 /* ── GRID */
 .sg{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;}
-.sg3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px;margin-bottom:14px;}
 .scard{background:var(--bg2);border:1px solid var(--ln);border-radius:var(--rs);padding:13px;}
-.sval{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:1px;line-height:1;margin-top:4px;}
+.sval{font-family:'Cormorant Garamond',serif;font-size:22px;letter-spacing:1px;line-height:1;margin-top:4px;}
 
-/* ── FLIP CARD */
-.fwrap{perspective:1200px;cursor:pointer;margin-bottom:16px;user-select:none;}
-.finnr{width:100%;height:260px;position:relative;transform-style:preserve-3d;transition:transform .6s cubic-bezier(.4,0,.2,1);}
+/* ═══════════════════════════════════════════════════════════════
+   PREMIUM FLIP CARD
+═══════════════════════════════════════════════════════════════ */
+.fwrap{perspective:1400px;cursor:pointer;margin-bottom:20px;user-select:none;-webkit-user-select:none;}
+.finnr{width:100%;height:280px;position:relative;transform-style:preserve-3d;transition:transform .75s cubic-bezier(.23,.86,.39,.97);}
 .fwrap.flip .finnr{transform:rotateY(180deg);}
-.ff,.fb{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:var(--r);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px 16px;}
-.ff{background:var(--bg2);border:1px solid var(--ln2);}
-.fb{background:var(--bg2);border:1px solid var(--rb);transform:rotateY(180deg);}
-.fb>*{transform:rotateY(0deg);}
-.fb.fi{background:var(--rbg);}
-.eye{width:56px;height:56px;border-radius:50%;border:1px solid var(--ln2);display:flex;align-items:center;justify-content:center;margin-bottom:14px;animation:epulse 2.5s infinite;flex-shrink:0;}
-@keyframes epulse{0%,100%{border-color:var(--ln2);}50%{border-color:rgba(230,57,70,.4);}}
-.fb-lbl{font-size:10px;font-weight:600;letter-spacing:2.5px;text-transform:uppercase;color:var(--tx3);margin-bottom:10px;flex-shrink:0;}
-.fb-word{font-family:'Bebas Neue',sans-serif;font-size:44px;letter-spacing:3px;color:var(--tx);text-align:center;line-height:1.05;word-break:break-word;hyphens:auto;max-width:100%;margin-bottom:12px;flex-shrink:1;}
-.fb-word.ri{color:var(--red);}
-.rtag{display:inline-flex;align-items:center;gap:5px;padding:5px 13px;border-radius:999px;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;flex-shrink:0;}
-.rtag.cit{background:var(--tbg);border:1px solid var(--tb);color:var(--teal);}
-.rtag.imp{background:var(--rbg);border:1px solid var(--rb);color:var(--rdim);}
+.ff,.fb{
+  position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;
+  border-radius:20px;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:24px 20px;overflow:hidden;
+}
 
-/* ── MY WORD CHIP */
-.mywc{display:flex;align-items:center;gap:12px;padding:14px 16px;border-radius:var(--r);border:1px solid var(--ln2);background:var(--bg2);margin-bottom:14px;}
-.mywc-w{font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:2px;line-height:1;}
-.mywc-lbl{font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--tx3);margin-bottom:3px;}
+/* FRONT FACE — dark premium */
+.ff{
+  background:linear-gradient(145deg,#0e0e12 0%,#141419 50%,#0e0e12 100%);
+  border:1px solid rgba(255,255,255,.07);
+  box-shadow:0 2px 40px rgba(0,0,0,.6), inset 0 1px 0 rgba(255,255,255,.05);
+}
+.ff::before{
+  content:'';position:absolute;inset:0;border-radius:20px;
+  background:repeating-linear-gradient(
+    0deg,transparent,transparent 28px,rgba(255,255,255,.015) 28px,rgba(255,255,255,.015) 29px
+  );pointer-events:none;
+}
+.ff-corner{
+  position:absolute;width:40px;height:40px;
+  border-color:rgba(196,163,90,.2);border-style:solid;
+}
+.ff-corner.tl{top:14px;left:14px;border-width:1px 0 0 1px;border-radius:6px 0 0 0;}
+.ff-corner.tr{top:14px;right:14px;border-width:1px 1px 0 0;border-radius:0 6px 0 0;}
+.ff-corner.bl{bottom:14px;left:14px;border-width:0 0 1px 1px;border-radius:0 0 0 6px;}
+.ff-corner.br{bottom:14px;right:14px;border-width:0 1px 1px 0;border-radius:0 0 6px 0;}
+.ff-eyeicon{
+  width:64px;height:64px;border-radius:50%;
+  border:1px solid rgba(196,163,90,.2);
+  background:radial-gradient(circle at 40% 40%,rgba(196,163,90,.08),transparent 70%);
+  display:flex;align-items:center;justify-content:center;margin-bottom:18px;
+  animation:eyePulse 3s ease-in-out infinite;
+}
+@keyframes eyePulse{0%,100%{box-shadow:0 0 0 0 rgba(196,163,90,0);}50%{box-shadow:0 0 0 8px rgba(196,163,90,.06);}}
+.ff-hint{font-family:'Cormorant Garamond',serif;font-size:22px;letter-spacing:3px;color:rgba(255,255,255,.35);margin-bottom:6px;font-weight:400;}
+.ff-sub{font-size:10px;letter-spacing:2px;color:var(--tx3);text-transform:uppercase;}
+
+/* BACK FACE — role reveal */
+.fb{transform:rotateY(180deg);}
+
+/* CITIZEN back */
+.fb.cit-back{
+  background:linear-gradient(160deg,#091810 0%,#0d2018 40%,#091810 100%);
+  border:1px solid rgba(74,158,122,.25);
+  box-shadow:0 0 60px rgba(74,158,122,.08),inset 0 1px 0 rgba(74,158,122,.1);
+}
+/* IMPOSTOR back */
+.fb.imp-back{
+  background:linear-gradient(160deg,#150810 0%,#200d15 40%,#150810 100%);
+  border:1px solid rgba(200,56,74,.3);
+  box-shadow:0 0 60px rgba(200,56,74,.12),inset 0 1px 0 rgba(200,56,74,.12);
+}
+
+.fb-glow-ring{
+  position:absolute;width:220px;height:220px;border-radius:50%;
+  top:50%;left:50%;transform:translate(-50%,-55%);pointer-events:none;
+  opacity:.4;
+}
+.cit-back .fb-glow-ring{background:radial-gradient(circle,rgba(74,158,122,.12) 0%,transparent 70%);}
+.imp-back .fb-glow-ring{background:radial-gradient(circle,rgba(200,56,74,.15) 0%,transparent 70%);}
+
+.fb-role-badge{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:5px 14px 5px 10px;border-radius:999px;
+  font-size:9px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;
+  margin-bottom:14px;position:relative;z-index:1;
+}
+.fb-role-badge.cit{background:rgba(74,158,122,.12);border:1px solid rgba(74,158,122,.3);color:#5fbf95;}
+.fb-role-badge.imp{background:rgba(200,56,74,.12);border:1px solid rgba(200,56,74,.35);color:#e05565;}
+.fb-role-dot{width:5px;height:5px;border-radius:50%;flex-shrink:0;}
+.fb-role-badge.cit .fb-role-dot{background:var(--teal);}
+.fb-role-badge.imp .fb-role-dot{background:var(--red);animation:mbl 1s infinite;}
+
+.fb-word-lbl{
+  font-size:9px;letter-spacing:3px;text-transform:uppercase;
+  margin-bottom:10px;position:relative;z-index:1;
+}
+.cit-back .fb-word-lbl{color:rgba(74,158,122,.5);}
+.imp-back .fb-word-lbl{color:rgba(200,56,74,.5);}
+
+.fb-word{
+  font-family:'Cormorant Garamond',serif;
+  font-size:48px;letter-spacing:2px;text-align:center;line-height:1.0;
+  word-break:break-word;hyphens:auto;max-width:100%;
+  margin-bottom:16px;position:relative;z-index:1;font-weight:600;
+}
+.cit-back .fb-word{color:#e8f5ee;text-shadow:0 0 40px rgba(74,158,122,.3);}
+.imp-back .fb-word{color:#fce8ea;text-shadow:0 0 40px rgba(200,56,74,.35);}
+
+.fb-desc{
+  font-size:11px;color:rgba(255,255,255,.3);letter-spacing:.5px;
+  text-align:center;line-height:1.6;position:relative;z-index:1;
+}
+.imp-back .fb-desc{color:rgba(255,120,130,.3);}
+
+/* ── MY WORD CHIP (discussion) */
+.mywc{display:flex;align-items:center;gap:14px;padding:14px 16px;border-radius:var(--r);border:1px solid var(--ln2);background:var(--bg2);margin-bottom:14px;}
+.mywc-w{font-family:'Cormorant Garamond',serif;font-size:30px;letter-spacing:1px;line-height:1;font-weight:600;}
+.mywc-lbl{font-size:9px;font-weight:600;letter-spacing:2.5px;text-transform:uppercase;color:var(--tx3);margin-bottom:4px;}
 
 /* ── TIMER */
 .tcard{background:var(--bg2);border:1px solid var(--ln);border-radius:var(--r);padding:16px 18px;margin-bottom:14px;}
 .tcard-top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px;}
-.tcard-lbl{font-size:10px;font-weight:600;letter-spacing:2.5px;text-transform:uppercase;color:var(--tx3);}
-.tcard-val{font-family:'Bebas Neue',sans-serif;font-size:32px;letter-spacing:2px;color:var(--tx);line-height:1;transition:color .3s;}
+.tcard-lbl{font-size:9px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:var(--tx3);}
+.tcard-val{font-family:'Cormorant Garamond',serif;font-size:34px;letter-spacing:2px;color:var(--tx);line-height:1;transition:color .3s;font-weight:500;}
 .tbar-track{height:2px;background:var(--bg4);border-radius:999px;overflow:hidden;}
 .tbar-fill{height:100%;border-radius:999px;transition:width 1s linear,background .4s;}
 
 /* ── SPEAKER */
-.spkcard{border-radius:var(--r);padding:15px 18px;margin-bottom:14px;position:relative;overflow:hidden;border:1px solid var(--ab);background:var(--abg);}
-.spkcard-lbl{font-size:10px;font-weight:600;letter-spacing:2.5px;text-transform:uppercase;color:var(--amb);opacity:.6;margin-bottom:4px;}
-.spkcard-name{font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:2px;color:var(--amb);word-break:break-word;line-height:1.1;}
+.spkcard{border-radius:var(--r);padding:15px 18px;margin-bottom:14px;position:relative;overflow:hidden;border:1px solid var(--gb);background:var(--gbg);}
+.spkcard-lbl{font-size:9px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:var(--gold);opacity:.6;margin-bottom:5px;}
+.spkcard-name{font-family:'Cormorant Garamond',serif;font-size:30px;letter-spacing:2px;color:var(--gold);word-break:break-word;line-height:1.1;font-weight:600;}
 
-/* ── MIC / VOICE */
+/* ── MIC */
 .mic{display:flex;align-items:center;gap:9px;padding:10px 13px;background:var(--bg2);border:1px solid var(--ln);border-radius:var(--rs);margin-bottom:12px;}
 .mled{width:7px;height:7px;border-radius:50%;background:var(--tx3);flex-shrink:0;transition:background .2s;}
 .mled.live{background:var(--red);animation:mbl 1s infinite;}
-@keyframes mbl{0%,100%{opacity:1;}50%{opacity:.2;}}
+@keyframes mbl{0%,100%{opacity:1;}50%{opacity:.3;}}
 .mtxt{font-size:11px;color:var(--tx2);flex:1;letter-spacing:.3px;}
 .mwaves{display:flex;align-items:center;gap:2px;}
 .mwaves span{display:block;width:3px;border-radius:2px;background:var(--rdim);}
@@ -165,166 +249,176 @@ select{appearance:none;cursor:pointer;}
 
 .vpanel{background:var(--bg2);border:1px solid var(--ln);border-radius:var(--r);padding:13px;margin-bottom:12px;}
 .vhead{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px;}
-.vtitle{font-size:10px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--tx3);}
+.vtitle{font-size:9px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--tx3);}
 .vactions{display:flex;gap:6px;}
-.vbtn{padding:7px 12px;border-radius:999px;border:1px solid var(--ln2);background:var(--bg3);color:var(--tx2);font-size:10px;font-weight:700;letter-spacing:1px;cursor:pointer;transition:border-color .15s,color .15s;}
+.vbtn{padding:7px 12px;border-radius:999px;border:1px solid var(--ln2);background:var(--bg3);color:var(--tx2);font-size:10px;font-weight:600;letter-spacing:1px;cursor:pointer;transition:border-color .15s,color .15s;}
 .vbtn.live{border-color:var(--tb);color:var(--teal);background:var(--tbg);}
 .vbtn.muted{border-color:var(--rb);color:var(--rdim);background:var(--rbg);}
 .vlist{display:flex;flex-direction:column;gap:5px;}
 .vrow{display:flex;align-items:center;gap:8px;padding:9px 11px;background:var(--bg3);border:1px solid var(--ln);border-radius:var(--rs);transition:border-color .2s;}
-.vrow.speaking{border-color:rgba(82,183,136,.3);}
+.vrow.speaking{border-color:rgba(74,158,122,.3);}
 .vmeta{flex:1;min-width:0;}
-.vname{font-size:12px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.vname{font-size:12px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .vsub{font-size:10px;color:var(--tx3);margin-top:1px;}
 .vmeter{width:52px;height:4px;background:var(--bg5);border-radius:999px;overflow:hidden;flex-shrink:0;}
 .vmeter>span{display:block;height:100%;width:0%;background:var(--teal);transition:width .1s linear;}
 .vtoggle{padding:5px 9px;border-radius:999px;border:1px solid var(--ln2);background:transparent;color:var(--tx2);font-size:9px;font-weight:700;letter-spacing:1px;cursor:pointer;flex-shrink:0;transition:border-color .15s,color .15s;}
 .vtoggle.on{border-color:var(--rb);color:var(--rdim);background:var(--rbg);}
 
-/* ── HOST CONTROLS STRIP */
+/* ── HOST STRIP */
 .hstrip{background:var(--bg2);border:1px solid var(--ln);border-radius:var(--r);padding:13px;margin-bottom:12px;}
-.hstrip-title{font-size:10px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--tx3);margin-bottom:10px;}
+.hstrip-title{font-size:9px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--tx3);margin-bottom:10px;}
 .hstrip-btns{display:flex;gap:7px;flex-wrap:wrap;}
-.hstrip-btn{padding:9px 14px;border-radius:999px;border:1px solid var(--ln2);background:var(--bg3);color:var(--tx2);font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:1px;cursor:pointer;transition:border-color .15s,color .15s,background .15s;}
+.hstrip-btn{padding:9px 14px;border-radius:999px;border:1px solid var(--ln2);background:var(--bg3);color:var(--tx2);font-family:'Space Grotesk',sans-serif;font-size:11px;letter-spacing:1px;font-weight:600;cursor:pointer;transition:border-color .15s,color .15s,background .15s;}
 .hstrip-btn:hover{border-color:var(--ln3);color:var(--tx);}
 .hstrip-btn.danger{border-color:var(--rb);color:var(--rdim);}
 .hstrip-btn.danger:hover{background:var(--rbg);}
 .hstrip-btn.prim{border-color:var(--tb);color:var(--teal);}
 .hstrip-btn.prim:hover{background:var(--tbg);}
-.hstrip-btn.amb{border-color:var(--ab);color:var(--amb);}
-.hstrip-btn.amb:hover{background:var(--abg);}
+.hstrip-btn.amb{border-color:var(--gb);color:var(--gold);}
+.hstrip-btn.amb:hover{background:var(--gbg);}
 
-/* ── VOTE — PREMIUM REDESIGN */
+/* ── VOTE */
 .vote-header{margin-bottom:20px;}
-.vote-phase-label{display:flex;align-items:center;gap:8px;margin-bottom:6px;}
-.vote-phase-dot{width:6px;height:6px;border-radius:50%;background:var(--red);animation:mbl 1s infinite;flex-shrink:0;}
-
-/* Voting player list — full-width rows instead of grid */
-.vlist-vote{display:flex;flex-direction:column;gap:7px;margin-bottom:16px;}
-.vcard{display:flex;align-items:center;gap:14px;padding:14px 16px;background:var(--bg2);border:1px solid var(--ln);border-radius:var(--r);cursor:pointer;transition:border-color .15s,background .15s,transform .1s;position:relative;overflow:hidden;}
+.vote-phase-label{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
+.vote-phase-dot{width:5px;height:5px;border-radius:50%;background:var(--red);animation:mbl 1s infinite;flex-shrink:0;}
+.vlist-vote{display:flex;flex-direction:column;gap:8px;margin-bottom:16px;}
+.vcard{
+  display:flex;align-items:center;gap:14px;padding:14px 16px;
+  background:var(--bg2);border:1px solid var(--ln);border-radius:var(--r);
+  cursor:pointer;transition:border-color .2s,background .2s,transform .1s;
+  position:relative;overflow:hidden;
+}
+.vcard::before{content:'';position:absolute;left:0;top:0;bottom:0;width:2px;background:transparent;transition:background .2s,opacity .2s;border-radius:2px;}
 .vcard:active{transform:scale(.99);}
-.vcard::before{content:'';position:absolute;left:0;top:0;bottom:0;width:2px;background:transparent;transition:background .15s;}
 .vcard.sel{border-color:var(--rb);background:var(--rbg);}
 .vcard.sel::before{background:var(--red);}
-.vcard.voted-out{border-color:var(--rb);background:var(--rbg);}
-.vcav{width:42px;height:42px;border-radius:12px;background:var(--bg4);border:1px solid var(--ln2);display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:13px;color:var(--tx2);flex-shrink:0;transition:border-color .15s,background .15s,color .15s;}
+.vcav{width:42px;height:42px;border-radius:12px;background:var(--bg4);border:1px solid var(--ln2);display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:13px;color:var(--tx2);flex-shrink:0;transition:border-color .15s,background .15s,color .15s;}
 .vcard.sel .vcav{border-color:var(--rb);color:var(--rdim);background:var(--rbg);}
 .vcard-info{flex:1;min-width:0;}
-.vcard-name{font-size:15px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.vcard-sub{font-size:11px;color:var(--tx3);margin-top:2px;}
-.vcard-check{width:22px;height:22px;border-radius:50%;background:var(--red);display:flex;align-items:center;justify-content:center;flex-shrink:0;opacity:0;transition:opacity .2s;}
-.vcard.sel .vcard-check{opacity:1;}
-.vcard-tally{font-family:'Bebas Neue',sans-serif;font-size:18px;color:var(--tx3);flex-shrink:0;min-width:24px;text-align:right;}
+.vcard-name{font-size:15px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.vcard-sub{font-size:10px;color:var(--tx3);margin-top:2px;letter-spacing:.3px;}
+.vcard-check{width:22px;height:22px;border-radius:50%;background:var(--red);display:flex;align-items:center;justify-content:center;flex-shrink:0;opacity:0;transition:opacity .2s;transform:scale(.7);transition:opacity .2s,transform .2s;}
+.vcard.sel .vcard-check{opacity:1;transform:scale(1);}
+.vcard-tally{font-family:'Cormorant Garamond',serif;font-size:18px;color:var(--tx3);flex-shrink:0;min-width:24px;text-align:right;}
 
-/* Vote count bar */
 .vote-progress{margin-bottom:16px;}
-.vote-count-row{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px;}
-.vote-count-label{font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--tx3);}
-.vote-count-val{font-family:'Bebas Neue',sans-serif;font-size:18px;color:var(--tx3);}
-.vote-dots{display:flex;gap:4px;flex-wrap:wrap;}
-.vote-dot{width:8px;height:8px;border-radius:50%;background:var(--bg5);transition:background .3s;}
-.vote-dot.cast{background:var(--red);}
+.vote-count-row{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px;}
+.vote-count-label{font-size:9px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:var(--tx3);}
+.vote-count-val{font-family:'Cormorant Garamond',serif;font-size:18px;color:var(--tx3);}
+.vote-dots{display:flex;gap:5px;flex-wrap:wrap;}
+.vote-dot{width:8px;height:8px;border-radius:50%;background:var(--bg5);transition:background .4s,transform .3s;}
+.vote-dot.cast{background:var(--red);transform:scale(1.1);}
 
-/* Confirm panel */
-.cfm{background:var(--bg2);border:1px solid var(--ln2);border-left:3px solid var(--red);border-radius:var(--r);padding:16px;margin-bottom:14px;display:none;}
-.cfm.on{display:block;animation:up .18s ease;}
-.cfm-title{font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--rdim);margin-bottom:8px;}
-.cfm-name{font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:2px;color:var(--tx);margin-bottom:14px;line-height:1;}
+.cfm{background:var(--bg2);border:1px solid var(--ln2);border-left:2px solid var(--red);border-radius:var(--r);padding:16px;margin-bottom:14px;display:none;}
+.cfm.on{display:block;animation:fadeUp .18s ease;}
+.cfm-title{font-size:9px;font-weight:600;letter-spacing:2.5px;text-transform:uppercase;color:var(--rdim);margin-bottom:8px;}
+.cfm-name{font-family:'Cormorant Garamond',serif;font-size:28px;letter-spacing:1px;color:var(--tx);margin-bottom:14px;line-height:1;font-weight:500;}
 .cfm-actions{display:flex;gap:8px;}
 .cfm-actions .btn{flex:1;}
 
-/* Sent state */
 .vsent-card{background:var(--bg2);border:1px solid var(--tb);border-radius:var(--r);padding:20px;text-align:center;margin-bottom:14px;display:none;}
-.vsent-card.on{display:block;animation:up .2s ease;}
+.vsent-card.on{display:block;animation:fadeUp .2s ease;}
 .vsent-icon{font-size:28px;margin-bottom:8px;}
-.vsent-title{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:2px;color:var(--teal);margin-bottom:4px;}
+.vsent-title{font-family:'Cormorant Garamond',serif;font-size:24px;letter-spacing:2px;color:var(--teal);margin-bottom:4px;font-weight:500;}
 .vsent-sub{font-size:11px;color:var(--tx3);}
+
+/* Waiting state while voting */
+.vwaiting-info{
+  background:var(--bg2);border:1px solid var(--ln);border-radius:var(--r);
+  padding:18px 16px;text-align:center;margin-bottom:14px;display:none;
+}
+.vwaiting-info.on{display:block;}
+.vwaiting-info .wi-title{font-family:'Cormorant Garamond',serif;font-size:22px;letter-spacing:2px;color:var(--tx2);margin-bottom:4px;}
+.vwaiting-info .wi-sub{font-size:11px;color:var(--tx3);}
 
 /* Impostor guess */
 .igbox{background:var(--rbg);border:1px solid var(--rb);border-radius:var(--r);padding:16px;margin-bottom:14px;display:none;}
-.igbox.on{display:block;animation:up .2s ease;}
-.igbox-title{font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--rdim);margin-bottom:5px;}
+.igbox.on{display:block;animation:fadeUp .2s ease;}
+.igbox-title{font-size:9px;font-weight:600;letter-spacing:2.5px;text-transform:uppercase;color:var(--rdim);margin-bottom:5px;}
 .igbox-sub{font-size:12px;color:var(--tx2);line-height:1.6;margin-bottom:12px;}
 .igrow{display:flex;gap:8px;}
 .igrow input{flex:1;}
-.igrow button{flex-shrink:0;padding:13px 16px;border-radius:var(--rs);border:none;background:var(--red);color:#fff;font-family:'Bebas Neue',sans-serif;font-size:14px;letter-spacing:1px;cursor:pointer;transition:opacity .15s;}
+.igrow button{flex-shrink:0;padding:13px 16px;border-radius:var(--rs);border:none;background:var(--red);color:#fff;font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:700;letter-spacing:1px;cursor:pointer;transition:opacity .15s;}
 .igrow button:hover{opacity:.85;}
 
 /* ── SCOREBOARD */
 .srow{display:flex;align-items:center;gap:9px;padding:11px 13px;background:var(--bg2);border:1px solid var(--ln);border-radius:var(--rs);margin-bottom:6px;}
-.srk{font-family:'Bebas Neue',sans-serif;font-size:16px;color:var(--tx3);width:20px;flex-shrink:0;}
-.srk.g{color:#f4a261;}.srk.s{color:#a0a0b0;}.srk.b{color:#8b6914;}
-.spt{font-family:'Bebas Neue',sans-serif;font-size:20px;margin-left:auto;color:var(--tx);}
+.srk{font-family:'Cormorant Garamond',serif;font-size:16px;color:var(--tx3);width:20px;flex-shrink:0;}
+.srk.g{color:#d4a832;}.srk.s{color:#aaaabc;}.srk.b{color:#9e7028;}
+.spt{font-family:'Cormorant Garamond',serif;font-size:22px;margin-left:auto;color:var(--tx);}
 .sdelta{font-size:9px;font-weight:700;padding:2px 6px;border-radius:999px;margin-left:5px;letter-spacing:.5px;}
 .sdelta.up{background:var(--tbg);color:var(--teal);}
 .sdelta.z{background:var(--bg4);color:var(--tx3);}
 
 /* ── RESULT */
-.rbanner{padding:28px 16px;text-align:center;border-radius:var(--r);margin-bottom:14px;position:relative;overflow:hidden;}
+.rbanner{padding:30px 18px;text-align:center;border-radius:var(--r);margin-bottom:16px;position:relative;overflow:hidden;}
 .rbanner.win{background:var(--tbg);border:1px solid var(--tb);}
 .rbanner.lose{background:var(--rbg);border:1px solid var(--rb);}
-.rbanner.tie{background:var(--abg);border:1px solid var(--ab);}
-.remoji{font-size:42px;margin-bottom:8px;line-height:1;}
-.rtitle{font-family:'Bebas Neue',sans-serif;font-size:34px;letter-spacing:3px;line-height:1;color:var(--tx);}
-.rsub{font-size:12px;color:var(--tx2);margin-top:6px;line-height:1.6;}
+.rbanner.tie{background:var(--gbg);border:1px solid var(--gb);}
+.remoji{font-size:40px;margin-bottom:8px;line-height:1;}
+.rtitle{font-family:'Cormorant Garamond',serif;font-size:36px;letter-spacing:2px;line-height:1;color:var(--tx);font-weight:600;}
+.rsub{font-size:12px;color:var(--tx2);margin-top:8px;line-height:1.6;}
 .rrow{display:flex;align-items:center;gap:9px;padding:11px 13px;border-radius:var(--rs);background:var(--bg2);border:1px solid var(--ln);margin-bottom:6px;}
 .rrow.ir{background:var(--rbg);border-color:var(--rb);}
 
 /* ── REVEAL PROGRESS */
-.revprog{background:var(--bg2);border:1px solid var(--ln);border-radius:var(--r);padding:15px;margin-bottom:14px;}
+.revprog{background:var(--bg2);border:1px solid var(--ln);border-radius:var(--r);padding:15px;margin-bottom:16px;}
 .revprog-bar{height:2px;background:var(--bg4);border-radius:999px;overflow:hidden;margin-top:8px;}
-.revprog-fill{height:100%;background:var(--teal);border-radius:999px;transition:width .4s ease;}
+.revprog-fill{height:100%;background:var(--teal);border-radius:999px;transition:width .5s ease;}
 
 /* ── RULES */
 .rstep{display:flex;gap:12px;margin-bottom:12px;align-items:flex-start;}
-.rnum{font-family:'Bebas Neue',sans-serif;font-size:18px;color:var(--red);flex-shrink:0;width:22px;line-height:1.2;}
+.rnum{font-family:'Cormorant Garamond',serif;font-size:20px;color:var(--red);flex-shrink:0;width:22px;line-height:1.2;}
 .rtxt{font-size:13px;color:var(--tx2);line-height:1.75;}
 .rtxt strong{color:var(--tx);font-weight:600;}
 
 /* ── MISC */
 .err{font-size:11px;color:var(--rdim);font-weight:500;margin-top:5px;min-height:14px;}
-.wait{text-align:center;font-size:10px;color:var(--tx3);letter-spacing:1.5px;text-transform:uppercase;padding:10px;}
+.wait{text-align:center;font-size:9px;color:var(--tx3);letter-spacing:2px;text-transform:uppercase;padding:10px;}
 .rowb{display:flex;justify-content:space-between;align-items:center;}
 .g4{margin-bottom:4px;}.g8{margin-bottom:8px;}.g10{margin-bottom:10px;}.g12{margin-bottom:12px;}.g14{margin-bottom:14px;}.g16{margin-bottom:16px;}.g20{margin-bottom:20px;}.g24{margin-bottom:24px;}
 .divider{height:1px;background:var(--ln);margin:16px 0;}
-.section-gap{margin-bottom:24px;}
 
 /* ── LIVE DOT */
 .live-row{display:flex;align-items:center;gap:8px;margin-bottom:16px;}
-.live-dot{width:6px;height:6px;border-radius:50%;background:var(--red);animation:mbl 1s infinite;flex-shrink:0;}
-.live-label{font-size:10px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:var(--rdim);}
+.live-dot{width:5px;height:5px;border-radius:50%;background:var(--red);animation:mbl 1s infinite;flex-shrink:0;}
+.live-label{font-size:9px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:var(--rdim);}
 
 /* ── TOAST */
-.toast{position:fixed;top:60px;left:50%;transform:translateX(-50%);background:rgba(24,24,24,.96);border:1px solid var(--ln2);border-radius:10px;padding:8px 16px;font-size:12px;font-weight:600;color:var(--tx);z-index:999;display:none;white-space:nowrap;max-width:88vw;overflow:hidden;text-overflow:ellipsis;letter-spacing:.3px;}
-.toast.on{display:block;animation:up .18s ease;}
+.toast{position:fixed;top:62px;left:50%;transform:translateX(-50%);background:rgba(20,20,25,.97);border:1px solid var(--ln3);border-radius:10px;padding:8px 16px;font-size:12px;font-weight:500;color:var(--tx);z-index:999;display:none;white-space:nowrap;max-width:88vw;overflow:hidden;text-overflow:ellipsis;letter-spacing:.3px;backdrop-filter:blur(12px);}
+.toast.on{display:block;animation:fadeUp .18s ease;}
 
 /* ── SPINNER */
-.spinov{position:fixed;inset:0;background:rgba(8,8,8,.96);z-index:500;display:none;flex-direction:column;align-items:center;justify-content:center;gap:12px;}
+.spinov{position:fixed;inset:0;background:rgba(6,6,8,.97);z-index:500;display:none;flex-direction:column;align-items:center;justify-content:center;gap:12px;}
 .spinov.on{display:flex;}
-.spn-sub{font-family:'Bebas Neue',sans-serif;font-size:10px;letter-spacing:3.5px;color:var(--tx3);}
-.spn-name{font-family:'Bebas Neue',sans-serif;font-size:44px;letter-spacing:4px;color:var(--red);text-align:center;padding:0 20px;animation:up .3s ease;}
-.spn-hint{font-size:10px;color:var(--tx3);letter-spacing:1.5px;text-transform:uppercase;}
+.spn-sub{font-size:9px;letter-spacing:4px;color:var(--tx3);text-transform:uppercase;}
+.spn-name{font-family:'Cormorant Garamond',serif;font-size:52px;letter-spacing:4px;color:var(--gold);text-align:center;padding:0 20px;animation:fadeUp .3s ease;font-weight:500;}
+.spn-hint{font-size:9px;color:var(--tx3);letter-spacing:2px;text-transform:uppercase;}
 
 /* ── MODAL */
-.modal-ov{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:800;display:none;align-items:flex-end;justify-content:center;}
+.modal-ov{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:800;display:none;align-items:flex-end;justify-content:center;}
 .modal-ov.on{display:flex;}
-.modal{background:var(--bg2);border:1px solid var(--ln2);border-top:1px solid var(--ln3);border-radius:var(--r) var(--r) 0 0;padding:22px 18px calc(32px + var(--safe-b));width:100%;max-width:430px;animation:mup .25s cubic-bezier(.16,1,.3,1);}
+.modal{background:var(--bg2);border:1px solid var(--ln2);border-radius:var(--r) var(--r) 0 0;padding:22px 18px calc(32px + var(--safe-b));width:100%;max-width:430px;animation:mup .25s cubic-bezier(.16,1,.3,1);}
 @keyframes mup{from{opacity:0;transform:translateY(30px);}to{opacity:1;transform:translateY(0);}}
-.modal-title{font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:2px;color:var(--tx);}
+.modal-title{font-family:'Cormorant Garamond',serif;font-size:26px;letter-spacing:2px;color:var(--tx);font-weight:500;}
 .modal-close{background:none;border:none;color:var(--tx3);cursor:pointer;font-size:20px;}
 .modal-list{display:flex;flex-direction:column;gap:7px;margin-bottom:16px;}
 .modal-item{display:flex;align-items:center;gap:11px;padding:11px 13px;background:var(--bg3);border:1px solid var(--ln);border-radius:var(--rs);cursor:pointer;transition:border-color .15s;}
 .modal-item:hover{border-color:var(--ln2);}
 .modal-item-btns{display:flex;gap:6px;margin-left:auto;}
-.modal-ibtn{padding:5px 11px;border-radius:999px;border:1px solid var(--ln2);background:none;color:var(--tx3);font-size:10px;font-weight:700;letter-spacing:1px;cursor:pointer;transition:border-color .15s,color .15s;}
+.modal-ibtn{padding:5px 11px;border-radius:999px;border:1px solid var(--ln2);background:none;color:var(--tx3);font-size:10px;font-weight:600;letter-spacing:1px;cursor:pointer;transition:border-color .15s,color .15s;}
 .modal-ibtn.kick{border-color:var(--rb);color:var(--rdim);}
 .modal-ibtn.host{border-color:var(--tb);color:var(--teal);}
+
+/* ── ONBOARDING */
+#ob{background:linear-gradient(180deg,#080810 0%,#060608 100%);}
 </style>
 </head>
 <body>
 <div class="app">
   <div class="bar">
-    <div class="logo">IMPOSTOR</div>
+    <div class="logo">Impostor</div>
     <div class="bar-r">
       <span class="rndbdg" id="rnd"></span>
       <button class="ibtn" id="btn-rules-icon" style="display:none;" title="Pravila">
@@ -341,21 +435,21 @@ select{appearance:none;cursor:pointer;}
 
     <!-- JOIN -->
     <div class="sc on" id="s-join">
-      <div style="margin-bottom:36px;margin-top:8px;">
-        <div style="font-size:10px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:var(--tx3);margin-bottom:10px;">PRISTUP MISIJI</div>
-        <div style="font-family:'Bebas Neue',sans-serif;font-size:42px;letter-spacing:2px;color:var(--tx);line-height:1;">AGENTSKI<br>IDENTITET</div>
+      <div style="margin-bottom:40px;margin-top:10px;">
+        <div style="font-size:9px;font-weight:600;letter-spacing:3.5px;text-transform:uppercase;color:var(--tx3);margin-bottom:12px;">Pristup misiji</div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:46px;letter-spacing:1px;color:var(--tx);line-height:1.0;font-weight:500;">Agentski<br>Identitet</div>
       </div>
       <span class="lbl g4">Vaše ime</span>
       <input type="text" id="j-name" placeholder="Ime agenta..." autocomplete="off" autocorrect="off" autocapitalize="words" class="g14"/>
       <span class="lbl g4">Kod sobe <span style="color:var(--tx3)">(za pristupanje)</span></span>
-      <input type="text" id="j-code" placeholder="ABCD" maxlength="4" class="g10" style="text-transform:uppercase;font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:10px;" autocomplete="off" autocorrect="off"/>
+      <input type="text" id="j-code" placeholder="ABCD" maxlength="4" class="g10" style="text-transform:uppercase;font-family:'Cormorant Garamond',serif;font-size:26px;letter-spacing:12px;" autocomplete="off" autocorrect="off"/>
       <div class="err g14" id="j-err"></div>
-      <button class="btn bp mb" id="btn-join">PRIDRUŽI SE</button>
+      <button class="btn bp mb" id="btn-join">Pridruži se</button>
       <div class="div-l"><span>ili</span></div>
-      <button class="btn bo mb" id="btn-create">KREIRAJ NOVU SOBU</button>
-      <button class="btn bo" id="btn-rules-join" style="border-color:var(--rb);color:var(--rdim);font-size:13px;padding:11px;">
+      <button class="btn bo mb" id="btn-create">Kreiraj novu sobu</button>
+      <button class="btn bo" id="btn-rules-join" style="border-color:var(--rb);color:var(--rdim);font-size:11px;padding:11px;">
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-        KAKO SE IGRA?
+        Kako se igra?
       </button>
     </div>
 
@@ -413,8 +507,8 @@ select{appearance:none;cursor:pointer;}
       </div>
       <div id="plist" class="g14"></div>
       <div class="err g6" id="l-err"></div>
-      <button class="btn bt mb" id="btn-ready">SPREMAN</button>
-      <button class="btn bp mb" id="btn-start" style="display:none;">▶ POKRETANJE MISIJE</button>
+      <button class="btn bt mb" id="btn-ready">Spreman</button>
+      <button class="btn bp mb" id="btn-start" style="display:none;">▶ Pokretanje misije</button>
       <div class="wait" id="l-wait">Čekanje na hosta...</div>
     </div>
 
@@ -422,34 +516,39 @@ select{appearance:none;cursor:pointer;}
     <div class="sc" id="s-reveal">
       <div class="g16">
         <span class="lbl lr">Protokol identiteta</span>
-        <h2 class="ttl g14">Otkrij<br>svoju ulogu</h2>
+        <h2 class="ttl g16">Otkrij<br>svoju ulogu</h2>
       </div>
+
+      <!-- PREMIUM FLIP CARD -->
       <div class="fwrap" id="fwrap">
         <div class="finnr">
+          <!-- FRONT -->
           <div class="ff">
-            <div class="eye">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--rdim)" stroke-width="1.5"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            <div class="ff-corner tl"></div>
+            <div class="ff-corner tr"></div>
+            <div class="ff-corner bl"></div>
+            <div class="ff-corner br"></div>
+            <div class="ff-eyeicon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="rgba(196,163,90,.6)" stroke-width="1.4"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
             </div>
-            <div style="font-size:10px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:var(--tx3);margin-bottom:5px;">Tapnite za otkrivanje</div>
-            <div style="font-size:11px;color:var(--tx3);">Uvjerite se da vas drugi ne gledaju</div>
+            <div class="ff-hint">Tapni za otkrivanje</div>
+            <div class="ff-sub">Osigurajte privatnost</div>
           </div>
-          <div class="fb" id="fback">
-            <div class="fb-lbl" id="fb-lbl">Vaša riječ</div>
-            <div class="fb-word" id="fb-word">???</div>
-            <div id="fb-role"></div>
-          </div>
+          <!-- BACK — populated by JS -->
+          <div class="fb" id="fback"></div>
         </div>
       </div>
+
       <div class="revprog g14" id="revprog">
         <div class="rowb">
           <span style="font-size:11px;color:var(--tx2);">Tko je potvrdio ulogu</span>
-          <span id="rev-count" style="font-family:'Bebas Neue',sans-serif;font-size:16px;color:var(--tx3);">0/0</span>
+          <span id="rev-count" style="font-family:'Cormorant Garamond',serif;font-size:18px;color:var(--tx3);">0/0</span>
         </div>
         <div class="revprog-bar"><div class="revprog-fill" id="rev-fill" style="width:0%"></div></div>
       </div>
-      <button class="btn bp mb" id="btn-rev-done">VIDIO SAM — GOTOVO ✓</button>
+      <button class="btn bp mb" id="btn-rev-done">Vidio sam — Potvrdi ✓</button>
       <div id="reroll-wrap" style="display:none;margin-top:0;">
-        <button class="btn bo bsm" id="btn-reroll" style="border-color:var(--ab);color:var(--amb);">↻ PROMIJENI RIJEČ</button>
+        <button class="btn bo bsm" id="btn-reroll" style="border-color:var(--gb);color:var(--gold);">↻ Promijeni riječ</button>
       </div>
     </div>
 
@@ -457,9 +556,8 @@ select{appearance:none;cursor:pointer;}
     <div class="sc" id="s-disc">
       <div class="live-row">
         <div class="live-dot"></div>
-        <span class="live-label">LIVE · RASPRAVA</span>
+        <span class="live-label">Live · Rasprava</span>
       </div>
-
       <div class="tcard" id="disc-tcard">
         <div class="tcard-top">
           <span class="tcard-lbl">Preostalo</span>
@@ -467,12 +565,10 @@ select{appearance:none;cursor:pointer;}
         </div>
         <div class="tbar-track"><div class="tbar-fill" id="disc-tf" style="background:var(--teal);width:100%;"></div></div>
       </div>
-
       <div class="spkcard g14" id="spkcard">
         <div class="spkcard-lbl">Govori sada</div>
         <div class="spkcard-name" id="spk-name">—</div>
       </div>
-
       <div class="mywc g14" id="mywc">
         <div style="flex:1;min-width:0;">
           <div class="mywc-lbl">Tvoja skrivena riječ</div>
@@ -480,44 +576,41 @@ select{appearance:none;cursor:pointer;}
         </div>
         <div id="mywc-tag"></div>
       </div>
-
       <div class="mic g12" id="mic">
         <div class="mled" id="mled"></div>
         <span class="mtxt" id="mtxt">Spajanje mikrofona...</span>
         <div class="mwaves" id="mwaves" style="display:none;"><span></span><span></span><span></span><span></span><span></span></div>
       </div>
-
       <div class="vpanel g12" id="disc-voice">
         <div class="vhead">
           <span class="vtitle">Igrači · Mikrofon</span>
           <div class="vactions">
-            <button class="vbtn" id="btn-self-mute" type="button">MIC ON</button>
-            <button class="vbtn" id="btn-audio-unlock" type="button">AUDIO</button>
+            <button class="vbtn" id="btn-self-mute" type="button">Mic On</button>
+            <button class="vbtn" id="btn-audio-unlock" type="button">Audio</button>
           </div>
         </div>
         <div class="vlist" id="voice-list"></div>
       </div>
-
       <div class="hstrip" id="disc-hstrip" style="display:none;">
         <div class="hstrip-title">Host kontrole</div>
         <div class="hstrip-btns">
-          <button class="hstrip-btn prim" id="btn-nxt-spk">SLJEDEĆI →</button>
-          <button class="hstrip-btn amb" id="btn-ext-disc">+30 SEK</button>
-          <button class="hstrip-btn danger" id="btn-start-vote">GLASANJE</button>
+          <button class="hstrip-btn prim" id="btn-nxt-spk">Sljedeći →</button>
+          <button class="hstrip-btn amb" id="btn-ext-disc">+30 sek</button>
+          <button class="hstrip-btn danger" id="btn-start-vote">Glasanje</button>
         </div>
       </div>
       <div class="wait" id="disc-wait">Čekanje na hosta da pokrene glasanje...</div>
     </div>
 
-    <!-- VOTING — PREMIUM -->
+    <!-- VOTING -->
     <div class="sc" id="s-vote">
       <div class="vote-header">
         <div class="vote-phase-label">
           <div class="vote-phase-dot"></div>
-          <span style="font-size:10px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:var(--rdim);">PROTOKOL SELEKCIJE</span>
+          <span style="font-size:9px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:var(--rdim);">Protokol selekcije</span>
         </div>
-        <div style="font-family:'Bebas Neue',sans-serif;font-size:42px;letter-spacing:2px;color:var(--tx);line-height:1;margin-bottom:6px;">GLASANJE</div>
-        <div style="font-size:12px;color:var(--tx3);">Odaberite impostora. Jedan glas, konačna odluka.</div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:46px;letter-spacing:1px;color:var(--tx);line-height:1;margin-bottom:6px;font-weight:500;">Glasanje</div>
+        <div style="font-size:12px;color:var(--tx3);">Jedan glas — konačna odluka.</div>
       </div>
 
       <div class="tcard" id="vote-tcard" style="margin-bottom:16px;">
@@ -528,17 +621,15 @@ select{appearance:none;cursor:pointer;}
         <div class="tbar-track"><div class="tbar-fill" id="vote-tf" style="background:var(--red);width:100%;"></div></div>
       </div>
 
-      <!-- Impostor secret guess -->
       <div class="igbox" id="igbox">
         <div class="igbox-title">⚡ Tajni potez impostora</div>
-        <div class="igbox-sub">Znate li pravu riječ? Pogodite i odmah pobijede — bez glasanja!</div>
+        <div class="igbox-sub">Znate li pravu riječ? Pogodite i odmah pobijede!</div>
         <div class="igrow">
           <input type="text" id="ig-in" placeholder="Upišite pravu riječ..." autocomplete="off" autocorrect="off"/>
-          <button id="ig-sub">POGODI</button>
+          <button id="ig-sub">Pogodi</button>
         </div>
       </div>
 
-      <!-- Vote count progress -->
       <div class="vote-progress">
         <div class="vote-count-row">
           <span class="vote-count-label">Glasovi</span>
@@ -547,7 +638,7 @@ select{appearance:none;cursor:pointer;}
         <div class="vote-dots" id="vote-dots"></div>
       </div>
 
-      <!-- Player list for voting -->
+      <!-- Player list -->
       <div class="vlist-vote" id="vgrid"></div>
 
       <!-- Confirm panel -->
@@ -555,16 +646,22 @@ select{appearance:none;cursor:pointer;}
         <div class="cfm-title">Potvrda glasanja</div>
         <div class="cfm-name" id="vtname">—</div>
         <div class="cfm-actions">
-          <button class="btn bo bsm" id="btn-cfm-cancel" style="color:var(--tx3);">ODUSTANI</button>
-          <button class="btn bp bsm" id="btn-cfm">GLASAM ZA OVOG</button>
+          <button class="btn bo bsm" id="btn-cfm-cancel" style="color:var(--tx3);">Odustani</button>
+          <button class="btn bp bsm" id="btn-cfm">Glasam za ovog</button>
         </div>
       </div>
 
       <!-- Sent state -->
       <div class="vsent-card" id="vsent">
-        <div class="vsent-icon">✅</div>
-        <div class="vsent-title">GLAS POSLAN</div>
+        <div class="vsent-icon">✓</div>
+        <div class="vsent-title">Glas poslan</div>
         <div class="vsent-sub" id="vcnt">Čekanje ostalih igrača...</div>
+      </div>
+
+      <!-- Waiting info for non-voted players after all voted -->
+      <div class="vwaiting-info" id="vwaiting">
+        <div class="wi-title">Rezultati dolaze...</div>
+        <div class="wi-sub">Svi su glasali, obrađujem...</div>
       </div>
     </div>
 
@@ -581,10 +678,10 @@ select{appearance:none;cursor:pointer;}
       </div>
       <div class="vpanel g12" id="res-voice">
         <div class="vhead">
-          <span class="vtitle">Open mic · rezultati</span>
+          <span class="vtitle">Open mic · Rezultati</span>
           <div class="vactions">
-            <button class="vbtn" id="btn-self-mute-res" type="button">MIC ON</button>
-            <button class="vbtn" id="btn-audio-unlock-res" type="button">AUDIO</button>
+            <button class="vbtn" id="btn-self-mute-res" type="button">Mic On</button>
+            <button class="vbtn" id="btn-audio-unlock-res" type="button">Audio</button>
           </div>
         </div>
         <div class="vlist" id="voice-list-res"></div>
@@ -593,17 +690,17 @@ select{appearance:none;cursor:pointer;}
       <div id="scoreboard" class="g14"></div>
       <span class="lbl g10">Debrief</span>
       <div id="rlist" class="g20"></div>
-      <button class="btn bp mb" id="btn-again">NOVA RUNDA</button>
-      <button class="btn ba mb" id="btn-rst" style="display:none;">RESETIRAJ BODOVE</button>
-      <button class="btn bo" id="btn-quit">IZLAZ</button>
+      <button class="btn bp mb" id="btn-again">Nova runda</button>
+      <button class="btn ba mb" id="btn-rst" style="display:none;">Resetiraj bodove</button>
+      <button class="btn bo" id="btn-quit">Izlaz</button>
     </div>
 
     <!-- RULES -->
     <div class="sc" id="s-rules">
-      <button class="btn bo bsm mb" id="btn-rbk" style="width:auto;padding:8px 14px;font-size:12px;">← Natrag</button>
+      <button class="btn bo bsm mb" id="btn-rbk" style="width:auto;padding:8px 14px;font-size:11px;">← Natrag</button>
       <div style="margin-bottom:24px;">
         <span class="lbl lr">Protokol misije</span>
-        <h2 class="ttl">PRAVILA<br>IGRE</h2>
+        <h2 class="ttl">Pravila<br>igre</h2>
       </div>
       <div class="g16">
         <span class="lbl">Cilj igre</span>
@@ -613,8 +710,8 @@ select{appearance:none;cursor:pointer;}
       </div>
       <div class="g16">
         <span class="lbl">Tijek igre</span>
-        <div class="rstep"><span class="rnum">1</span><p class="rtxt"><strong>Otkrivanje</strong> — Svaki igrač tapne kartu, pogleda svoju tajnu ulogu i klikne "Vidio sam". Sačekajte da svi potvrde.</p></div>
-        <div class="rstep"><span class="rnum">2</span><p class="rtxt"><strong>Rasprava</strong> — Slobodna diskusija. Opisujte svoju riječ bez da je direktno kažete. Mikrofon je dostupan svima.</p></div>
+        <div class="rstep"><span class="rnum">1</span><p class="rtxt"><strong>Otkrivanje</strong> — Svaki igrač tapne kartu, pogleda svoju tajnu ulogu i klikne "Vidio sam".</p></div>
+        <div class="rstep"><span class="rnum">2</span><p class="rtxt"><strong>Rasprava</strong> — Slobodna diskusija. Opisujte svoju riječ bez da je direktno kažete.</p></div>
         <div class="rstep"><span class="rnum">3</span><p class="rtxt"><strong>Glasanje</strong> — Svi glasaju tko je impostor. Igrač s najviše glasova je izbačen.</p></div>
         <div class="rstep"><span class="rnum">4</span><p class="rtxt"><strong>Rezultati</strong> — Otkriva se tko je bio impostor i koje su bile obje tajne riječi.</p></div>
       </div>
@@ -622,100 +719,83 @@ select{appearance:none;cursor:pointer;}
         <span class="lbl">Bodovanje</span>
         <div class="rstep"><span class="rnum" style="color:var(--teal);">✓</span><p class="rtxt"><strong>Citizens pobijede</strong>: svaki citizen koji je glasao ispravno dobiva <strong>+2 boda</strong>.</p></div>
         <div class="rstep"><span class="rnum" style="color:var(--red);">✗</span><p class="rtxt"><strong>Impostor preživi glasanje</strong>: <strong>+3 boda</strong> svakom impostoru.</p></div>
-        <div class="rstep"><span class="rnum" style="color:var(--amb);">★</span><p class="rtxt"><strong>Impostor pogodi pravu riječ</strong>: <strong>+4 boda</strong> pogađaču, <strong>+2</strong> ostalim impostorima.</p></div>
+        <div class="rstep"><span class="rnum" style="color:var(--gold);">★</span><p class="rtxt"><strong>Impostor pogodi pravu riječ</strong>: <strong>+4 boda</strong> pogađaču, <strong>+2</strong> ostalim impostorima.</p></div>
       </div>
-      <div class="g16">
-        <span class="lbl">Savjeti za impostore</span>
-        <div class="card cr g14"><p class="rtxt">Vaša je riječ <strong>različita</strong> od prave — dajte opće opise koji bi mogli pristati obojem. Slušajte pažljivo ostale i pogodite pravu riječ kroz tajni panel u glasanju.</p></div>
-      </div>
-      <div class="g16">
-        <span class="lbl">Savjeti za citizens</span>
-        <div class="card ct g14"><p class="rtxt">Opišite svoju riječ <strong>specifično</strong> ali nemojte je direktno reći. Impostor ne zna pravu riječ — zbunite ga pitanjima.</p></div>
-      </div>
-      <div class="g16">
-        <span class="lbl">Host kontrole</span>
-        <div class="card ca g14"><p class="rtxt">Host može <strong>kickati igrače</strong> i <strong>prenositi host ulogu</strong> prije igre. Tokom rasprave host može <strong>promijeniti govornika</strong>, <strong>produžiti timer</strong> i <strong>pokrenuti glasanje ranije</strong>.</p></div>
-      </div>
-      <button class="btn bp" id="btn-rbk2">RAZUMIJEM — IGRAJMO!</button>
+      <button class="btn bp" id="btn-rbk2">Razumijem — Igrajmo!</button>
     </div>
 
   </div>
 </div>
 
 <!-- ONBOARDING -->
-<div id="ob" style="display:none;position:fixed;inset:0;z-index:9999;background:#080808;flex-direction:column;align-items:center;justify-content:space-between;padding:48px 24px 40px;">
-
+<div id="ob" style="display:none;position:fixed;inset:0;z-index:9999;flex-direction:column;align-items:center;justify-content:space-between;padding:48px 24px 40px;">
   <div style="flex:1;width:100%;max-width:400px;display:flex;align-items:center;justify-content:center;">
     <div class="obs" style="text-align:center;">
-      <div style="font-size:80px;margin-bottom:28px;">&#127917;</div>
-      <div style="font-size:11px;letter-spacing:3px;color:#444;margin-bottom:10px;font-weight:600;font-family:DM Sans,sans-serif;">DOBRODOŠLI U</div>
-      <div style="font-family:Bebas Neue,sans-serif;font-size:56px;letter-spacing:5px;color:#E63946;line-height:1;margin-bottom:18px;">IMPOSTOR</div>
-      <p style="color:#888;font-size:15px;line-height:1.7;max-width:300px;margin:0 auto;font-family:DM Sans,sans-serif;">Party igra za <strong style="color:#f0eeeb;">3–10 igrača</strong> u kojoj jedan igrač skriva svoju tajnu i pokušava proći <strong style="color:#f0eeeb;">neopaženo</strong>.</p>
+      <div style="font-size:76px;margin-bottom:28px;">🎭</div>
+      <div style="font-size:9px;letter-spacing:4px;color:var(--tx3);margin-bottom:12px;font-weight:600;font-family:'Space Grotesk',sans-serif;">Dobrodošli u</div>
+      <div style="font-family:'Cormorant Garamond',serif;font-size:60px;letter-spacing:4px;color:var(--gold);line-height:1;margin-bottom:20px;font-weight:600;">Impostor</div>
+      <p style="color:var(--tx2);font-size:15px;line-height:1.7;max-width:300px;margin:0 auto;font-family:'Space Grotesk',sans-serif;">Party igra za <strong style="color:var(--tx);">3–10 igrača</strong> u kojoj jedan igrač skriva svoju tajnu i pokušava proći <strong style="color:var(--tx);">neopaženo</strong>.</p>
     </div>
     <div class="obs" style="display:none;text-align:center;">
-      <div style="font-size:80px;margin-bottom:28px;">&#127183;</div>
-      <div style="font-size:11px;letter-spacing:3px;color:#444;margin-bottom:10px;font-weight:600;font-family:DM Sans,sans-serif;">TAJNA MISIJA</div>
-      <div style="font-family:Bebas Neue,sans-serif;font-size:44px;letter-spacing:3px;color:#f4a261;line-height:1;margin-bottom:22px;">DVIJE RAZLIČITE<br>RIJEČI</div>
-      <div style="display:flex;gap:12px;justify-content:center;margin-bottom:18px;">
-        <div style="background:rgba(82,183,136,.08);border:1px solid rgba(82,183,136,.25);border-radius:14px;padding:16px 22px;">
-          <div style="font-size:9px;font-weight:700;letter-spacing:2px;color:#52b788;margin-bottom:8px;font-family:DM Sans,sans-serif;">CITIZENS</div>
-          <div style="font-family:Bebas Neue,sans-serif;font-size:28px;color:#52b788;">Pizza</div>
+      <div style="font-size:70px;margin-bottom:24px;">🎯</div>
+      <div style="font-size:9px;letter-spacing:4px;color:var(--tx3);margin-bottom:12px;font-weight:600;">Tajna misija</div>
+      <div style="font-family:'Cormorant Garamond',serif;font-size:44px;letter-spacing:2px;color:var(--gold);line-height:1;margin-bottom:22px;font-weight:500;">Dvije različite<br>riječi</div>
+      <div style="display:flex;gap:14px;justify-content:center;margin-bottom:18px;">
+        <div style="background:var(--tbg);border:1px solid var(--tb);border-radius:14px;padding:16px 22px;">
+          <div style="font-size:9px;font-weight:700;letter-spacing:2px;color:var(--teal);margin-bottom:8px;">Citizens</div>
+          <div style="font-family:'Cormorant Garamond',serif;font-size:28px;color:var(--teal);font-weight:600;">Pizza</div>
         </div>
-        <div style="background:rgba(230,57,70,.08);border:1px solid rgba(230,57,70,.25);border-radius:14px;padding:16px 22px;">
-          <div style="font-size:9px;font-weight:700;letter-spacing:2px;color:#ff6b75;margin-bottom:8px;font-family:DM Sans,sans-serif;">IMPOSTOR</div>
-          <div style="font-family:Bebas Neue,sans-serif;font-size:28px;color:#E63946;">Burek</div>
+        <div style="background:var(--rbg);border:1px solid var(--rb);border-radius:14px;padding:16px 22px;">
+          <div style="font-size:9px;font-weight:700;letter-spacing:2px;color:var(--rdim);margin-bottom:8px;">Impostor</div>
+          <div style="font-family:'Cormorant Garamond',serif;font-size:28px;color:var(--red);font-weight:600;">Burek</div>
         </div>
       </div>
-      <p style="color:#888;font-size:14px;line-height:1.7;max-width:300px;margin:0 auto;font-family:DM Sans,sans-serif;">Svi citizens dobiju <strong style="color:#f0eeeb;">istu</strong> riječ. Impostor dobije <strong style="color:#f0eeeb;">srodnu, ali drugu</strong>.</p>
+      <p style="color:var(--tx2);font-size:13px;line-height:1.7;max-width:300px;margin:0 auto;">Svi citizens dobiju <strong style="color:var(--tx);">istu</strong> riječ. Impostor dobije <strong style="color:var(--tx);">srodnu, ali drugu</strong>.</p>
     </div>
     <div class="obs" style="display:none;text-align:center;width:100%;">
-      <div style="font-size:60px;margin-bottom:18px;">&#128269;</div>
-      <div style="font-size:11px;letter-spacing:3px;color:#444;margin-bottom:10px;font-weight:600;font-family:DM Sans,sans-serif;">KAKO SE IGRA</div>
-      <div style="font-family:Bebas Neue,sans-serif;font-size:44px;letter-spacing:3px;color:#52b788;line-height:1;margin-bottom:20px;">4 KORAKA</div>
+      <div style="font-size:60px;margin-bottom:18px;">🔍</div>
+      <div style="font-size:9px;letter-spacing:4px;color:var(--tx3);margin-bottom:12px;font-weight:600;">Kako se igra</div>
+      <div style="font-family:'Cormorant Garamond',serif;font-size:44px;letter-spacing:2px;color:var(--teal);line-height:1;margin-bottom:20px;font-weight:500;">4 koraka</div>
       <div style="display:flex;flex-direction:column;gap:8px;max-width:320px;margin:0 auto;">
-        <div style="display:flex;align-items:center;gap:13px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:11px 14px;">
-          <div style="width:28px;height:28px;border-radius:50%;background:rgba(230,57,70,.12);color:#ff6b75;font-family:Bebas Neue,sans-serif;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:15px;">1</div>
-          <div style="font-size:13px;color:#888;line-height:1.5;text-align:left;font-family:DM Sans,sans-serif;"><strong style="color:#f0eeeb;">Otkrivanje</strong> — tapni kartu, vidi svoju ulogu</div>
+        <div style="display:flex;align-items:center;gap:13px;background:var(--bg3);border:1px solid var(--ln);border-radius:12px;padding:11px 14px;">
+          <div style="width:28px;height:28px;border-radius:50%;background:var(--rbg);color:var(--rdim);font-family:'Cormorant Garamond',serif;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:15px;font-weight:600;">1</div>
+          <div style="font-size:13px;color:var(--tx2);line-height:1.5;text-align:left;"><strong style="color:var(--tx);">Otkrivanje</strong> — tapni kartu, vidi svoju ulogu</div>
         </div>
-        <div style="display:flex;align-items:center;gap:13px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:11px 14px;">
-          <div style="width:28px;height:28px;border-radius:50%;background:rgba(244,162,97,.12);color:#f4a261;font-family:Bebas Neue,sans-serif;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:15px;">2</div>
-          <div style="font-size:13px;color:#888;line-height:1.5;text-align:left;font-family:DM Sans,sans-serif;"><strong style="color:#f0eeeb;">Rasprava</strong> — opisuj svoju riječ, ali je ne reci</div>
+        <div style="display:flex;align-items:center;gap:13px;background:var(--bg3);border:1px solid var(--ln);border-radius:12px;padding:11px 14px;">
+          <div style="width:28px;height:28px;border-radius:50%;background:var(--gbg);color:var(--gold);font-family:'Cormorant Garamond',serif;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:15px;font-weight:600;">2</div>
+          <div style="font-size:13px;color:var(--tx2);line-height:1.5;text-align:left;"><strong style="color:var(--tx);">Rasprava</strong> — opisuj svoju riječ, ali je ne reci</div>
         </div>
-        <div style="display:flex;align-items:center;gap:13px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:11px 14px;">
-          <div style="width:28px;height:28px;border-radius:50%;background:rgba(82,183,136,.12);color:#52b788;font-family:Bebas Neue,sans-serif;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:15px;">3</div>
-          <div style="font-size:13px;color:#888;line-height:1.5;text-align:left;font-family:DM Sans,sans-serif;"><strong style="color:#f0eeeb;">Glasanje</strong> — tko je impostor? Glasaj za sumnjivca</div>
+        <div style="display:flex;align-items:center;gap:13px;background:var(--bg3);border:1px solid var(--ln);border-radius:12px;padding:11px 14px;">
+          <div style="width:28px;height:28px;border-radius:50%;background:var(--tbg);color:var(--teal);font-family:'Cormorant Garamond',serif;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:15px;font-weight:600;">3</div>
+          <div style="font-size:13px;color:var(--tx2);line-height:1.5;text-align:left;"><strong style="color:var(--tx);">Glasanje</strong> — tko je impostor?</div>
         </div>
-        <div style="display:flex;align-items:center;gap:13px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:11px 14px;">
-          <div style="width:28px;height:28px;border-radius:50%;background:rgba(244,162,97,.12);color:#f4a261;font-family:Bebas Neue,sans-serif;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:15px;">4</div>
-          <div style="font-size:13px;color:#888;line-height:1.5;text-align:left;font-family:DM Sans,sans-serif;"><strong style="color:#f0eeeb;">Rezultati</strong> — otkriva se tko je bio impostor</div>
+        <div style="display:flex;align-items:center;gap:13px;background:var(--bg3);border:1px solid var(--ln);border-radius:12px;padding:11px 14px;">
+          <div style="width:28px;height:28px;border-radius:50%;background:var(--gbg);color:var(--gold);font-family:'Cormorant Garamond',serif;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:15px;font-weight:600;">4</div>
+          <div style="font-size:13px;color:var(--tx2);line-height:1.5;text-align:left;"><strong style="color:var(--tx);">Rezultati</strong> — otkriva se tko je bio impostor</div>
         </div>
       </div>
     </div>
     <div class="obs" style="display:none;text-align:center;">
-      <div style="font-size:80px;margin-bottom:28px;">&#127942;</div>
-      <div style="font-size:11px;letter-spacing:3px;color:#444;margin-bottom:10px;font-weight:600;font-family:DM Sans,sans-serif;">BODOVANJE</div>
-      <div style="font-family:Bebas Neue,sans-serif;font-size:44px;letter-spacing:3px;line-height:1;margin-bottom:20px;">BUDI <span style="color:#E63946;">PAMETAN</span></div>
+      <div style="font-size:70px;margin-bottom:24px;">🏆</div>
+      <div style="font-size:9px;letter-spacing:4px;color:var(--tx3);margin-bottom:12px;font-weight:600;">Bodovanje</div>
+      <div style="font-family:'Cormorant Garamond',serif;font-size:44px;letter-spacing:2px;line-height:1;margin-bottom:20px;font-weight:500;">Budi <span style="color:var(--red);">pametan</span></div>
       <div style="display:flex;flex-direction:column;gap:8px;max-width:320px;margin:0 auto 18px;">
-        <div style="background:rgba(82,183,136,.08);border:1px solid rgba(82,183,136,.2);border-radius:999px;padding:10px 18px;font-size:13px;color:#52b788;font-family:DM Sans,sans-serif;">Citizen uhvati impostora &rarr; <strong>+2 boda</strong></div>
-        <div style="background:rgba(230,57,70,.08);border:1px solid rgba(230,57,70,.2);border-radius:999px;padding:10px 18px;font-size:13px;color:#ff6b75;font-family:DM Sans,sans-serif;">Impostor preživi glasanje &rarr; <strong>+3 boda</strong></div>
-        <div style="background:rgba(244,162,97,.08);border:1px solid rgba(244,162,97,.2);border-radius:999px;padding:10px 18px;font-size:13px;color:#f4a261;font-family:DM Sans,sans-serif;">Impostor pogodi pravu riječ &rarr; <strong>+4 boda</strong></div>
+        <div style="background:var(--tbg);border:1px solid var(--tb);border-radius:999px;padding:10px 18px;font-size:13px;color:var(--teal);">Citizen uhvati impostora → <strong>+2 boda</strong></div>
+        <div style="background:var(--rbg);border:1px solid var(--rb);border-radius:999px;padding:10px 18px;font-size:13px;color:var(--rdim);">Impostor preživi glasanje → <strong>+3 boda</strong></div>
+        <div style="background:var(--gbg);border:1px solid var(--gb);border-radius:999px;padding:10px 18px;font-size:13px;color:var(--gold);">Impostor pogodi pravu riječ → <strong>+4 boda</strong></div>
       </div>
-      <p style="color:#888;font-size:14px;line-height:1.6;font-family:DM Sans,sans-serif;">Bodovi se <strong style="color:#f0eeeb;">akumuliraju</strong> kroz runde.</p>
     </div>
   </div>
-
   <div id="ob-dots" style="display:flex;gap:8px;align-items:center;margin-bottom:24px;">
-    <div class="obd" style="width:22px;height:7px;border-radius:4px;background:#E63946;transition:all .25s;cursor:pointer;" onclick="obGo(0)"></div>
-    <div class="obd" style="width:7px;height:7px;border-radius:50%;background:#222;transition:all .25s;cursor:pointer;" onclick="obGo(1)"></div>
-    <div class="obd" style="width:7px;height:7px;border-radius:50%;background:#222;transition:all .25s;cursor:pointer;" onclick="obGo(2)"></div>
-    <div class="obd" style="width:7px;height:7px;border-radius:50%;background:#222;transition:all .25s;cursor:pointer;" onclick="obGo(3)"></div>
+    <div class="obd" style="width:22px;height:6px;border-radius:4px;background:var(--gold);transition:all .25s;cursor:pointer;" onclick="obGo(0)"></div>
+    <div class="obd" style="width:6px;height:6px;border-radius:50%;background:var(--bg5);transition:all .25s;cursor:pointer;" onclick="obGo(1)"></div>
+    <div class="obd" style="width:6px;height:6px;border-radius:50%;background:var(--bg5);transition:all .25s;cursor:pointer;" onclick="obGo(2)"></div>
+    <div class="obd" style="width:6px;height:6px;border-radius:50%;background:var(--bg5);transition:all .25s;cursor:pointer;" onclick="obGo(3)"></div>
   </div>
-
   <div style="display:flex;gap:10px;width:100%;max-width:400px;">
-    <button onclick="obSkip()" style="padding:15px 18px;border-radius:16px;border:1px solid #222;background:transparent;font-family:Bebas Neue,sans-serif;font-size:15px;letter-spacing:1px;color:#444;cursor:pointer;">PRESKOČI</button>
-    <button id="ob-next" onclick="obNext()" style="flex:1;padding:15px;border-radius:16px;border:none;font-family:Bebas Neue,sans-serif;font-size:18px;letter-spacing:1.5px;background:#E63946;color:#fff;cursor:pointer;">DALJE</button>
+    <button onclick="obSkip()" style="padding:15px 18px;border-radius:14px;border:1px solid var(--ln2);background:transparent;font-family:'Space Grotesk',sans-serif;font-size:12px;letter-spacing:1px;font-weight:600;color:var(--tx3);cursor:pointer;text-transform:uppercase;">Preskoči</button>
+    <button id="ob-next" onclick="obNext()" style="flex:1;padding:15px;border-radius:14px;border:none;font-family:'Space Grotesk',sans-serif;font-size:13px;letter-spacing:2px;font-weight:700;background:var(--gold);color:#060608;cursor:pointer;text-transform:uppercase;">Dalje</button>
   </div>
-
 </div>
 
 <!-- TOAST -->
@@ -723,7 +803,7 @@ select{appearance:none;cursor:pointer;}
 
 <!-- SPINNER -->
 <div class="spinov" id="spinov">
-  <div class="spn-sub">PRVI GOVORI</div>
+  <div class="spn-sub">Govori prvi</div>
   <div class="spn-name" id="spn-name">—</div>
   <div class="spn-hint">Počnite raspravu!</div>
 </div>
@@ -747,9 +827,9 @@ select{appearance:none;cursor:pointer;}
       <span class="modal-title">Napusti sobu?</span>
       <button class="modal-close" id="modal-close-leave">✕</button>
     </div>
-    <p style="font-size:13px;color:var(--tx2);margin-bottom:18px;line-height:1.7;">Jeste li sigurni da želite napustiti sobu? Vaši bodovi bit će izgubljeni.</p>
-    <button class="btn bdng mb" id="btn-leave-confirm">DA, NAPUSTI SOBU</button>
-    <button class="btn bo" id="btn-leave-cancel">OSTANI</button>
+    <p style="font-size:13px;color:var(--tx2);margin-bottom:18px;line-height:1.7;">Jeste li sigurni? Vaši bodovi bit će izgubljeni.</p>
+    <button class="btn bdng mb" id="btn-leave-confirm">Da, napusti sobu</button>
+    <button class="btn bo" id="btn-leave-cancel">Ostani</button>
   </div>
 </div>
 
@@ -780,13 +860,13 @@ let G={},me=null,myWord=null,myRole=null,selVote=null,impCount=1,discTotal=120,v
 let micStream=null,pcs={},pendingOffers=[],rulesFrom='s-join';
 let micWanted=false,micInitPromise=null,micRestartTimer=null,resumeTried=false;
 let mobileResumeLock=false;
-const SESSION_KEY='impostor.session.v2';
+const SESSION_KEY='impostor.session.v3';
 const AUDIO_PREFS_KEY='impostor.audioPrefs.v2';
 let selfMuted=false, remoteMuted={}, remoteMeters={}, localMeterStop=null;
 
 const $=id=>document.getElementById(id);
-const ini=n=>(n||'').split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
-const esc=s=>String(s||'').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+const ini=n=>(n||'').split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2)||'?';
+const esc=s=>String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 const meNow=()=>G.players?G.players.find(p=>p.id===socket.id):null;
 
 function show(id){
@@ -836,7 +916,7 @@ function applySelfMute(){
   else if(hasLiveMic())setMicUi('live','Mikrofon aktivan · Svi se čuju');
 }
 function updateVoiceButtons(){
-  ['btn-self-mute','btn-self-mute-res'].forEach(id=>{const b=$(id);if(!b)return;b.textContent=selfMuted?'MIC OFF':'MIC ON';b.className='vbtn '+(selfMuted?'muted':'live');});
+  ['btn-self-mute','btn-self-mute-res'].forEach(id=>{const b=$(id);if(!b)return;b.textContent=selfMuted?'Mic Off':'Mic On';b.className='vbtn '+(selfMuted?'muted':'live');});
 }
 async function unlockAudio(){
   try{const a=gAC();if(a?.state==='suspended')await a.resume();}catch(e){}
@@ -877,7 +957,7 @@ function renderVoiceList(targetId){
     row.innerHTML=`<div class="av ${p.id===socket.id?'t':(p.isHost?'r':'')}">${ini(p.name)}</div>
       <div class="vmeta"><div class="vname">${esc(p.name)}</div><div class="vsub">${esc(speakerStatus(p.id))}</div></div>
       <div class="vmeter" data-vmeter="${p.id}"><span></span></div>
-      ${p.id===socket.id?`<button class="vtoggle ${selfMuted?'on':''}" data-self-toggle="1">${selfMuted?'UNMUTE':'MUTE'}</button>`:`<button class="vtoggle ${muted?'on':''}" data-peer-toggle="${p.id}">${muted?'UNMUTE':'MUTE'}</button>`}`;
+      ${p.id===socket.id?`<button class="vtoggle ${selfMuted?'on':''}" data-self-toggle="1">${selfMuted?'Unmute':'Mute'}</button>`:`<button class="vtoggle ${muted?'on':''}" data-peer-toggle="${p.id}">${muted?'Unmute':'Mute'}</button>`}`;
     host.appendChild(row);
   });
   host.querySelectorAll('[data-peer-toggle]').forEach(btn=>btn.onclick=()=>toggleRemoteMute(btn.dataset.peerToggle));
@@ -927,13 +1007,13 @@ $('modal-close-manage').onclick=()=>$('modal-manage').classList.remove('on');
 function renderManageModal(){
   const list=$('modal-plist');list.innerHTML='';
   (G.players||[]).forEach(p=>{
-    if(p.id===socket.id)return; // can't kick yourself
+    if(p.id===socket.id)return;
     const d=document.createElement('div');d.className='modal-item';
     d.innerHTML=`<div class="av ${p.isHost?'r':''}">${ini(p.name)}</div>
       <div class="pi"><div class="pn">${esc(p.name)}</div><div class="ps">${p.isHost?'Host':'Igrač'}</div></div>
       <div class="modal-item-btns">
-        <button class="modal-ibtn host" data-action="host" data-id="${p.id}">HOST</button>
-        <button class="modal-ibtn kick" data-action="kick" data-id="${p.id}">KICK</button>
+        <button class="modal-ibtn host" data-action="host" data-id="${p.id}">Host</button>
+        <button class="modal-ibtn kick" data-action="kick" data-id="${p.id}">Kick</button>
       </div>`;
     list.appendChild(d);
   });
@@ -955,15 +1035,16 @@ $('btn-join').onclick=()=>{
   err.textContent='';
   if(!name){err.textContent='Unesite ime agenta.';return;}
   if(!code||code.length<3){err.textContent='Unesite ispravan kod sobe.';return;}
-  saveSession({code,name,playerToken:getSession().playerToken||''});
-  socket.emit('joinRoom',{code,playerName:name,playerToken:getSession().playerToken||''});
+  const ss=getSession();
+  saveSession({code,name,playerToken:ss.playerToken||''});
+  socket.emit('joinRoom',{code,playerName:name,playerToken:ss.playerToken||''});
 };
 $('j-code').oninput=function(){this.value=this.value.toUpperCase();};
 $('btn-create').onclick=()=>{
   const name=$('j-name').value.trim();
   if(!name){$('j-err').textContent='Unesite ime agenta.';return;}
   saveSession({name});
-  socket.emit('createRoom',{playerName:name,playerToken:getSession().playerToken||''});
+  socket.emit('createRoom',{playerName:name});
 };
 
 // ── LOBBY ─────────────────────────────────────────────────────────────────────
@@ -998,12 +1079,12 @@ function renderLobby(){
         <div class="pn">${esc(p.name)}${offline?' <span style="font-size:9px;color:var(--tx3);">(offline)</span>':''}</div>
         <div class="ps">${p.isHost?'Host · Leader':'Operative'}</div>
       </div>
-      <div style="font-family:'Bebas Neue',sans-serif;font-size:14px;color:var(--tx3);margin-right:5px;">${sc}pt</div>
+      <div style="font-family:'Cormorant Garamond',serif;font-size:15px;color:var(--tx3);margin-right:5px;">${sc}pt</div>
       <div class="dot ${p.isReady?'on':''}"></div>`;
     list.appendChild(d);
   });
   const mr=me&&me.isReady;
-  $('btn-ready').textContent=mr?'NIJE SPREMAN':'SPREMAN';
+  $('btn-ready').textContent=mr?'Nije spreman':'Spreman';
   $('btn-ready').className=`btn ${mr?'bo':'bt'} mb`;
 }
 function emitCfg(){socket.emit('updateConfig',{code:G.code,category:$('cfg-cat').value,impostors:impCount,discussionTime:parseInt($('cfg-disc').value)||120,votingTime:parseInt($('cfg-vote').value)||60});}
@@ -1014,16 +1095,30 @@ $('btn-ready').onclick=()=>socket.emit('toggleReady',{code:G.code});
 $('btn-start').onclick=()=>socket.emit('startGame',{code:G.code});
 
 // ── REVEAL ────────────────────────────────────────────────────────────────────
+function buildFlipBack(isImp, word){
+  const cls=isImp?'imp-back':'cit-back';
+  const roleCls=isImp?'imp':'cit';
+  const roleLabel=isImp?'Impostor':'Citizen';
+  const wordDesc=isImp?'Tvoja varijanta':'Vaša prava riječ';
+  const bottomDesc=isImp?'Slušaj pažljivo i ne odaj se':'Opisi svoju riječ, ali je ne kaži';
+  return `
+    <div class="fb-glow-ring"></div>
+    <div class="fb-role-badge ${roleCls}">
+      <div class="fb-role-dot"></div>
+      ${roleLabel}
+    </div>
+    <div class="fb-word-lbl">${wordDesc}</div>
+    <div class="fb-word">${esc(word||'?')}</div>
+    <div class="fb-desc">${bottomDesc}</div>`;
+}
 function setupReveal(){
   const btn=$('btn-rev-done');
-  btn.disabled=false;btn.textContent='VIDIO SAM — GOTOVO ✓';btn.style.opacity='1';
+  btn.disabled=false;btn.textContent='Vidio sam — Potvrdi ✓';btn.style.opacity='1';
   $('reroll-wrap').style.display=(me&&me.isHost)?'block':'none';
   const isImp=myRole==='IMPOSTOR';
-  $('fb-lbl').textContent=isImp?'⚠ Vaša riječ (IMPOSTOR)':'Vaša riječ';
-  $('fb-word').textContent=myWord||'?';
-  $('fb-word').className='fb-word'+(isImp?' ri':'');
-  $('fback').className='fb'+(isImp?' fi':'');
-  $('fb-role').innerHTML=`<span class="rtag ${isImp?'imp':'cit'}">${isImp?'IMPOSTOR':'CITIZEN'}</span>`;
+  const fback=$('fback');
+  fback.className='fb '+(isImp?'imp-back':'cit-back');
+  fback.innerHTML=buildFlipBack(isImp, myWord);
   $('fwrap').classList.remove('flip');
   updateRevealProgress(0,G.players.length);
   if(isImp){setTimeout(()=>{SFX.imp();toast('⚠ Ti si IMPOSTOR! Pazi što govoriš.',3500);},400);}
@@ -1037,7 +1132,7 @@ $('fwrap').onclick=function(){if(!this.classList.contains('flip')){SFX.reveal();
 $('btn-rev-done').onclick=()=>{
   socket.emit('playerReady',{code:G.code});
   $('btn-rev-done').disabled=true;
-  $('btn-rev-done').textContent='POTVRĐENO ✓';
+  $('btn-rev-done').textContent='Potvrđeno ✓';
   $('btn-rev-done').style.opacity='.5';
 };
 $('btn-reroll').onclick=()=>{socket.emit('rerollWord',{code:G.code});toast('↻ Nova riječ u pripremi...');};
@@ -1049,13 +1144,11 @@ function setupDisc(room){
   $('disc-hstrip').style.display=isHost?'block':'none';
   $('disc-wait').style.display=isHost?'none':'block';
   discTotal=room.discussionTime||120;
-  // My word reminder
   const isImp=myRole==='IMPOSTOR';
   const wd=$('mywc-w');const rt=$('mywc-tag');const mwc=$('mywc');
   if(wd){wd.textContent=myWord||'?';wd.style.color=isImp?'var(--rdim)':'var(--teal)';}
-  if(rt){rt.innerHTML=`<span class="rtag ${isImp?'imp':'cit'}">${isImp?'IMPOSTOR':'CITIZEN'}</span>`;}
+  if(rt){rt.innerHTML=`<span style="font-size:9px;font-weight:600;letter-spacing:2px;text-transform:uppercase;padding:3px 10px;border-radius:999px;background:${isImp?'var(--rbg)':'var(--tbg)'};border:1px solid ${isImp?'var(--rb)':'var(--tb)'};color:${isImp?'var(--rdim)':'var(--teal)'}">${isImp?'IMPOSTOR':'CITIZEN'}</span>`;}
   if(mwc){mwc.style.borderColor=isImp?'var(--rb)':'var(--tb)';mwc.style.background=isImp?'var(--rbg)':'var(--tbg)';}
-  // First speaker
   if(room.firstSpeakerName)$('spk-name').textContent=room.firstSpeakerName;
   renderAllVoiceLists();
   updateVoiceButtons();
@@ -1196,14 +1289,14 @@ socket.on('timer',({phase,remaining})=>{
   if(phase==='discussion'){
     const pct=Math.max(0,remaining/discTotal*100);
     const bar=$('disc-tf'),val=$('disc-tv');
-    if(bar){bar.style.width=pct+'%';bar.style.background=pct<25?'var(--red)':pct<50?'var(--amb)':'var(--teal)';}
-    if(val){val.textContent=fmt(remaining);val.style.color=remaining<=10?'var(--red)':remaining<=30?'var(--amb)':'var(--tx)';}
+    if(bar){bar.style.width=pct+'%';bar.style.background=pct<25?'var(--red)':pct<50?'var(--gold)':'var(--teal)';}
+    if(val){val.textContent=fmt(remaining);val.style.color=remaining<=10?'var(--red)':remaining<=30?'var(--gold)':'var(--tx)';}
     if(remaining===30||remaining===10)SFX.warn();
     if(remaining>0&&remaining<=5)SFX.tick();
   } else if(phase==='voting'){
     const pct=Math.max(0,remaining/voteTotal*100);
     const bar=$('vote-tf'),val=$('vote-tv');
-    if(bar){bar.style.width=pct+'%';bar.style.background=pct<25?'var(--red)':pct<50?'var(--amb)':'var(--red)';}
+    if(bar){bar.style.width=pct+'%';bar.style.background=pct<25?'var(--red)':pct<50?'var(--gold)':'var(--red)';}
     if(val){val.textContent=fmt(remaining);val.style.color=remaining<=10?'var(--red)':'var(--tx)';}
     if(remaining===10)SFX.warn();
     if(remaining>0&&remaining<=5){SFX.tick();toast(`⚠ Glasanje završava za ${remaining}s`);}
@@ -1211,20 +1304,39 @@ socket.on('timer',({phase,remaining})=>{
 });
 
 // ── VOTING ────────────────────────────────────────────────────────────────────
+let myVoteSubmitted=false;
+
 function renderVoting(){
-  selVote=null;$('cfm').classList.remove('on');
+  myVoteSubmitted=false;
+  selVote=null;
+  $('cfm').classList.remove('on');
   $('vsent').classList.remove('on');$('vsent').style.display='';
+  $('vwaiting').classList.remove('on');
   $('vgrid').style.opacity='1';$('vgrid').style.pointerEvents='auto';
+  $('igbox').style.display='';
   const isImp=myRole==='IMPOSTOR';
   $('igbox').className=`igbox${isImp?' on':''}`;
   // Build vote dots
-  const dotsEl=$('vote-dots');if(dotsEl){dotsEl.innerHTML='';G.players.forEach(()=>{const d=document.createElement('div');d.className='vote-dot';dotsEl.appendChild(d);});}
+  const dotsEl=$('vote-dots');
+  if(dotsEl){
+    dotsEl.innerHTML='';
+    G.players.forEach(()=>{const d=document.createElement('div');d.className='vote-dot';dotsEl.appendChild(d);});
+  }
   const cntEl=$('vcnt-display');if(cntEl)cntEl.textContent=`0 / ${G.players.length}`;
   const grid=$('vgrid');grid.innerHTML='';
   G.players.forEach(p=>{
+    if(p.id===socket.id)return; // can't vote for yourself
     const c=document.createElement('div');c.className='vcard';c.id='vc-'+p.id;
-    c.innerHTML=`<div class="vcav">${ini(p.name)}</div><div class="vcard-info"><div class="vcard-name">${esc(p.name)}</div><div class="vcard-sub">Igrač</div></div><div class="vcard-check"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></div>`;
+    c.innerHTML=`<div class="vcav">${ini(p.name)}</div>
+      <div class="vcard-info">
+        <div class="vcard-name">${esc(p.name)}</div>
+        <div class="vcard-sub">Operative</div>
+      </div>
+      <div class="vcard-check">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>`;
     c.onclick=()=>{
+      if(myVoteSubmitted)return;
       document.querySelectorAll('.vcard').forEach(x=>x.classList.remove('sel'));
       c.classList.add('sel');
       selVote=p.id;$('vtname').textContent=p.name;$('cfm').classList.add('on');SFX.vote();
@@ -1233,10 +1345,11 @@ function renderVoting(){
   });
 }
 $('btn-cfm').onclick=()=>{
-  if(!selVote)return;
+  if(!selVote||myVoteSubmitted)return;
+  myVoteSubmitted=true;
   socket.emit('castVote',{code:G.code,targetId:selVote});
   $('cfm').classList.remove('on');
-  $('vgrid').style.opacity='.4';$('vgrid').style.pointerEvents='none';
+  $('vgrid').style.opacity='.35';$('vgrid').style.pointerEvents='none';
   $('igbox').style.display='none';
   $('vsent').style.display='block';$('vsent').classList.add('on');
 };
@@ -1252,15 +1365,19 @@ socket.on('voteCast',data=>{
   const disp=$('vcnt-display');if(disp)disp.textContent=`${data.total} / ${data.max}`;
   const dots=document.querySelectorAll('#vote-dots .vote-dot');
   dots.forEach((d,i)=>{d.classList.toggle('cast',i<data.total);});
+  // If all voted and I haven't voted yet, show waiting state
+  if(data.total>=data.max&&!myVoteSubmitted){
+    $('vwaiting').classList.add('on');
+  }
 });
 
 // ── RESULTS ───────────────────────────────────────────────────────────────────
 function renderResults(){
   const res=G.results,b=$('rbanner');
-  if(res.isTie){b.className='rbanner tie';$('rtitle').textContent='NERIJEŠENO!';$('remoji').textContent='🤝';$('rsub').textContent='Nitko nije izbačen — impostor pobijedio.';SFX.warn();}
-  else if(res.winner==='CITIZENS'){b.className='rbanner win';$('rtitle').textContent='IMPOSTOR UHVAĆEN!';$('remoji').textContent='✅';$('rsub').textContent=`${esc(res.votedOutName)} je bio impostor.`;SFX.win();}
-  else if(res.impostorGuessedCorrectly){b.className='rbanner lose';$('rtitle').textContent='IMPOSTOR POBIJEDIO!';$('remoji').textContent='🧠';$('rsub').textContent='Pogodio je pravu riječ!';SFX.lose();}
-  else{b.className='rbanner lose';$('rtitle').textContent='MISIJA KOMPROMITIRANA!';$('remoji').textContent='💀';$('rsub').textContent=`${esc(res.votedOutName||'?')} nije bio impostor.`;SFX.lose();}
+  if(res.isTie){b.className='rbanner tie';$('rtitle').textContent='Neriješeno!';$('remoji').textContent='🤝';$('rsub').textContent='Nitko nije izbačen — impostor pobijedio.';SFX.warn();}
+  else if(res.winner==='CITIZENS'){b.className='rbanner win';$('rtitle').textContent='Impostor uhvaćen!';$('remoji').textContent='✅';$('rsub').textContent=`${esc(res.votedOutName)} je bio impostor.`;SFX.win();}
+  else if(res.impostorGuessedCorrectly){b.className='rbanner lose';$('rtitle').textContent='Impostor pobijedio!';$('remoji').textContent='🧠';$('rsub').textContent='Pogodio je pravu riječ!';SFX.lose();}
+  else{b.className='rbanner lose';$('rtitle').textContent='Misija kompromitirana!';$('remoji').textContent='💀';$('rsub').textContent=`${esc(res.votedOutName||'?')} nije bio impostor.`;SFX.lose();}
   $('rw-r').textContent=G.words?.citizen||'—';
   $('rw-i').textContent=G.words?.impostor||'—';
   // Scoreboard
@@ -1278,9 +1395,9 @@ function renderResults(){
   const rl=$('rlist');rl.innerHTML='';
   G.players.forEach(p=>{
     const isImp=p.role==='IMPOSTOR',vf=G.players.find(v=>v.id===G.votes?.[p.id]);
-    const wordLabel=p.word?`<span style="font-family:'Bebas Neue',sans-serif;font-size:12px;letter-spacing:1px;color:${isImp?'var(--rdim)':'var(--teal)'};background:${isImp?'var(--rbg)':'var(--tbg)'};border:1px solid ${isImp?'var(--rb)':'var(--tb)'};border-radius:5px;padding:2px 7px;">${esc(p.word)}</span>`:'';
+    const wordLabel=p.word?`<span style="font-family:'Cormorant Garamond',serif;font-size:13px;letter-spacing:1px;color:${isImp?'var(--rdim)':'var(--teal)'};background:${isImp?'var(--rbg)':'var(--tbg)'};border:1px solid ${isImp?'var(--rb)':'var(--tb)'};border-radius:5px;padding:2px 8px;">${esc(p.word)}</span>`:'' ;
     const d=document.createElement('div');d.className=`rrow${isImp?' ir':''}`;
-    d.innerHTML=`<div class="av ${isImp?'r':'t'}">${ini(p.name)}</div><div class="pi"><div class="pn">${esc(p.name)} ${wordLabel}</div><div class="ps">Glasao za: ${vf?esc(vf.name):'—'}</div></div><span class="rtag ${isImp?'imp':'cit'}">${isImp?'IMPOSTOR':'CITIZEN'}</span>`;
+    d.innerHTML=`<div class="av ${isImp?'r':'t'}">${ini(p.name)}</div><div class="pi"><div class="pn">${esc(p.name)} ${wordLabel}</div><div class="ps">Glasao za: ${vf?esc(vf.name):'—'}</div></div><span style="font-size:9px;font-weight:600;letter-spacing:2px;padding:3px 9px;border-radius:999px;background:${isImp?'var(--rbg)':'var(--tbg)'};border:1px solid ${isImp?'var(--rb)':'var(--tb)'};color:${isImp?'var(--rdim)':'var(--teal)'};">${isImp?'IMPOSTOR':'CITIZEN'}</span>`;
     rl.appendChild(d);
   });
   $('btn-rst').style.display=me&&me.isHost?'flex':'none';
@@ -1293,8 +1410,16 @@ $('btn-rst').onclick=()=>{socket.emit('resetScores',{code:G.code});toast('Bodovi
 ['btn-audio-unlock','btn-audio-unlock-res'].forEach(id=>{const el=$(id);if(el)el.onclick=()=>unlockAudio();});
 
 // ── SOCKET EVENTS ─────────────────────────────────────────────────────────────
-socket.on('roomCreated',room=>{G=room;me=room.players[0];saveSession({code:room.code,name:me?.name,playerToken:room.playerToken});badge();show('s-lobby');renderLobby();SFX.join();});
-socket.on('roomJoined',room=>{G=room;me=meNow();saveSession({code:room.code,name:me?.name||$('j-name').value.trim(),playerToken:room.playerToken});badge();show('s-lobby');renderLobby();SFX.join();});
+socket.on('roomCreated',room=>{
+  G=room;me=room.players[0];
+  saveSession({code:room.code,name:me?.name,playerToken:room.playerToken});
+  badge();show('s-lobby');renderLobby();SFX.join();
+});
+socket.on('roomJoined',room=>{
+  G=room;me=meNow();
+  saveSession({code:room.code,name:me?.name||$('j-name').value.trim(),playerToken:room.playerToken});
+  badge();show('s-lobby');renderLobby();SFX.join();
+});
 socket.on('sessionResumed',room=>{
   G=room;me=meNow();myWord=room.myWord;myRole=room.myRole;
   saveSession({code:room.code,name:me?.name||$('j-name').value.trim(),playerToken:room.playerToken});
@@ -1352,47 +1477,41 @@ socket.on('gameEnded',room=>{
 });
 socket.on('error',msg=>{$('j-err').textContent=msg;$('l-err').textContent=msg;toast('⚠ '+msg);});
 
+// ── ONBOARDING ────────────────────────────────────────────────────────────────
 var obCur=0;
-var OB_KEY='impostor.onboarded.v2';
+var OB_KEY='impostor.onboarded.v3';
 function obShow(){
   var s=document.querySelectorAll('.obs');
   var d=document.querySelectorAll('.obd');
-  for(var i=0;i<s.length;i++) s[i].style.display=i===obCur?'block':'none';
+  for(var i=0;i<s.length;i++) s[i].style.display=i===obCur?'flex':'none';
   for(var i=0;i<d.length;i++){
-    if(i===obCur){d[i].style.width='22px';d[i].style.borderRadius='4px';d[i].style.background='#E63946';}
-    else{d[i].style.width='7px';d[i].style.borderRadius='50%';d[i].style.background='#333';}
+    if(i===obCur){d[i].style.width='22px';d[i].style.borderRadius='4px';d[i].style.background='var(--gold)';}
+    else{d[i].style.width='6px';d[i].style.borderRadius='50%';d[i].style.background='var(--bg5)';}
   }
   var b=document.getElementById('ob-next');
-  if(b){b.textContent=obCur===3?'IGRAJMO!':'DALJE';b.style.background=obCur===3?'#52b788':'#E63946';}
+  if(b){b.textContent=obCur===3?'Igrajmo!':'Dalje';b.style.background=obCur===3?'var(--teal)':'var(--gold)';}
 }
 function obNext(){if(obCur<3){obCur++;obShow();}else{obSkip();}}
 function obGo(n){obCur=n;obShow();}
 function obSkip(){
   var el=document.getElementById('ob');
   if(el) el.style.display='none';
+  localStorage.setItem(OB_KEY,'1');
 }
 (function(){
   var el=document.getElementById('ob');
   if(!el) return;
-
+  if(localStorage.getItem(OB_KEY)){el.style.display='none';return;}
   el.style.display='flex';
   obShow();
-
-  // ── SWIPE + MOUSE DRAG ────────────────────────────────────────────────────
-  var inner=el.querySelector('div');
-  var startX=0,startY=0,dx=0,active=false,locked=false,isTouch=false;
+  // Swipe
+  var startX=0,startY=0,dx=0,active=false,locked=false;
   var THRESHOLD=50;
-
-  function dragStart(x,y,touch){
-    startX=x;startY=y;dx=0;active=true;locked=false;isTouch=touch;
-  }
+  function dragStart(x,y){startX=x;startY=y;dx=0;active=true;locked=false;}
   function dragMove(x,y){
     if(!active)return;
     var ddx=x-startX,ddy=y-startY;
-    if(!locked){
-      if(Math.abs(ddy)>Math.abs(ddx)){active=false;return;}
-      locked=true;
-    }
+    if(!locked){if(Math.abs(ddy)>Math.abs(ddx)){active=false;return;}locked=true;}
     dx=ddx;
   }
   function dragEnd(){
@@ -1401,14 +1520,10 @@ function obSkip(){
     else if(dx>THRESHOLD&&obCur>0){obCur--;obShow();}
     dx=0;
   }
-
-  // Touch
-  el.addEventListener('touchstart',function(e){dragStart(e.touches[0].clientX,e.touches[0].clientY,true);},{passive:true});
+  el.addEventListener('touchstart',function(e){dragStart(e.touches[0].clientX,e.touches[0].clientY);},{passive:true});
   el.addEventListener('touchmove',function(e){dragMove(e.touches[0].clientX,e.touches[0].clientY);},{passive:true});
   el.addEventListener('touchend',dragEnd);
-
-  // Mouse (PC)
-  el.addEventListener('mousedown',function(e){dragStart(e.clientX,e.clientY,false);});
+  el.addEventListener('mousedown',function(e){dragStart(e.clientX,e.clientY);});
   el.addEventListener('mousemove',function(e){if(active)dragMove(e.clientX,e.clientY);});
   el.addEventListener('mouseup',dragEnd);
   el.addEventListener('mouseleave',dragEnd);
