@@ -510,7 +510,13 @@ io.on('connection', (socket) => {
     const room = rooms.get(code);
     if (!room || room.state !== 'REVEAL') return;
     if (!room.players.find(p => p.id === socket.id && p.isHost)) return;
-    room.words = getRandomWord(room.category, code);
+    if (room.customPair) {
+      room.words = Math.random() > 0.5
+        ? { citizen: room.customPair.citizen, impostor: room.customPair.impostor }
+        : { citizen: room.customPair.impostor, impostor: room.customPair.citizen };
+    } else {
+      room.words = getRandomWord(room.category, code);
+    }
     room.players.forEach(p => { p.word = p.role === 'IMPOSTOR' ? room.words.impostor : room.words.citizen; p.hasRevealed = false; });
     const base = safeRoom(room);
     room.players.forEach(p => { io.to(p.id).emit('wordRerolled', { ...base, myWord: p.word, myRole: p.role }); });

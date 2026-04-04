@@ -711,6 +711,7 @@ select{appearance:none;cursor:pointer;}
               <input type="text" id="cfg-impostor" maxlength="40" placeholder="npr. Dell laptop" style="padding:11px 12px;font-size:13px;"/>
             </div>
             <div class="err" id="custom-err" style="display:none;"></div>
+            <div id="custom-pair-confirm" style="display:none;font-size:11px;color:var(--cg-dim);letter-spacing:.5px;padding:6px 0 0;"></div>
           </div>
         </div>
       </div>
@@ -1348,8 +1349,20 @@ function renderLobby(){
   $('l-wait').style.display=isHost?'none':'block';
   $('btn-start').style.display='none';
   if(isHost){
-    $('cfg-cat').value=G.category;
+    if(!customActive)$('cfg-cat').value=G.category;
     $('imp-v').textContent=G.impostorCount;impCount=G.impostorCount;
+    // Show visual confirmation when server has accepted the custom pair
+    const confirmEl=$('custom-pair-confirm');
+    if(confirmEl){
+      if(G.hasCustomPair&&customActive){
+        const c=$('cfg-citizen').value.trim();
+        const imp=$('cfg-impostor').value.trim();
+        confirmEl.textContent=`✓ Postavljeno: ${c||'?'} / ${imp||'?'}`;
+        confirmEl.style.display='block';
+      } else {
+        confirmEl.style.display='none';
+      }
+    }
     const ok=G.players.length>=3&&G.players.every(p=>p.isReady);
     $('btn-start').style.display=ok?'flex':'none';
     $('l-err').textContent=G.players.length<3?`Potrebno još ${3-G.players.length} igrač(a) (min 3)`:(!ok?'Čekanje da svi budu spremni...':'');
