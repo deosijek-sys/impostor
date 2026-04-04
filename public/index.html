@@ -43,6 +43,21 @@ html,body{height:100%;background:var(--bg);color:var(--tx);font-family:'DM Sans'
 .sc.on{display:block;}
 @keyframes up{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
 
+/* ── WELCOME CAROUSEL */
+#s-welcome{display:none;padding:0;overflow:hidden;}
+#s-welcome.on{display:block;}
+.wc-track{display:flex;transition:transform .35s cubic-bezier(.16,1,.3,1);will-change:transform;user-select:none;}
+.wc-slide{flex:0 0 100%;width:100%;min-height:calc(100dvh - 54px);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 30px 80px;text-align:center;}
+.wc-dots{position:fixed;bottom:28px;left:50%;transform:translateX(-50%);display:none;gap:7px;z-index:10;}
+.wc-dots.on{display:flex;}
+.wc-dot{width:6px;height:6px;border-radius:50%;background:var(--tx3);transition:background .2s,transform .2s;}
+.wc-dot.on{background:var(--red);transform:scale(1.4);}
+.wc-icon{font-size:56px;margin-bottom:24px;line-height:1;}
+.wc-title{font-family:'Bebas Neue',sans-serif;font-size:34px;letter-spacing:3px;color:var(--tx);margin-bottom:12px;line-height:1.1;}
+.wc-body{font-size:15px;color:var(--tx2);line-height:1.6;max-width:280px;}
+.wc-cta{margin-top:36px;display:flex;flex-direction:column;gap:10px;width:100%;}
+
+
 /* ── TYPE */
 .lbl{font-size:10px;font-weight:600;letter-spacing:2.5px;text-transform:uppercase;color:var(--tx3);display:block;margin-bottom:6px;}
 .lr{color:rgba(230,57,70,.5);}
@@ -298,8 +313,50 @@ select{appearance:none;cursor:pointer;}
 
   <div class="scroll">
 
+    <!-- WELCOME CAROUSEL -->
+    <div class="sc on" id="s-welcome">
+      <div class="wc-track" id="wc-track">
+
+        <div class="wc-slide">
+          <div class="wc-icon">🕵️</div>
+          <div class="wc-title">Dobrodošli u<br>IMPOSTOR</div>
+          <div class="wc-body">Igra dedukcije i blefiranja za 3–10 igrača. Tko je među vama skriva tajnu riječ?</div>
+          <div style="margin-top:20px;font-size:11px;color:var(--tx3);letter-spacing:1.5px;">POVUCITE LIJEVO ZA VIŠE</div>
+        </div>
+
+        <div class="wc-slide">
+          <div class="wc-icon">🎭</div>
+          <div class="wc-title">Dvije uloge,<br>jedna istina</div>
+          <div class="wc-body"><strong style="color:var(--teal);">Citizens</strong> znaju pravu riječ i raspravljaju o njoj.<br><br><strong style="color:var(--red);">Impostor</strong> dobiva sličnu, ali drugu riječ — i mora se uklopiti bez otkrivanja.</div>
+        </div>
+
+        <div class="wc-slide">
+          <div class="wc-icon">🗳️</div>
+          <div class="wc-title">Raspravljajte,<br>glasajte</div>
+          <div class="wc-body">Nakon rasprave svi glasaju tko je impostor. Uhvatite ga i citizens pobjeđuju — ali impostor može pokušati pogoditi pravu riječ i preokrenuti igru.</div>
+        </div>
+
+        <div class="wc-slide">
+          <div class="wc-icon">🚀</div>
+          <div class="wc-title">Počnimo<br>misiju</div>
+          <div class="wc-body">Kreirajte sobu i pozovite prijatelje ili se pridružite postojećoj igri s kodom.</div>
+          <div class="wc-cta">
+            <button class="btn bp" id="wc-btn-create">KREIRAJ SOBU</button>
+            <button class="btn bo" id="wc-btn-join">PRIDRUŽI SE</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <div class="wc-dots on" id="wc-dots">
+      <div class="wc-dot on"></div>
+      <div class="wc-dot"></div>
+      <div class="wc-dot"></div>
+      <div class="wc-dot"></div>
+    </div>
+
     <!-- JOIN -->
-    <div class="sc on" id="s-join">
+    <div class="sc" id="s-join">
       <div class="g24">
         <span class="lbl">Pristupite misiji</span>
         <h2 class="ttl" style="font-size:38px;">Unesite<br>podatke</h2>
@@ -723,7 +780,7 @@ const SFX={
 // ── STATE ─────────────────────────────────────────────────────────────────────
 const socket=io();
 let G={},me=null,myWord=null,myRole=null,selVote=null,impCount=1,discTotal=120,voteTotal=60;
-let micStream=null,pcs={},pendingOffers=[],rulesFrom='s-join';
+let micStream=null,pcs={},pendingOffers=[],rulesFrom='s-welcome';
 let micWanted=false,micInitPromise=null,micRestartTimer=null,resumeTried=false;
 let mobileResumeLock=false;
 const SESSION_KEY='impostor.session.v2';
@@ -739,7 +796,51 @@ function show(id){
   document.querySelectorAll('.sc').forEach(s=>s.classList.remove('on'));
   $(id).classList.add('on');
   document.querySelector('.scroll').scrollTo(0,0);
+  $('wc-dots').classList.toggle('on', id==='s-welcome');
 }
+
+// ── WELCOME CAROUSEL ──────────────────────────────────────────────────────────
+(function(){
+  const track=$('wc-track');
+  const dots=[...$('wc-dots').querySelectorAll('.wc-dot')];
+  let cur=0,startX=0,startY=0,dx=0,dragging=false,locked=false;
+  const N=4;
+
+  function goTo(i){
+    cur=Math.max(0,Math.min(N-1,i));
+    track.style.transition='transform .35s cubic-bezier(.16,1,.3,1)';
+    track.style.transform=`translateX(${-cur*100}%)`;
+    dots.forEach((d,j)=>d.classList.toggle('on',j===cur));
+  }
+
+  track.addEventListener('touchstart',e=>{
+    startX=e.touches[0].clientX;startY=e.touches[0].clientY;
+    dx=0;dragging=true;locked=false;
+    track.style.transition='none';
+  },{passive:true});
+
+  track.addEventListener('touchmove',e=>{
+    if(!dragging)return;
+    const ddx=e.touches[0].clientX-startX;
+    const ddy=e.touches[0].clientY-startY;
+    if(!locked){if(Math.abs(ddy)>Math.abs(ddx)){dragging=false;return;}locked=true;}
+    dx=ddx;
+    const pct=(-cur*100)+(dx/track.parentElement.offsetWidth*100);
+    track.style.transform=`translateX(${pct}%)`;
+  },{passive:true});
+
+  track.addEventListener('touchend',()=>{
+    if(!dragging)return;dragging=false;
+    if(dx<-50)goTo(cur+1);
+    else if(dx>50)goTo(cur-1);
+    else goTo(cur);
+    dx=0;
+  });
+
+  $('wc-btn-create').onclick=()=>{show('s-join');setTimeout(()=>$('btn-create').click(),50);};
+  $('wc-btn-join').onclick=()=>{show('s-join');setTimeout(()=>$('j-name').focus(),100);};
+})();
+
 function badge(){
   if(!me)return;
   $('pbav').textContent=ini(me.name);

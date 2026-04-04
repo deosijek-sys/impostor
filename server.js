@@ -495,12 +495,9 @@ io.on('connection', (socket) => {
   socket.on('castVote', ({ code, targetId }) => {
     const room = rooms.get(code);
     if (!room || room.state !== 'VOTING' || room.votes[socket.id]) return;
-    // Ne dopusti glasanje za sebe
     if (targetId === socket.id) return;
-    // Ne dopusti glasanje za igrača koji nije u sobi
     if (!room.players.find(p => p.id === targetId)) return;
     room.votes[socket.id] = targetId;
-    // Označi igrača kao glasača
     const voter = room.players.find(p => p.id === socket.id);
     if (voter) voter.voted = true;
     const total = Object.keys(room.votes).length;
@@ -557,7 +554,7 @@ io.on('connection', (socket) => {
     io.to(code).emit('gameEnded', buildResults(room));
   }
 
-  // ── BODOVANJE ─────────────────────────────────────────────────────────────
+  // ── BODOVANJE — ispravljeno ───────────────────────────────────────────────
   // Citizens pobijede (impostor uhvaćen):
   //   - Svaki citizen koji je glasao za impostora: +2 boda
   //   - Svaki citizen koji NIJE glasao za impostora: +0 bodova
