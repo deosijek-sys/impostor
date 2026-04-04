@@ -694,7 +694,7 @@ select{appearance:none;cursor:pointer;}
           <div class="rowb" style="align-items:flex-start;">
             <div>
               <span class="eyebrow a g8">✏️ Custom par</span>
-              <p style="font-size:11px;color:var(--t3);line-height:1.6;margin-top:2px;">Hostov fair play mod — host ne igra i zna obje riječi</p>
+              <p style="font-size:11px;color:var(--t3);line-height:1.6;margin-top:2px;">Unesite vlastite riječi umjesto random kategorije</p>
             </div>
             <label class="toggle-wrap" style="flex-shrink:0;margin-top:2px;" onclick="event.stopPropagation()">
               <input type="checkbox" id="cfg-custom-toggle" style="display:none;">
@@ -1011,13 +1011,13 @@ select{appearance:none;cursor:pointer;}
 
 <!-- SPECTATOR (FAIR PLAY HOST) -->
 <div class="sc" id="s-spectator">
-  <div style="margin-bottom:28px;">
-    <span class="eyebrow a g8">Fair Play Mod</span>
-    <h2 class="title g12">Ti si<br><span style="color:var(--ca-dim);">Voditelj</span></h2>
-    <p class="subtitle">Znaš obje riječi — ostani miran i ne odaj se 🤫</p>
+  <div style="margin-bottom:20px;">
+    <span class="eyebrow a g8">Fair Play · Voditelj</span>
+    <h2 class="title g8">Znaš obje<br><span style="color:var(--ca-dim);">riječi</span></h2>
+    <p class="subtitle">Vodi igru — ne odaj se 🤫</p>
   </div>
 
-  <div class="card g20" style="border-color:rgba(196,152,48,.3);background:rgba(196,152,48,.05);text-align:center;">
+  <div class="card g16" style="border-color:rgba(196,152,48,.3);background:rgba(196,152,48,.05);text-align:center;">
     <div>
       <span class="eyebrow g g8">Građani vide</span>
       <div id="spec-citizen" style="font-family:var(--ff-serif);font-size:42px;color:var(--cg-dim);font-weight:300;letter-spacing:-.5px;margin-top:4px;">—</div>
@@ -1029,14 +1029,24 @@ select{appearance:none;cursor:pointer;}
     </div>
   </div>
 
-  <div id="spec-phase-wrap" style="margin-top:20px;">
-    <div class="card" style="text-align:center;padding:16px;">
-      <span class="eyebrow g8" id="spec-phase">Čekanje na igrače...</span>
-      <p class="subtitle" style="margin-top:6px;font-size:11px;">Promatraš igru — ne možeš glasati</p>
+  <div class="card g16" id="spec-status-card" style="text-align:center;padding:14px 16px;">
+    <span class="eyebrow g8" id="spec-phase">Igrači otkrivaju uloge...</span>
+    <div id="spec-reveal-progress" style="margin-top:8px;display:none;">
+      <div class="revprog-bar"><div class="revprog-fill" id="spec-rev-fill" style="width:0%"></div></div>
     </div>
   </div>
 
-  <div style="margin-top:24px;display:flex;flex-direction:column;gap:10px;">
+  <div class="hstrip" id="spec-hstrip" style="display:none;">
+    <div class="hstrip-lbl">Host kontrole</div>
+    <div class="hstrip-btns">
+      <button class="hbtn g" id="spec-nxt-spk">Sljedeći →</button>
+      <button class="hbtn a" id="spec-ext-disc">+30 sek</button>
+      <button class="hbtn r" id="spec-start-vote">Glasanje</button>
+      <button class="hbtn r" id="spec-kick-btn" style="display:none;">Izbaci igrača</button>
+    </div>
+  </div>
+
+  <div style="margin-top:16px;display:flex;flex-direction:column;gap:10px;">
     <button class="btn bp mb" id="spec-next-round" style="display:none;">▶ Sljedeća runda</button>
     <button class="btn bo" id="spec-leave" style="margin-top:0;">Napusti sobu</button>
   </div>
@@ -1330,13 +1340,10 @@ function renderLobby(){
   $('l-code').textContent=G.code;
   const catLabel = G.hasCustomPair ? '✏️ Custom (Fair Play)' : G.category;
   $('l-cat').textContent=catLabel;
-  // Only sync customActive from server state if user isn't currently editing custom inputs
+  // Sync toggle ON from server (e.g. after reconnect), but never force it OFF via roomUpdated
+  // User controls the toggle manually; server state is source of truth only on initial load
   if(G.hasCustomPair&&me&&me.isHost&&!customActive){
-    if(typeof setCustomActive==='function')setCustomActive(true);
-  } else if(!G.hasCustomPair&&me&&me.isHost&&customActive&&!customInputFocused){
-    // Server cleared customPair and user isn't editing — sync down
-    customActive=false;
-    updateToggleUI();
+    setCustomActive(true);
   }
   $('l-imps').textContent=G.impostorCount;
   $('rnd').textContent=G.roundNumber>0?`R${G.roundNumber}`:'';
@@ -1363,9 +1370,10 @@ function renderLobby(){
         confirmEl.style.display='none';
       }
     }
-    const ok=G.players.length>=3&&G.players.every(p=>p.isReady);
+    const minP=G.fairPlay?4:3;
+    const ok=G.players.length>=minP&&G.players.every(p=>p.isReady);
     $('btn-start').style.display=ok?'flex':'none';
-    $('l-err').textContent=G.players.length<3?`Potrebno još ${3-G.players.length} igrač(a) (min 3)`:(!ok?'Čekanje da svi budu spremni...':'');
+    $('l-err').textContent=G.players.length<minP?`Potrebno još ${minP-G.players.length} igrač(a) (min ${minP}${G.fairPlay?' + host voditelj':''})`:(!ok?'Čekanje da svi budu spremni...':'');
   }
   const list=$('plist');list.innerHTML='';
   G.players.forEach(p=>{
@@ -1922,6 +1930,7 @@ socket.on('gameStarted',room=>{
 });
 socket.on('revealProgress',({readyCount,total})=>{
   updateRevealProgress(readyCount,total);
+  updateSpectatorRevealProgress(readyCount,total);
   if(readyCount===total)toast('Svi su potvrdili — počinjemo!');
 });
 socket.on('startDiscussion',room=>{
@@ -1958,10 +1967,18 @@ socket.on('votingStarted',room=>{
 });
 socket.on('gameEnded',room=>{
   if(myRole==='SPECTATOR'){
+    G=room;me=meNow();
     const btn=$('spec-next-round');
-    if(btn){btn.style.display='flex';}
+    if(btn)btn.style.display='flex';
+    const hs=$('spec-hstrip');
+    if(hs)hs.style.display='none';
     const phase=$('spec-phase');
-    if(phase)phase.textContent='Runda završena';
+    const res=room.results;
+    if(phase){
+      if(res?.winner==='CITIZENS') phase.textContent='✅ Građani pobijedili!';
+      else if(res?.impostorGuessedCorrectly) phase.textContent='🧠 Impostor pogodio riječ!';
+      else phase.textContent='💀 Impostor preživio!';
+    }
     show('s-spectator');
     return;
   }
@@ -2041,10 +2058,13 @@ function obSkip(){
 maybeResumeSession();
 
 // ── SPECTATOR (FAIR PLAY HOST) ────────────────────────────────────────────────
-// Buttons wired after DOM ready — using event delegation
 document.addEventListener('click', e => {
   if(e.target.id==='spec-next-round') socket.emit('startGame',{code:G.code});
   if(e.target.id==='spec-leave') socket.emit('leaveRoom',{code:G.code});
+  if(e.target.id==='spec-nxt-spk'){SFX.next();socket.emit('nextSpeaker',{code:G.code});}
+  if(e.target.id==='spec-ext-disc'){socket.emit('extendDiscussion',{code:G.code,seconds:30});toast('+30 sekundi dodano');SFX.next();}
+  if(e.target.id==='spec-start-vote') socket.emit('startVoting',{code:G.code});
+  if(e.target.id==='spec-kick-btn'){renderKickDiscModal();$('modal-kick-disc').classList.add('on');}
 });
 let spectatorWords=null;
 function showSpectatorScreen(words){
@@ -2054,16 +2074,37 @@ function showSpectatorScreen(words){
   el.querySelector('#spec-citizen').textContent=words?.citizen||'?';
   el.querySelector('#spec-impostor').textContent=words?.impostor||'?';
   el.querySelector('#spec-phase').textContent='Igrači otkrivaju uloge...';
+  const rp=el.querySelector('#spec-reveal-progress');
+  if(rp){rp.style.display='block';}
   const nb=el.querySelector('#spec-next-round');
   if(nb)nb.style.display='none';
+  const hs=el.querySelector('#spec-hstrip');
+  if(hs)hs.style.display='none';
   show('s-spectator');
 }
 function updateSpectatorDiscScreen(room){
   const el=$('s-spectator');
   if(!el)return;
   const phase=el.querySelector('#spec-phase');
-  if(phase)phase.textContent=room.state==='VOTING'?'⚡ Glasanje u tijeku':'🗣️ Rasprava u tijeku';
+  const rp=el.querySelector('#spec-reveal-progress');
+  const hs=el.querySelector('#spec-hstrip');
+  const kb=el.querySelector('#spec-kick-btn');
+  if(room.state==='VOTING'){
+    if(phase)phase.textContent='⚡ Glasanje u tijeku';
+    if(hs)hs.style.display='none';
+  } else {
+    if(phase)phase.textContent='🗣️ Rasprava u tijeku';
+    if(hs)hs.style.display='block';
+    if(kb)kb.style.display=(G.players||[]).length>2?'inline-flex':'none';
+  }
+  if(rp)rp.style.display='none';
   show('s-spectator');
+}
+function updateSpectatorRevealProgress(done,total){
+  const fill=$('spec-rev-fill');
+  const phase=$('spec-phase');
+  if(fill)fill.style.width=`${total>0?(done/total*100):0}%`;
+  if(phase)phase.textContent=`Otkrivanje uloga — ${done}/${total}`;
 }
 </script>
 </body>

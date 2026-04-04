@@ -429,8 +429,9 @@ io.on('connection', (socket) => {
     if (!room) return socket.emit('error', 'Soba nije pronađena.');
     if (!room.players.find(p => p.id === socket.id && p.isHost))
       return socket.emit('error', 'Samo host može pokrenuti igru.');
-    if (room.players.length < 3)
-      return socket.emit('error', 'Potrebno je minimalno 3 igrača.');
+    const minPlayers = room.fairPlay ? 4 : 3;
+    if (room.players.length < minPlayers)
+      return socket.emit('error', `Potrebno je minimalno ${minPlayers} igrača${room.fairPlay ? ' (host je voditelj)' : ''}.`);
 
     room.roundNumber++;
 
