@@ -1123,7 +1123,7 @@ const SFX={
 // ── STATE ─────────────────────────────────────────────────────────────────────
 const socket=io();
 let G={},me=null,myWord=null,myRole=null,selVote=null,impCount=1,discTotal=120,voteTotal=60;
-let micStream=null,pcs={},pendingOffers=[],rulesFrom='s-join';
+let micStream=null,pcs={},pendingOffers=[],iceQueues={},rulesFrom='s-join';
 let micWanted=false,micInitPromise=null,micRestartTimer=null,resumeTried=false;
 let mobileResumeLock=false;
 const SESSION_KEY='impostor.session.v3';
@@ -1512,16 +1512,32 @@ function makeAudio(id){
 }
 function removeAudio(pid){stopRemoteMonitor(pid);const au=document.getElementById('au-'+pid);if(au){au.srcObject=null;au.remove();}setVoiceLevel(pid,0);}
 function hasLiveMic(){return !!(micStream&&micStream.getAudioTracks().some(t=>t.readyState==='live'));}
-function setMicUi(state,msg){$('mtxt').textContent=msg;$('mled').classList.toggle('live',state==='live');$('mwaves').style.display=state==='live'?'flex':'none';if(state!=='live')$('mled').style.background='var(--t3)';}
+function setMicUi(state,msg){
+  const mtxt=$('mtxt');if(mtxt)mtxt.textContent=msg;
+  const mled=$('mled');if(mled){mled.classList.toggle('live',state==='live');if(state!=='live')mled.style.background='var(--t3)';}
+  const mwaves=$('mwaves');if(mwaves)mwaves.style.display=state==='live'?'flex':'none';
+}
 function scheduleMicEnsure(delay=500){clearTimeout(micRestartTimer);micRestartTimer=setTimeout(()=>{if(micWanted)initMic({force:true});},delay);}
-function teardownPeerGraph(){Object.keys(pcs).forEach(pid=>closePeer(pid));pcs={};pendingOffers=[];}
+
+function teardownPeerGraph(){
+  Object.keys(pcs).forEach(pid=>closePeer(pid));
+  pcs={};
+  pendingOffers=[];
+  iceQueues={};
+}
+
 function stopMic({fullStop=true}={}){
   clearTimeout(micRestartTimer);
-  if(micStream){try{if(localMeterStop)localMeterStop();localMeterStop=null;}catch(e){}try{if(micStream._stopMon)micStream._stopMon();}catch(e){}micStream.getTracks().forEach(t=>{try{t.onended=null;t.onmute=null;t.onunmute=null;t.stop();}catch(e){}});micStream=null;}
+  if(micStream){
+    try{if(localMeterStop){localMeterStop();localMeterStop=null;}}catch(e){}
+    micStream.getTracks().forEach(t=>{try{t.onended=null;t.onmute=null;t.onunmute=null;t.stop();}catch(e){}});
+    micStream=null;
+  }
   teardownPeerGraph();
   if(fullStop){micWanted=false;setMicUi('idle','Mikrofon neaktivan');}
   renderAllVoiceLists();updateVoiceButtons();
 }
+
 function bindMicTrackLifecycle(stream){
   stream.getAudioTracks().forEach(track=>{
     track.onended=()=>{setMicUi('idle','Mikrofon prekinut — ponovno spajanje...');if(micWanted)scheduleMicEnsure(300);};
@@ -1529,33 +1545,59 @@ function bindMicTrackLifecycle(stream){
     track.onunmute=()=>{if(hasLiveMic())setMicUi('live','Mikrofon aktivan · Svi se čuju');};
   });
 }
+
 async function initMic({force=false}={}){
   if(micInitPromise)return micInitPromise;
   if(!force&&hasLiveMic())return micStream;
   micInitPromise=(async()=>{
-    if(force&&micStream)stopMic({fullStop:false});
+    // Clean up old stream but keep peer graph — we'll rebuild connections after
+    if(micStream){
+      try{if(localMeterStop){localMeterStop();localMeterStop=null;}}catch(e){}
+      micStream.getTracks().forEach(t=>{try{t.stop();}catch(e){}});
+      micStream=null;
+    }
+    teardownPeerGraph();
     setMicUi('pending','Spajanje mikrofona...');
     try{
-      const stream=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true,autoGainControl:true,channelCount:1},video:false});
-      micStream=stream;bindMicTrackLifecycle(stream);applySelfMute();
+      const stream=await navigator.mediaDevices.getUserMedia({
+        audio:{echoCancellation:true,noiseSuppression:true,autoGainControl:true,channelCount:1},
+        video:false
+      });
+      micStream=stream;
+      bindMicTrackLifecycle(stream);
+      applySelfMute();
       if(!selfMuted)setMicUi('live','Mikrofon aktivan · Svi se čuju');
-      monitorMic();renderAllVoiceLists();teardownPeerGraph();
-      // Signaliziraj svima da imamo mic, pa kreiraj veze
+      monitorMic();
+      renderAllVoiceLists();
+      // Signal all peers, then build connections
       if(G?.code)socket.emit('peer-mic-ready',{code:G.code});
       ensurePeerLinks();
-      const queued=[...pendingOffers];pendingOffers=[];
+      // Process any offers that arrived while mic was initializing
+      const queued=[...pendingOffers];
+      pendingOffers=[];
       for(const {from,offer} of queued)await handleOffer(from,offer);
       return stream;
-    }catch(e){setMicUi('idle','Mikrofon nedostupan — pričajte uživo');toast('⚠ Mikrofon nije dostupan');throw e;}
-    finally{micInitPromise=null;}
+    }catch(e){
+      setMicUi('idle','Mikrofon nedostupan — pričajte uživo');
+      toast('⚠ Mikrofon nije dostupan');
+      throw e;
+    }finally{micInitPromise=null;}
   })();
   return micInitPromise;
 }
+
 function wantMic(enabled){
   micWanted=enabled;
   if(enabled)initMic({force:!hasLiveMic()}).catch(()=>{});
   else stopMic({fullStop:true});
 }
+
+// Force mic restart + full peer reconnect (used between rounds)
+function restartMicAndReconnect(){
+  micWanted=true;
+  initMic({force:true}).catch(()=>{});
+}
+
 function monitorMic(){
   if(!micStream)return;
   try{
@@ -1565,23 +1607,25 @@ function monitorMic(){
     const buf=new Uint8Array(an.frequencyBinCount);
     let alive=true;
     localMeterStop=()=>{alive=false;try{src.disconnect();an.disconnect();}catch(e){};setVoiceLevel(socket.id,0);};
-    micStream._stopMon=localMeterStop;
     (function tick(){
       if(!alive||!micStream)return;
       an.getByteFrequencyData(buf);
       const avg=buf.reduce((s,v)=>s+v,0)/buf.length;
-      $('mled').style.background=selfMuted?'var(--t3)':(avg>12?'var(--cr)':'var(--cg)');
+      const mled=$('mled');
+      if(mled)mled.style.background=selfMuted?'var(--t3)':(avg>12?'var(--cr)':'var(--cg)');
       setVoiceLevel(socket.id,selfMuted?0:(avg*1.8));
       requestAnimationFrame(tick);
     })();
   }catch(e){}
 }
+
 // ══════════════════════════════════════════════════════════════
-// WebRTC — FULL MESH: svaki peer spaja se sa svakim
-// Glitch-free: peer s MANJIM socket.id uvijek je ANSWERER
-// (tj. peer s VEĆIM ID-om šalje offer — "polite peer" pattern)
-// Kad oba pošalju offer istovremeno: manji ID rollbacka i odgovara
+// WebRTC — FULL MESH
+// Perfect negotiation pattern: impolite = larger socket.id sends offer
+// ICE candidates buffered until remote description is set
 // ══════════════════════════════════════════════════════════════
+let iceQueues={};  // pid → [candidate, ...]
+
 function makeICE(){
   return {iceServers:[
     {urls:'stun:stun.l.google.com:19302'},
@@ -1592,7 +1636,6 @@ function makeICE(){
   ]};
 }
 
-// Impolite peer (veći ID) šalje offer; polite peer (manji ID) odgovara
 function amImpolite(pid){ return socket.id > pid; }
 
 function closePeer(pid){
@@ -1600,6 +1643,7 @@ function closePeer(pid){
   if(!pc)return;
   try{pc.onicecandidate=null;pc.ontrack=null;pc.onconnectionstatechange=null;pc.onnegotiationneeded=null;pc.close();}catch(e){}
   delete pcs[pid];
+  delete iceQueues[pid];
   removeAudio(pid);
 }
 
@@ -1608,13 +1652,13 @@ function makePeer(pid){
   if(!hasLiveMic())return null;
   const pc=new RTCPeerConnection(makeICE());
   pcs[pid]=pc;
+  iceQueues[pid]=[];
   let makingOffer=false;
   let ignoreOffer=false;
+  let remoteDescSet=false;
 
-  // Dodaj lokalne trackove
   micStream.getTracks().forEach(t=>pc.addTrack(t,micStream));
 
-  // Primamo remote audio
   pc.ontrack=e=>{
     const au=makeAudio(pid);
     au.srcObject=e.streams[0];
@@ -1623,12 +1667,10 @@ function makePeer(pid){
     renderAllVoiceLists();
   };
 
-  // ICE kandidati
   pc.onicecandidate=e=>{
     if(e.candidate)socket.emit('rtc-ice',{to:pid,candidate:e.candidate});
   };
 
-  // Stanje veze
   pc.onconnectionstatechange=()=>{
     const s=pc.connectionState;
     if(s==='connected'){renderAllVoiceLists();}
@@ -1636,11 +1678,20 @@ function makePeer(pid){
       closePeer(pid);
       if(micWanted)setTimeout(()=>{if(micWanted&&!pcs[pid]&&hasLiveMic())makePeer(pid);},2500);
     }
+    if(s==='disconnected'){
+      // Give it 4s to recover on its own before forcing reconnect
+      setTimeout(()=>{
+        const cur=pcs[pid];
+        if(cur&&cur.connectionState==='disconnected'){
+          closePeer(pid);
+          if(micWanted&&hasLiveMic())makePeer(pid);
+        }
+      },4000);
+    }
   };
 
-  // Negotiation needed — impolite peer šalje offer
   pc.onnegotiationneeded=async()=>{
-    if(!amImpolite(pid))return; // polite peer nikad ne inicira
+    if(!amImpolite(pid))return;
     try{
       makingOffer=true;
       await pc.setLocalDescription();
@@ -1648,45 +1699,60 @@ function makePeer(pid){
     }catch(e){}finally{makingOffer=false;}
   };
 
-  // Spremi meta na PC objektu za handleOffer pristup
+  // Expose state for handleOffer
   pc._makingOffer=()=>makingOffer;
   pc._setIgnore=(v)=>{ignoreOffer=v;};
   pc._ignoreOffer=()=>ignoreOffer;
   pc._amImpolite=()=>amImpolite(pid);
+  pc._setRemoteDescSet=(v)=>{remoteDescSet=v;};
+  pc._remoteDescSet=()=>remoteDescSet;
 
   return pc;
+}
+
+async function drainIceQueue(pid){
+  const pc=pcs[pid];
+  const q=iceQueues[pid];
+  if(!pc||!q)return;
+  while(q.length){
+    const c=q.shift();
+    try{await pc.addIceCandidate(c);}catch(e){}
+  }
 }
 
 async function handleOffer(from,offer){
   if(!hasLiveMic()){
     pendingOffers=pendingOffers.filter(x=>x.from!==from);
     pendingOffers.push({from,offer});
-    if(micWanted)initMic().catch(()=>{});
+    if(micWanted)initMic({force:false}).catch(()=>{});
     return;
   }
 
-  // Nabavi ili kreiraj PC
   let pc=pcs[from];
   if(!pc)pc=makePeer(from);
   if(!pc)return;
 
   const offerCollision=(offer.type==='offer')&&(pc._makingOffer()||pc.signalingState!=='stable');
-  const ignoreOffer=!pc._amImpolite()&&offerCollision; // polite peer ignorira koliziju
-  pc._setIgnore(ignoreOffer);
-  if(ignoreOffer)return;
+  const ignore=!pc._amImpolite()&&offerCollision;
+  pc._setIgnore(ignore);
+  if(ignore)return;
 
   try{
     if(offerCollision){
-      // impolite peer: rollback i prihvati novi offer
-      await pc.setLocalDescription({type:'rollback'});
+      await Promise.all([
+        pc.setLocalDescription({type:'rollback'}),
+        pc.setRemoteDescription(offer)
+      ]);
+    } else {
+      await pc.setRemoteDescription(offer);
     }
-    await pc.setRemoteDescription(offer);
+    pc._setRemoteDescSet(true);
+    await drainIceQueue(from);
     if(offer.type==='offer'){
       await pc.setLocalDescription();
       socket.emit('rtc-answer',{to:from,answer:pc.localDescription});
     }
   }catch(e){
-    // Teška greška — uništi i pokušaj ponovo
     closePeer(from);
     if(micWanted)setTimeout(()=>{if(micWanted&&!pcs[from]&&hasLiveMic())makePeer(from);},1500);
   }
@@ -1694,13 +1760,12 @@ async function handleOffer(from,offer){
 
 function ensurePeerLinks(){
   if(!hasLiveMic())return;
-  // Skip spectators (fair play host) — they have no mic
   (G.players||[]).filter(p=>!p.isSpectator).forEach(p=>{
     if(p.id===socket.id)return;
     const pc=pcs[p.id];
     if(!pc){makePeer(p.id);return;}
-    const s=pc.connectionState||pc.iceConnectionState;
-    if(['failed','closed'].includes(s)){closePeer(p.id);makePeer(p.id);}
+    const s=pc.connectionState;
+    if(s==='failed'||s==='closed'){closePeer(p.id);makePeer(p.id);}
   });
 }
 
@@ -1708,34 +1773,41 @@ socket.on('rtc-offer',({from,offer})=>{
   if(!hasLiveMic()){
     pendingOffers=pendingOffers.filter(x=>x.from!==from);
     pendingOffers.push({from,offer});
-    if(micWanted)initMic().catch(()=>{});
+    if(micWanted)initMic({force:false}).catch(()=>{});
   } else {
     handleOffer(from,offer);
   }
 });
+
 socket.on('rtc-answer',async({from,answer})=>{
   const pc=pcs[from];
   if(!pc)return;
-  try{await pc.setRemoteDescription(answer);}catch(e){}
+  try{
+    await pc.setRemoteDescription(answer);
+    pc._setRemoteDescSet(true);
+    await drainIceQueue(from);
+  }catch(e){}
 });
+
 socket.on('rtc-ice',async({from,candidate})=>{
   const pc=pcs[from];
   if(!pc)return;
-  try{
-    await pc.addIceCandidate(candidate);
-  }catch(e){
-    if(!pc._ignoreOffer?.())console.warn('ICE add failed',e);
+  // Buffer ICE candidates until remote description is set
+  if(!pc._remoteDescSet()){
+    if(!iceQueues[from])iceQueues[from]=[];
+    iceQueues[from].push(candidate);
+    return;
   }
+  try{await pc.addIceCandidate(candidate);}catch(e){}
 });
 
-// Kad peer dobije mic — svi koji su impolite prema njemu iniciraju vezu
 socket.on('peer-mic-ready',({from})=>{
   if(!hasLiveMic())return;
   const fromPlayer=G.players?.find(p=>p.id===from);
   if(!fromPlayer||fromPlayer.isSpectator)return;
-  // Svejedno — makePeer će odlučiti tko šalje offer via onnegotiationneeded
-  if(!pcs[from]){makePeer(from);}
-  else{
+  if(!pcs[from]){
+    makePeer(from);
+  } else {
     const s=pcs[from].connectionState;
     if(['failed','closed','disconnected'].includes(s)){closePeer(from);makePeer(from);}
   }
@@ -1745,8 +1817,10 @@ function safeMobileResume(){
   if(mobileResumeLock)return;mobileResumeLock=true;
   setTimeout(()=>{
     if(socket.disconnected){try{socket.connect();}catch(e){}}
-    if(micWanted){initMic({force:!hasLiveMic()}).catch(()=>{});}
-    if(G?.state==='DISCUSSION'||G?.state==='RESULTS')setTimeout(()=>ensurePeerLinks(),250);
+    if(micWanted){
+      if(!hasLiveMic()){initMic({force:true}).catch(()=>{});}
+      else{setTimeout(()=>ensurePeerLinks(),300);}
+    }
     mobileResumeLock=false;
   },900);
 }
@@ -1908,7 +1982,7 @@ socket.on('roomUpdated',room=>{
     $('imp-v').textContent=impCount;
   }
   saveSession({code:G.code,name:me?.name||getSession().name||$('j-name').value.trim()});
-  if((G.state==='DISCUSSION'||G.state==='RESULTS')&&micWanted){scheduleMicEnsure(200);setTimeout(()=>ensurePeerLinks(),350);}
+  if((G.state==='DISCUSSION'||G.state==='RESULTS')&&micWanted&&hasLiveMic()){setTimeout(()=>ensurePeerLinks(),350);}
   renderAllVoiceLists();
   if(G.state==='LOBBY'){wantMic(false);if(!$('s-lobby').classList.contains('on'))show('s-lobby');renderLobby();}
   if(G.state==='DISCUSSION'&&me?.isHost){
@@ -1941,23 +2015,13 @@ socket.on('startDiscussion',room=>{
   } else {
     show('s-disc');setupDisc(room);
     if(room.firstSpeakerName)spinner(room.firstSpeakerName,null);
-    // Force mic restart so peer-mic-ready signal fires and all peers reconnect
-    teardownPeerGraph();
-    if(micStream){
-      try{if(localMeterStop)localMeterStop();localMeterStop=null;}catch(e){}
-      micStream.getTracks().forEach(t=>{try{t.stop();}catch(e){}});
-      micStream=null;
-    }
-    micWanted=true;
-    initMic({force:true}).then(()=>{
-      if(G?.code)socket.emit('peer-mic-ready',{code:G.code});
-      setTimeout(()=>ensurePeerLinks(),400);
-    }).catch(()=>{});
+    restartMicAndReconnect();
   }
 });
 socket.on('votingStarted',room=>{
   G=room;me=meNow();if(me){me.word=myWord;me.role=myRole;}
-  voteTotal=room.votingTime||60;wantMic(false);
+  voteTotal=room.votingTime||60;
+  // Keep mic alive through voting so results screen audio works immediately
   if(myRole==='SPECTATOR'){
     updateSpectatorDiscScreen(room);
     toast('Glasanje u tijeku — vi gledate');
@@ -1984,8 +2048,12 @@ socket.on('gameEnded',room=>{
   }
   myWord=room.myWord??myWord;myRole=room.myRole??myRole;
   G=room;me=meNow();if(me){me.word=myWord;me.role=myRole;}
-  show('s-res');renderResults();wantMic(true);
-  setTimeout(()=>ensurePeerLinks(),400);unlockAudio();
+  show('s-res');renderResults();
+  // Mic kept alive from discussion — just ensure all peer links are intact
+  micWanted=true;
+  if(hasLiveMic()){setTimeout(()=>ensurePeerLinks(),300);}
+  else{restartMicAndReconnect();}
+  unlockAudio();
 });
 socket.on('playerKickedMidGame',({kickedId,kickedName})=>{
   if(kickedId===socket.id){
