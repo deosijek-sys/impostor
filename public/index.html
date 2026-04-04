@@ -1285,14 +1285,13 @@ function obShow(){
 function obNext(){if(obCur<3){obCur++;obShow();}else{obSkip();}}
 function obGo(n){obCur=n;obShow();}
 function obSkip(){
-  localStorage.setItem(OB_KEY,'1');
   var el=document.getElementById('ob');
   if(el) el.style.display='none';
 }
 (function(){
   var el=document.getElementById('ob');
   if(!el) return;
-  if(localStorage.getItem(OB_KEY)){el.style.display='none';return;}
+
   el.style.display='flex';
   obShow();
 
