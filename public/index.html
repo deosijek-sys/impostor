@@ -1036,8 +1036,10 @@ $('btn-join').onclick=()=>{
   if(!name){err.textContent='Unesite ime agenta.';return;}
   if(!code||code.length<3){err.textContent='Unesite ispravan kod sobe.';return;}
   const ss=getSession();
-  saveSession({code,name,playerToken:ss.playerToken||''});
-  socket.emit('joinRoom',{code,playerName:name,playerToken:ss.playerToken||''});
+  // only send token if it belongs to this exact room — otherwise treat as fresh join
+  const sendToken=(ss.playerToken&&ss.code===code)?ss.playerToken:'';
+  saveSession({code,name,playerToken:sendToken});
+  socket.emit('joinRoom',{code,playerName:name,playerToken:sendToken});
 };
 $('j-code').oninput=function(){this.value=this.value.toUpperCase();};
 $('btn-create').onclick=()=>{

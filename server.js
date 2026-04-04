@@ -278,13 +278,19 @@ io.on('connection', (socket) => {
         io.to(roomCode).emit('roomUpdated', safeRoom(room));
         return;
       }
+      // Token not found in this room — treat as new player, ignore stale token
     }
 
     if (room.players.length >= 10) return socket.emit('error', 'Soba je puna (max 10).');
-    const nameTaken = room.players.find(p => p.name.toLowerCase() === (playerName||'').toLowerCase() && p.isConnected !== false);
+    // Exclude players with same socket.id (reconnect edge case) from nameTaken check
+    const nameTaken = room.players.find(p =>
+      p.name.toLowerCase() === (playerName||'').toLowerCase() &&
+      p.isConnected !== false &&
+      p.id !== socket.id
+    );
     if (nameTaken) return socket.emit('error', 'To ime je već zauzeto.');
 
-    const token = playerToken || makePlayerToken();
+    const token = makePlayerToken(); // always fresh token for truly new players
     room.players.push({ id: socket.id, name: playerName, isHost: false, isReady: false, playerToken: token, isConnected: true });
     room.scores[token] = room.scores[token] || 0;
     socket.join(roomCode);
