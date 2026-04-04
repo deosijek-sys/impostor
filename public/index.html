@@ -1329,8 +1329,13 @@ function renderLobby(){
   $('l-code').textContent=G.code;
   const catLabel = G.hasCustomPair ? '✏️ Custom (Fair Play)' : G.category;
   $('l-cat').textContent=catLabel;
+  // Only sync customActive from server state if user isn't currently editing custom inputs
   if(G.hasCustomPair&&me&&me.isHost&&!customActive){
     if(typeof setCustomActive==='function')setCustomActive(true);
+  } else if(!G.hasCustomPair&&me&&me.isHost&&customActive&&!customInputFocused){
+    // Server cleared customPair and user isn't editing — sync down
+    customActive=false;
+    updateToggleUI();
   }
   $('l-imps').textContent=G.impostorCount;
   $('rnd').textContent=G.roundNumber>0?`R${G.roundNumber}`:'';
@@ -1369,6 +1374,7 @@ function renderLobby(){
   $('btn-ready').className=`btn ${mr?'bo':'bg'} mb`;
 }
 let customActive=false;
+let customInputFocused=false;
 function emitCfg(){
   if(customActive){
     const c=$('cfg-citizen').value.trim();
@@ -1404,6 +1410,8 @@ function setCustomActive(val){
 $('cfg-custom-toggle').onchange=()=>setCustomActive($('cfg-custom-toggle').checked);
 $('toggle-pill').onclick=()=>setCustomActive(!customActive);
 $('cfg-citizen').oninput=$('cfg-impostor').oninput=()=>{if(customActive)emitCfg();};
+$('cfg-citizen').onfocus=$('cfg-impostor').onfocus=()=>{customInputFocused=true;};
+$('cfg-citizen').onblur=$('cfg-impostor').onblur=()=>{customInputFocused=false;};
 $('cfg-cat').onchange=$('cfg-disc').onchange=$('cfg-vote').onchange=emitCfg;
 $('imp-m').onclick=()=>{impCount=Math.max(1,impCount-1);$('imp-v').textContent=impCount;emitCfg();};
 $('imp-p').onclick=()=>{impCount=Math.min(3,impCount+1);$('imp-v').textContent=impCount;emitCfg();};
@@ -1912,7 +1920,18 @@ socket.on('startDiscussion',room=>{
   } else {
     show('s-disc');setupDisc(room);
     if(room.firstSpeakerName)spinner(room.firstSpeakerName,null);
-    setTimeout(()=>ensurePeerLinks(),400);
+    // Force mic restart so peer-mic-ready signal fires and all peers reconnect
+    teardownPeerGraph();
+    if(micStream){
+      try{if(localMeterStop)localMeterStop();localMeterStop=null;}catch(e){}
+      micStream.getTracks().forEach(t=>{try{t.stop();}catch(e){}});
+      micStream=null;
+    }
+    micWanted=true;
+    initMic({force:true}).then(()=>{
+      if(G?.code)socket.emit('peer-mic-ready',{code:G.code});
+      setTimeout(()=>ensurePeerLinks(),400);
+    }).catch(()=>{});
   }
 });
 socket.on('votingStarted',room=>{
