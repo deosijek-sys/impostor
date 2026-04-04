@@ -14,72 +14,152 @@ const PORT = process.env.PORT || 3000;
 
 const WORDS = {
   "Hrana": [
-    ["Pizza","Burek"],["Hamburger","Ćevapi"],["Sushi","Riblji štapići"],["Torta","Kolač"],["Palačinke","Vafli"],["Sladoled","Puding"],["Kava","Čaj"],["Pivo","Cider"],["Sok","Cola"],["Kruh","Tortilja"],["Sir","Jogurt"],["Jaje","Kobasica"],["Tjestenina","Riža"],["Piletina","Puretina"],["Riba","Lignje"],["Salata","Pizza"],["Čokolada","Kolač"],["Čips","Pereci"],["Sendvič","Tost"],["Naranča","Grejpfrut"],["Jabuka","Kruška"],["Banana","Mango"],["Jagoda","Malina"],["Rajčica","Paprika"],["Krumpir","Mrkva"],["Luk","Češnjak"],["Tiramisu","Panna cotta"],["Krafna","Fritula"],["Nutella","Džem"],["Popcorn","Kikiriki"],["Smoothie","Kakao"],["Rižoto","Pomfrit"],["Pršut","Salama"],["Ajvar","Senf"],["Punjena paprika","Sarma"],["Lješnjak","Badem"],["Grah","Leća"],["Jaje na oko","Kuhano jaje"],["Hot dog","Kobasica"],["Cappuccino","Latte"],["Espresso","Turska kava"],["Kokos","Ananas"],["Lubenica","Dinja"],["Grožđe","Šljiva"]
+    ["Pizza","Burek"],["Hamburger","Ćevapi"],["Sushi","Riblji štapići"],
+    ["Torta","Palačinke"],["Vafli","Krafna"],["Sladoled","Puding"],
+    ["Kava","Čaj"],["Pivo","Vino"],["Sok","Voda"],
+    ["Kruh","Lepinja"],["Sir","Slanina"],["Jaje","Kaša"],
+    ["Tjestenina","Riža"],["Piletina","Riba"],["Odrezak","Ćufte"],
+    ["Salata","Juha"],["Čokolada","Gumene bombone"],["Čips","Pereci"],
+    ["Sendvič","Tost"],["Pečena piletina","Ražnjići"],["Naranča","Breskva"],
+    ["Jabuka","Banana"],["Mango","Kivi"],["Jagoda","Borovnica"],
+    ["Rajčica","Krastavac"],["Mrkva","Kukuruz"],["Luk","Češnjak"],
+    ["Tiramisu","Cheesecake"],["Nutella","Džem"],
+    ["Popcorn","Kikiriki"],["Smoothie","Matcha"],["Rižoto","Gulaš"],
+    ["Pršut","Salama"],["Ajvar","Senf"]
   ],
   "Sport": [
-    ["Nogomet","Ragbi"],["Košarka","Vaterpolo"],["Tenis","Badminton"],["Plivanje","Ronjenje"],["Boks","Karate"],["Sprint","Maraton"],["Skijanje","Snowboard"],["Biciklizam","Rolanje"],["Odbojka","Odbojka na pijesku"],["Golf","Nogomet"],["Gimnastika","Akrobatika"],["Judo","Hrvanje"],["Surfanje","Jedrenje"],["Penjanje","Planinarenje"],["Hokej","Klizanje"],["Maraton","Polumaraton"],["Veslanje","Kajak"],["Rukomet","Futsal"],["Joga","Pilates"],["Kickboxing","MMA"],["Streličarstvo","Pikado"],["Taekwondo","Kung fu"],["Stolni tenis","Biljar"],["Baseball","Košarka"],["Američki nogomet","Rukomet"],["Parkour","Trčanje s preprekama"],["Boćanje","Picigin"],["Ribolov","Lov"],["Skateboarding","BMX"]
+    ["Nogomet","Košarka"],["Tenis","Badminton"],["Plivanje","Atletika"],
+    ["Boks","Karate"],["Biciklizam","Rolanje"],
+    ["Skijanje","Surfanje"],["Skateboarding","Parkour"],
+    ["Odbojka","Rukomet"],["Golf","Kuglanje"],
+    ["Gimnastika","Akrobatika"],["Judo","Taekwondo"],
+    ["Jedrenje","Kajak"],["Penjanje","Planinarenje"],
+    ["Hokej","Curling"],["Maraton","Triatlon"],
+    ["Veslanje","Vaterpolo"],["Futsal","Ragbi"],
+    ["Joga","Pilates"],["Kickboxing","MMA"],
+    ["Streličarstvo","Pikado"],["Stolni tenis","Squash"],
+    ["Boćanje","Picigin"],["Ribolov","Lov"]
   ],
   "Životinje": [
-    ["Pas","Mačka"],["Mačka","Lav"],["Lav","Tigar"],["Slon","Nosorog"],["Majmun","Gorila"],["Delfin","Hobotnica"],["Konj","Magarac"],["Krava","Bik"],["Svinja","Ovca"],["Kokoš","Patka"],["Orao","Gavran"],["Sova","Papiga"],["Zec","Vjeverica"],["Medvjed","Panda"],["Pingvin","Tuljan"],["Flamingo","Pelikan"],["Žirafa","Deva"],["Koala","Klokan"],["Gepard","Puma"],["Krokodil","Gušter"],["Zmija","Leguan"],["Pčela","Osa"],["Leptir","Bubamara"],["Hobotnica","Lignja"],["Morski pas","Sabljarka"],["Labud","Čaplja"],["Miš","Hrčak"],["Jež","Krtica"],["Lama","Koza"],["Bizon","Los"],["Hijena","Šakal"],["Morski konjic","Meduza"],["Riba","Jegulja"]
+    ["Pas","Vuk"],["Mačka","Leopard"],["Lav","Tigar"],
+    ["Slon","Nosorog"],["Majmun","Gorila"],["Delfin","Kit"],
+    ["Konj","Zebra"],["Krava","Svinja"],["Kokoš","Patka"],
+    ["Orao","Sova"],["Papiga","Flamingo"],["Žaba","Gušter"],
+    ["Zec","Jež"],["Medvjed","Lisica"],["Pingvin","Tuljan"],
+    ["Žirafa","Deva"],["Koala","Klokan"],
+    ["Gepard","Puma"],["Krokodil","Zmija"],
+    ["Bubamara","Leptir"],["Hobotnica","Morski pas"],
+    ["Vjeverica","Jazavac"],["Lama","Alpaka"],
+    ["Bizon","Los"],["Morski konjic","Meduza"]
   ],
   "Mjesta": [
-    ["Plaža","Bazen"],["Škola","Fakultet"],["Bolnica","Privatna klinika"],["Restoran","Kafić"],["Kino","Kazalište"],["Tržnica","Supermarket"],["Crkva","Džamija"],["Park","Trg"],["Hotel","Apartman"],["Aerodrom","Kolodvor"],["Muzej","Galerija"],["Stadion","Igralište"],["Teretana","Sportski centar"],["Knjižnica","Knjižara"],["Banka","Mjenjačnica"],["Frizerski salon","Kozmetički salon"],["Zagreb","Split"],["Dubrovnik","Šibenik"],["Rijeka","Osijek"],["Pariz","Madrid"],["London","Berlin"],["New York","Los Angeles"],["Tokio","Bangkok"],["Planina","Brežuljak"],["Jezero","More"],["Otok","Poluotok"],["Dvorac","Tvrđava"],["Centar grada","Selo"],["Kamp","Bungalov"],["Zabavni park","Aquapark"],["Tržni centar","Prodavaonica"],["Benzinska postaja","Autopraonica"],["Igralište","Skatepark"],["Zoološki vrt","Akvarij"],["Vatrogasna postaja","Policijska postaja"]
+    ["Plaža","Bazen"],["Škola","Bolnica"],
+    ["Restoran","Knjižnica"],["Kino","Kazalište"],
+    ["Tržnica","Muzej"],["Crkva","Stadion"],
+    ["Park","Teretana"],["Hotel","Kamp"],
+    ["Aerodrop","Luka"],["Galerija","Zoološki vrt"],
+    ["Banka","Pošta"],["Frizerski salon","Ljekarna"],
+    ["Zagreb","Dubrovnik"],["Split","Osijek"],
+    ["Pariz","Tokio"],["London","New York"],
+    ["Berlin","Amsterdam"],["Rim","Istanbul"],
+    ["Otok","Tvrđava"],["Kanjon","Dolina"],
+    ["Zabavni park","Aquapark"],["Tržni centar","Igralište"],
+    ["Vatrogasna postaja","Policijska postaja"]
   ],
   "Predmeti": [
-    ["Mobitel","Tablet"],["Laptop","Tablet"],["Televizor","Projektor"],["Automobil","Motor"],["Bicikl","Skateboard"],["Motor","Moped"],["Kišobran","Kabanica"],["Torba","Ruksak"],["Novčanik","Torbica"],["Sat","Budilnik"],["Naočale","Sunčane naočale"],["Slušalice","Zvučnik"],["Knjiga","Tablet"],["Olovka","Kemijska"],["Bilježnica","Rokovnik"],["Šešir","Kačket"],["Čizme","Tenisice"],["Sandale","Papuče"],["Krevet","Kauč"],["Stol","Polica"],["Stolica","Fotelja"],["Hladnjak","Zamrzivač"],["Tava","Lonac"],["Nož","Vilica"],["Gitara","Ukulele"],["Klavir","Harmonika"],["Bubnjevi","Činele"],["Kamera","Telefon"],["Lopta","Frisbee"],["Karte","Šah"],["Sapun","Šampon"],["Četkica za zube","Konac za zube"],["Ručnik","Ogrtač"],["Punjač","Produžni kabel"],["Baterijska lampa","Svijeća"],["Metla","Usisavač"],["Pegla","Sušilo za kosu"]
+    ["Automobil","Bicikl"],["Motor","Romobil"],
+    ["Kišobran","Kabanica"],["Torba","Ruksak"],
+    ["Novčanik","Ključevi"],["Sat","Kompas"],
+    ["Naočale","Kontaktne leće"],["Slušalice","Kamera"],
+    ["Olovka","Kemijska"],["Bilježnica","Rokovnik"],
+    ["Šešir","Kačket"],["Čizme","Sandale"],
+    ["Krevet","Hammock"],["Stol","Polica"],
+    ["Stolica","Fotelja"],["Hladnjak","Mikrovalna"],
+    ["Tava","Nož"],["Harmonika","Ukulele"],
+    ["Truba","Saksofon"],["Videokamera","Teleskop"],
+    ["Lopta","Frisbee"],["Karte","Šah"],
+    ["Sapun","Dezodorans"],["Metla","Usisavač"],
+    ["Baterijska lampa","Sveća"],["Punjač","Produžni kabel"]
   ],
   "Filmovi i serije": [
-    ["Titanic","Pearl Harbor"],["The Godfather","Scarface"],["Inception","The Matrix"],["The Dark Knight","Joker"],["Pulp Fiction","Reservoir Dogs"],["Game of Thrones","House of the Dragon"],["Breaking Bad","Better Call Saul"],["Stranger Things","Dark"],["Friends","The Office"],["The Office","Brooklyn 99"],["Squid Game","Hunger Games"],["Money Heist","Lupin"],["Peaky Blinders","Boardwalk Empire"],["Narcos","Sicario"],["1917","Dunkirk"],["Interstellar","Gravity"],["Dune","Avatar"],["Avengers","Justice League"],["Harry Potter","Narnia"],["Star Wars","Star Trek"],["Parasite","Oldboy"],["Chernobyl","Narcos"],["Succession","Breaking Bad"],["Euphoria","Skins"],["Sherlock","Breaking Bad"],["The Wire","The Shield"],["Wednesday","Coraline"],["Emily in Paris","Sex and the City"],["Ted Lasso","Abbott Elementary"],["Severance","Black Mirror"],["The Bear","Ramsay's Kitchen Nightmares"],["White Lotus","The Undoing"],["The Mandalorian","Andor"],["The Hobbit","Rings of Power"],["Cobra Kai","Karate Kid"],["Yellowstone","Outer Range"]
+    ["Titanic","Schindler's List"],["The Godfather","Scarface"],
+    ["Inception","The Matrix"],["The Dark Knight","Joker"],
+    ["Pulp Fiction","Fight Club"],
+    ["Game of Thrones","Peaky Blinders"],
+    ["Breaking Bad","The Wire"],
+    ["Stranger Things","Black Mirror"],["Friends","The Office"],
+    ["Squid Game","Hunger Games"],["Money Heist","Narcos"],
+    ["True Detective","Mindhunter"],
+    ["1917","Dunkirk"],["Interstellar","Dune"],
+    ["Avengers","Star Wars"],["Harry Potter","Narnia"],
+    ["Parasite","Oldboy"],["Chernobyl","Sicario"],
+    ["Succession","Billions"],["Euphoria","Skins"],
+    ["Sherlock","Elementary"],["Wednesday","Coraline"],
+    ["Ted Lasso","Abbott Elementary"],
+    ["Severance","Dark"],["The Bear","Ramsay's Kitchen Nightmares"],
+    ["The Mandalorian","Avatar"],["Cobra Kai","Karate Kid"],
+    ["Yellowstone","Outer Range"]
   ],
   "Profesije": [
-    ["Liječnik","Medicinska sestra"],["Zubar","Ortodont"],["Učitelj","Trener"],["Odgajatelj","Babysitter"],["Policajac","Detektiv"],["Vojnik","Specijalac"],["Kuhar","Dostavljač hrane"],["Farmer","Vrtlar"],["Taksist","Vozač autobusa"],["Pilot","Stjuardesa"],["Arhitekt","Građevinar"],["Električar","Vodoinstalater"],["Programer","Serviser"],["Fotograf","Novinar"],["Glumac","Pjevač"],["Novinar","Urednik"],["Odvjetnik","Sudac"],["Frizer","Kozmetičar"],["Psiholog","Logoped"],["Trener","Fizioterapeut"],["Ekonomist","Računovođa"],["Šumar","Lovočuvar"],["Ribar","Lovac"],["Tesar","Stolar"],["Vozač kamiona","Dostavljač"],["Redatelj","Scenarist"],["Prevoditelj","Lektor"],["Bibliotekar","Arhivist"],["Socijalni radnik","Pedagog"],["Meteorolog","Geograf"],["Mehaničar","Autolimar"]
+    ["Liječnik","Vatrogasac"],["Zubar","Frizer"],
+    ["Učitelj","Trener"],["Odgajatelj","Psiholog"],
+    ["Policajac","Vojnik"],["Kuhar","Konobar"],
+    ["Farmer","Šumar"],["Taksist","Pilot"],
+    ["Arhitekt","Programer"],["Električar","Vodoinstalater"],
+    ["Fotograf","Novinar"],["Glumac","Pjevač"],
+    ["Odvjetnik","Sudac"],["Ekonomist","Računovođa"],
+    ["Ribar","Lovac"],["Tesar","Stolar"],
+    ["Vozač kamiona","Dostavljač"],["Redatelj","Scenarist"],
+    ["Prevoditelj","Bibliotekar"],["Socijalni radnik","Pedagog"],
+    ["Meteorolog","Geograf"],["Mehaničar","Dizajner"]
   ],
   "Glazba": [
-    ["Pop","Hip-hop"],["Rock","Elektronika"],["Jazz","Blues"],["Klasična","Film glazba"],["Elektronika","Techno"],["House","Trance"],["Reggae","Ska"],["Folk","Country"],["Soul","R&B"],["Punk","Grunge"],["Rap","Govor"],["Gitara","Bas gitara"],["Bubnjevi","Sintesajzer"],["Klavir","Harmonika"],["Violina","Viola"],["Koncert","Festival"],["Album","Single"],["Aplikacija","Radio"],["Ploča","Mobitel"],["Nagrada","MTV nagrada"],["Mikrofon","Zvučnik"],["Zbor","Bend"],["DJ","Producent"],["Balada","Himna"],["Disco","Funk"],["Coldplay","Radiohead"],["Beyoncé","Rihanna"],["Taylor Swift","Billie Eilish"],["Eminem","Kendrick Lamar"]
+    ["Pop","Rock"],["Metal","Jazz"],["Hip-hop","Blues"],
+    ["Klasična glazba","Reggae"],["Elektronika","Folk"],
+    ["House","Country"],["Soul","Punk"],
+    ["Gitara","Violina"],["Bubnjevi","Klavir"],
+    ["Mikrofon","Sintesajzer"],["Koncert","Festival"],
+    ["Album","Single"],["Spotify","Vinyl"],
+    ["Grammy","MTV nagrade"],["Bend","DJ"],
+    ["Balada","Himna"],["Coldplay","Eminem"],
+    ["Taylor Swift","Beyoncé"],["Zbor","Rap"]
   ],
   "Svakodnevni život": [
-    ["Jutarnja kava","Doručak"],["Buđenje","Alarm"],
-    ["Tuš","Kupanje"],["Pranje zuba","Brijanje"],
-    ["Odlazak na posao","Home office"],["Autom na posao","Pješice"],
-    ["Ručak","Snack"],["Šetnja","Trčanje"],
+    ["Jutarnja kava","Trening"],["Buđenje","Alarm"],
+    ["Tuš","Sauna"],["Pranje zuba","Brijanje"],
+    ["Odlazak na posao","Rad od kuće"],["Autom","Pješice"],
+    ["Ručak","Večera"],["Šetnja","Meditacija"],
     ["Kupovina","Online narudžba"],["Kuhanje","Naručivanje hrane"],
-    ["Pranje posuđa","Perilica"],["Usisavanje","Brisanje prašine"],
-    ["Gledanje TV-a","Streaming"],["Čitanje knjige","Audiobook"],
-    ["Telefonski poziv","Video poziv"],["Poruka","Email"],
-    ["Vikend izlet","Dan na plaži"],["Piknik","BBQ"],
+    ["Pranje posuđa","Usisavanje"],["Gledanje TV-a","Čitanje knjige"],
+    ["Telefonski poziv","Poruka"],["Pismo","Razglednica"],
+    ["Vikend izlet","Piknik"],["Roštilj","Fondue"],
     ["Posjet prijatelju","Obiteljski ručak"],
-    ["Rodjendan","Proslava"],["Vjenčanje","Krštenje"],
-    ["Godišnji odmor","Produženi vikend"]
+    ["Rođendan","Vjenčanje"],["Godišnji odmor","Božić"],
+    ["Jutarnja šetnja","Večernji film"],["Uređivanje stana","Vrtlarstvo"]
   ],
   "Priroda": [
-    ["Kiša","Tuča"],["Snijeg","Led"],["Vjetar","Oluja"],
-    ["Sunce","Oblaci"],["Duga","Munja"],["Magla","Izmaglica"],
-    ["Poplave","Suša"],["Planina","Brežuljak"],
-    ["Rijeka","Potok"],["Jezero","Bara"],["More","Zaljev"],
-    ["Šuma","Džungla"],["Livada","Polje"],
-    ["Pustinja","Savana"],["Vulkan","Gejzir"],
-    ["Hrast","Bor"],["Palma","Bambus"],
-    ["Ruža","Lala"],["Suncokret","Lavanda"],
-    ["Gljiva","Mahovina"],["Komarac","Muha"],
-    ["Bubamara","Leptir"],["Mravi","Pčele"]
+    ["Kiša","Snijeg"],["Vjetar","Oluja"],
+    ["Sunce","Magla"],["Duga","Munja"],
+    ["Poplava","Suša"],["Planina","More"],
+    ["Rijeka","Gejzir"],["Jezero","Vulkan"],
+    ["Šuma","Livada"],["Savana","Džungla"],
+    ["Hrast","Palma"],["Ruža","Kaktus"],
+    ["Suncokret","Bambus"],["Gljiva","Mahovina"],
+    ["Komarac","Mrav"],["Pauk","Stonoga"],
+    ["Litica","Klisura"],["Maslina","Trešnja"]
   ],
   "Tehnologija": [
-    ["Mobitel","Pametni sat"],["Laptop","Tablet"],["WiFi","Bluetooth"],["Internet","Bez interneta"],["WhatsApp","Telegram"],["Signal","Viber"],["Instagram","TikTok"],["YouTube","Netflix"],["Google","Bing"],["Chrome","Firefox"],["iPhone","Android"],["Windows","Mac"],["USB","SD kartica"],["Printer","Skener"],["Miš","Touchpad"],["Tipkovnica","Dodirni ekran"],["Monitor","Projektor"],["Kamera","Webcam"],["PlayStation","Xbox"],["Nintendo","Steam Deck"],["Internet","USB"],["Lozinka","PIN"],["QR kod","Barcode"],["Robot","Dron"],["Asistent","Čovjek"],["VR","AR"],["Powerbank","Punjač"],["Pametna TV","IPTV"],["WiFi","Hotspot"]
-  ],
-  "Boje": [
-    ["Crvena","Narančasta"],["Plava","Tirkizna"],["Zelena","Maslinasta"],["Žuta","Zlatna"],["Ljubičasta","Indigo"],["Ružičasta","Breskva"],["Smeđa","Bež"],["Crna","Tamno siva"],["Bijela","Krem"],["Siva","Bijela"],["Bordo","Tamnocrvena"],["Tirkizna","Mintna"],["Limeta","Neon zelena"],["Koraljna","Losos"],["Lavanda","Lila"],["Teget","Plava"],["Smeđa","Čokolada"]
-  ],
-  "Prijevoz": [
-    ["Automobil","Kombi"],["Autobus","Taksi"],["Vlak","Avion"],["Avion","Helikopter"],["Bicikl","Romobil"],["Motor","Moped"],["Brod","Jedrilica"],["Taksi","Prijatelj vozi"],["Kamion","Traktor"],["Podmornica","Čamac"],["Žičara","Uspinjača"],["Kabriolet","Limuzina"],["Pickup","Džip"],["Kamp prikolica","Autodom"],["Električni auto","Benzinski auto"],["Električni romobil","Bicikl"]
-  ],
-  "Emocije": [
-    ["Sreća","Uzbuđenje"],["Tuga","Melankolija"],["Ljutnja","Frustracija"],["Strah","Uzbuđenje"],["Iznenađenje","Zbunjenost"],["Gađenje","Nelagoda"],["Ljubav","Divljenje"],["Zavist","Razočaranje"],["Ponos","Samopouzdanje"],["Stid","Neugoda"],["Krivnja","Žaljenje"],["Nada","Optimizam"],["Dosada","Umor"],["Zahvalnost","Ponos"],["Nostalgija","Čežnja"],["Panika","Strah"]
-  ],
-  "Godišnja doba i praznici": [
-    ["Proljeće","Ljeto"],["Jesen","Zima"],["Božić","Nova godina"],["Uskrs","Fašnik"],["Valentinovo","Majčin dan"],["Halloween","Maskenbal"],["Karneval","Maskenbal"],["Dan državnosti","Dan neovisnosti"],["Majčin dan","Očev dan"],["Proslava","Godišnjica"],["Ljetni odmor","Zimski odmor"],["Doček Nove godine","Silvestar"]
-  ],
-  "Hobiji": [
-    ["Slikanje","Fotografija"],["Fotografija","Snimanje videa"],["Kuhanje","Naručivanje hrane"],["Vrtlarstvo","Uzgoj biljaka"],["Šivanje","Pletenje"],["Čitanje","Podcast"],["Igranje igara","Sport"],["Kolekcionarstvo","Skupljanje marki"],["Planinarenje","Kampiranje"],["Ribolov","Lov"],["Plesanje","Pjevanje"],["Meditacija","Joga"],["Origami","Modelarstvo"],["3D printanje","Modelarstvo"],["Mađioničarstvo","Žongliranje"],["Podcasting","Blogging"],["Sudoku","Križaljka"],["Escape room","Društvene igre"]
+    ["Mobitel","Pametni sat"],["Laptop","Tablet"],
+    ["WiFi","Bluetooth"],["WhatsApp","Signal"],
+    ["Instagram","YouTube"],["TikTok","Netflix"],
+    ["Google","Bing"],["Chrome","Firefox"],
+    ["iPhone","Android"],["Windows","MacOS"],
+    ["USB","SD kartica"],["Printer","Skener"],
+    ["Tipkovnica","Touchscreen"],["Monitor","Projektor"],
+    ["PlayStation","Xbox"],["Nintendo Switch","PC gaming"],
+    ["Cloud","Vanjski disk"],["Lozinka","PIN"],
+    ["QR kod","Barcode"],["Robot","Dron"],
+    ["AI asistent","VR naočale"],["Powerbank","Router"]
   ]
 };
 
@@ -141,6 +221,10 @@ function startTimer(code, seconds, onTick, onEnd) {
 function safeRoom(room) {
   return {
     ...room,
+    fairPlay: !!room.fairPlay,
+    hasCustomPair: !!room.customPair,
+    customPair: undefined, // never expose words to client via safeRoom
+    words: undefined,
     players: room.players.map(p => ({
       id: p.id,
       name: p.name,
@@ -150,7 +234,8 @@ function safeRoom(room) {
       voted: !!p.voted,
       isConnected: p.isConnected !== false,
       score: room.scores?.[scoreKey(p)] || 0,
-      playerToken: p.playerToken
+      playerToken: p.playerToken,
+      isSpectator: p.role === 'SPECTATOR'
     }))
   };
 }
@@ -236,10 +321,29 @@ io.on('connection', (socket) => {
     io.to(roomCode).emit('roomUpdated', safeRoom(room));
   });
 
-  socket.on('updateConfig', ({ code, category, impostors, discussionTime, votingTime }) => {
+  socket.on('updateConfig', ({ code, category, impostors, discussionTime, votingTime, customPair, fairPlay }) => {
     const room = rooms.get((code || '').toUpperCase());
     if (!room || room.state !== 'LOBBY' || !room.players.find(p => p.id === socket.id && p.isHost)) return;
-    if (WORDS[category]) room.category = category;
+
+    if (customPair === null) {
+      room.customPair = null;
+      room.fairPlay = false;
+      if (room.category === '\u270f\ufe0f Custom') room.category = 'Hrana';
+    } else if (customPair && customPair.citizen && customPair.impostor) {
+      const c = customPair.citizen.trim().slice(0, 40);
+      const i = customPair.impostor.trim().slice(0, 40);
+      if (c && i && c.toLowerCase() !== i.toLowerCase()) {
+        room.customPair = { citizen: c, impostor: i };
+        room.category = '\u270f\ufe0f Custom';
+        room.fairPlay = true;
+      }
+    } else {
+      if (!room.customPair) {
+        if (WORDS[category]) room.category = category;
+        room.fairPlay = !!fairPlay;
+      }
+    }
+
     room.impostorCount = Math.max(1, Math.min(3, parseInt(impostors) || 1));
     if (discussionTime) room.discussionTime = Math.max(30, Math.min(300, parseInt(discussionTime)));
     if (votingTime) room.votingTime = Math.max(20, Math.min(120, parseInt(votingTime)));
@@ -329,29 +433,54 @@ io.on('connection', (socket) => {
       return socket.emit('error', 'Potrebno je minimalno 3 igrača.');
 
     room.roundNumber++;
-    room.words = getRandomWord(room.category, code);
+
+    // Use custom pair if set, otherwise pick from category
+    if (room.customPair) {
+      room.words = Math.random() > 0.5
+        ? { citizen: room.customPair.citizen, impostor: room.customPair.impostor }
+        : { citizen: room.customPair.impostor, impostor: room.customPair.citizen };
+    } else {
+      room.words = getRandomWord(room.category, code);
+    }
+
     room.state = 'REVEAL';
     room.votes = {};
     room.impostorGuess = null;
 
     room.players.forEach(p => { const key = scoreKey(p); if (room.scores[key] === undefined) room.scores[key] = 0; });
 
-    const shuffled = [...room.players].sort(() => Math.random() - 0.5);
-    const impCount = Math.min(room.impostorCount, Math.floor(room.players.length / 2));
+    // Fair play: host is spectator — excluded from impostor assignment and word reveal
+    const fairPlay = !!room.fairPlay;
+    const activePlayers = fairPlay
+      ? room.players.filter(p => !p.isHost)
+      : room.players;
+
+    const shuffled = [...activePlayers].sort(() => Math.random() - 0.5);
+    const impCount = Math.min(room.impostorCount, Math.floor(activePlayers.length / 2));
     const impIds = new Set(shuffled.slice(0, impCount).map(p => p.id));
+
     room.players.forEach(p => {
-      p.role = impIds.has(p.id) ? 'IMPOSTOR' : 'CITIZEN';
-      p.word = p.role === 'IMPOSTOR' ? room.words.impostor : room.words.citizen;
+      if (fairPlay && p.isHost) {
+        p.role = 'SPECTATOR';
+        p.word = null;
+      } else {
+        p.role = impIds.has(p.id) ? 'IMPOSTOR' : 'CITIZEN';
+        p.word = p.role === 'IMPOSTOR' ? room.words.impostor : room.words.citizen;
+      }
       p.hasRevealed = false;
       p.voted = false;
     });
 
-    room.speakOrder = [...room.players].sort(() => Math.random() - 0.5).map(p => p.id);
+    room.speakOrder = [...activePlayers].sort(() => Math.random() - 0.5).map(p => p.id);
     room.currentSpeakerIdx = 0;
 
     const base = safeRoom(room);
     room.players.forEach(p => {
-      io.to(p.id).emit('gameStarted', { ...base, myWord: p.word, myRole: p.role });
+      if (p.role === 'SPECTATOR') {
+        io.to(p.id).emit('gameStarted', { ...base, myWord: null, myRole: 'SPECTATOR', fairPlay: true, words: room.words });
+      } else {
+        io.to(p.id).emit('gameStarted', { ...base, myWord: p.word, myRole: p.role, fairPlay });
+      }
     });
   });
 
@@ -360,10 +489,12 @@ io.on('connection', (socket) => {
     if (!room || room.state !== 'REVEAL') return;
     const p = room.players.find(p => p.id === socket.id);
     if (!p || p.hasRevealed) return; // prevent double-fire
-    p.hasRevealed = true;
-    const readyCount = room.players.filter(p => p.hasRevealed).length;
-    io.to(code).emit('revealProgress', { readyCount, total: room.players.length });
-    if (readyCount === room.players.length) {
+    if (p.role === 'SPECTATOR') { p.hasRevealed = true; } // spectator auto-confirms
+    else { p.hasRevealed = true; }
+    const activePlayers = room.fairPlay ? room.players.filter(pl => !pl.isHost) : room.players;
+    const readyCount = activePlayers.filter(p => p.hasRevealed).length;
+    io.to(code).emit('revealProgress', { readyCount, total: activePlayers.length });
+    if (readyCount === activePlayers.length) {
       room.state = 'DISCUSSION';
       const firstSpeakerId = room.speakOrder[0];
       const firstSpeaker = room.players.find(p => p.id === firstSpeakerId);
