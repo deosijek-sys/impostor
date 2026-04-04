@@ -1916,7 +1916,6 @@ socket.on('peer-mic-ready',({from})=>{
 
 // When a player reconnects after network loss, rebuild their peer link
 // Mobile/tab visibility — resume mic and peer links when coming back
-let mobileResumeLock=false;
 function safeMobileResume(){
   if(mobileResumeLock)return; mobileResumeLock=true;
   setTimeout(()=>{
