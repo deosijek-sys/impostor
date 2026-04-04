@@ -14,112 +14,28 @@ const PORT = process.env.PORT || 3000;
 
 const WORDS = {
   "Hrana": [
-    ["Pizza","Burek"],["Hamburger","Ćevapi"],["Sushi","Riblji štapići"],
-    ["Torta","Kolač"],["Palačinke","Vafli"],["Sladoled","Jogurt"],
-    ["Kava","Čaj"],["Pivo","Vino"],["Sok","Limunade"],
-    ["Kruh","Lepinja"],["Sir","Maslac"],["Jaje","Slanina"],
-    ["Tjestenina","Riža"],["Piletina","Puretina"],["Riba","Lignje"],
-    ["Salata","Juha"],["Čokolada","Bombon"],["Grickalice","Čips"],
-    ["Sendvič","Wrap"],["Roštilj","Štrudle"],["Naranča","Limun"],
-    ["Jabuka","Kruška"],["Banana","Mango"],["Jagoda","Malina"],
-    ["Rajčica","Paprika"],["Krumpir","Mrkva"],["Luk","Češnjak"],
-    ["Cheesecake","Tiramisu"],["Krafna","Burek sa sirom"],
-    ["Nutella","Džem"],["Popcorn","Kokice s maslacem"],
-    ["Smoothie","Milkshake"]
+    ["Pizza","Burek"],["Hamburger","Ćevapi"],["Sushi","Riblji štapići"],["Torta","Kolač"],["Palačinke","Vafli"],["Sladoled","Puding"],["Kava","Čaj"],["Pivo","Cider"],["Sok","Cola"],["Kruh","Tortilja"],["Sir","Jogurt"],["Jaje","Kobasica"],["Tjestenina","Riža"],["Piletina","Puretina"],["Riba","Lignje"],["Salata","Pizza"],["Čokolada","Kolač"],["Čips","Pereci"],["Sendvič","Tost"],["Naranča","Grejpfrut"],["Jabuka","Kruška"],["Banana","Mango"],["Jagoda","Malina"],["Rajčica","Paprika"],["Krumpir","Mrkva"],["Luk","Češnjak"],["Tiramisu","Panna cotta"],["Krafna","Fritula"],["Nutella","Džem"],["Popcorn","Kikiriki"],["Smoothie","Kakao"],["Rižoto","Pomfrit"],["Pršut","Salama"],["Ajvar","Senf"],["Punjena paprika","Sarma"],["Lješnjak","Badem"],["Grah","Leća"],["Jaje na oko","Kuhano jaje"],["Hot dog","Kobasica"],["Cappuccino","Latte"],["Espresso","Turska kava"],["Kokos","Ananas"],["Lubenica","Dinja"],["Grožđe","Šljiva"]
   ],
   "Sport": [
-    ["Nogomet","Ragbi"],["Košarka","Vaterpolo"],["Tenis","Squash"],
-    ["Plivanje","Ronjenje"],["Boks","Karate"],["Trčanje","Hodanje"],
-    ["Skijanje","Snowboard"],["Biciklizam","Rolanje"],
-    ["Odbojka","Badminton"],["Golf","Kuglanje"],
-    ["Gimnastika","Ples"],["Judo","Hrvanje"],
-    ["Surfanje","Jedrenje"],["Penjanje","Planinarenje"],
-    ["Hokej","Curling"],["Maraton","Triatlоn"],
-    ["Veslanje","Kajak"],["Rukomet","Futsal"],
-    ["CrossFit","Aerobik"],["Joga","Pilates"],["Kickboxing","MMA"]
+    ["Nogomet","Ragbi"],["Košarka","Vaterpolo"],["Tenis","Badminton"],["Plivanje","Ronjenje"],["Boks","Karate"],["Sprint","Maraton"],["Skijanje","Snowboard"],["Biciklizam","Rolanje"],["Odbojka","Odbojka na pijesku"],["Golf","Nogomet"],["Gimnastika","Akrobatika"],["Judo","Hrvanje"],["Surfanje","Jedrenje"],["Penjanje","Planinarenje"],["Hokej","Klizanje"],["Maraton","Polumaraton"],["Veslanje","Kajak"],["Rukomet","Futsal"],["Joga","Pilates"],["Kickboxing","MMA"],["Streličarstvo","Pikado"],["Taekwondo","Kung fu"],["Stolni tenis","Biljar"],["Baseball","Košarka"],["Američki nogomet","Rukomet"],["Parkour","Trčanje s preprekama"],["Boćanje","Picigin"],["Ribolov","Lov"],["Skateboarding","BMX"]
   ],
   "Životinje": [
-    ["Pas","Vuk"],["Mačka","Tigar"],["Lav","Leopard"],
-    ["Slon","Nosorog"],["Majmun","Gorila"],["Delfin","Kit"],
-    ["Konj","Zebra"],["Krava","Bik"],["Svinja","Divlja svinja"],
-    ["Kokoš","Fazan"],["Riba","Jegulja"],["Žaba","Kameleon"],
-    ["Orao","Sokol"],["Sova","Papiga"],["Patka","Labud"],
-    ["Zec","Vjeverica"],["Medvjed","Lisica"],["Pingvin","Tuljan"],
-    ["Flamingo","Rode"],["Žirafa","Okapi"],["Koala","Klokан"],
-    ["Gepard","Puma"],["Krokodil","Gušter"],["Zmija","Piton"],
-    ["Pčela","Osa"],["Leptir","Moljac"],["Hobotnica","Lignja"],
-    ["Morski pas","Raža"]
+    ["Pas","Mačka"],["Mačka","Lav"],["Lav","Tigar"],["Slon","Nosorog"],["Majmun","Gorila"],["Delfin","Hobotnica"],["Konj","Magarac"],["Krava","Bik"],["Svinja","Ovca"],["Kokoš","Patka"],["Orao","Gavran"],["Sova","Papiga"],["Zec","Vjeverica"],["Medvjed","Panda"],["Pingvin","Tuljan"],["Flamingo","Pelikan"],["Žirafa","Deva"],["Koala","Klokan"],["Gepard","Puma"],["Krokodil","Gušter"],["Zmija","Leguan"],["Pčela","Osa"],["Leptir","Bubamara"],["Hobotnica","Lignja"],["Morski pas","Sabljarka"],["Labud","Čaplja"],["Miš","Hrčak"],["Jež","Krtica"],["Lama","Koza"],["Bizon","Los"],["Hijena","Šakal"],["Morski konjic","Meduza"],["Riba","Jegulja"]
   ],
   "Mjesta": [
-    ["Plaža","Bazen"],["Škola","Fakultet"],["Bolnica","Klinika"],
-    ["Restoran","Kafić"],["Kino","Kazalište"],["Tržnica","Supermarket"],
-    ["Crkva","Džamija"],["Park","Šuma"],["Hotel","Hostel"],
-    ["Aerodrom","Kolodvor"],["Muzej","Galerija"],["Stadion","Dvorana"],
-    ["Teretana","Bazen"],["Knjižnica","Arhiv"],
-    ["Banka","Pošta"],["Frizerski salon","Kozmetički salon"],
-    ["Zagreb","Split"],["Dubrovnik","Šibenik"],["Rijeka","Osijek"],
-    ["Rim","Atena"],["Pariz","Madrid"],["London","Dublin"],
-    ["New York","Chicago"],["Tokio","Seoul"],
-    ["Planina","Brdo"],["Jezero","Rijeka"],["Otok","Poluotok"],
-    ["Pustinja","Stepa"],["Tvrđava","Dvorac"]
+    ["Plaža","Bazen"],["Škola","Fakultet"],["Bolnica","Privatna klinika"],["Restoran","Kafić"],["Kino","Kazalište"],["Tržnica","Supermarket"],["Crkva","Džamija"],["Park","Trg"],["Hotel","Apartman"],["Aerodrom","Kolodvor"],["Muzej","Galerija"],["Stadion","Igralište"],["Teretana","Sportski centar"],["Knjižnica","Knjižara"],["Banka","Mjenjačnica"],["Frizerski salon","Kozmetički salon"],["Zagreb","Split"],["Dubrovnik","Šibenik"],["Rijeka","Osijek"],["Pariz","Madrid"],["London","Berlin"],["New York","Los Angeles"],["Tokio","Bangkok"],["Planina","Brežuljak"],["Jezero","More"],["Otok","Poluotok"],["Dvorac","Tvrđava"],["Centar grada","Selo"],["Kamp","Bungalov"],["Zabavni park","Aquapark"],["Tržni centar","Prodavaonica"],["Benzinska postaja","Autopraonica"],["Igralište","Skatepark"],["Zoološki vrt","Akvarij"],["Vatrogasna postaja","Policijska postaja"]
   ],
   "Predmeti": [
-    ["Mobitel","Tablet"],["Laptop","Računalo"],["Televizor","Monitor"],
-    ["Automobil","Kombi"],["Bicikl","Romobil"],["Motor","Moped"],
-    ["Kišobran","Kabanica"],["Torba","Ruksak"],["Novčanik","Torbica"],
-    ["Sat","Budilnik"],["Naočale","Leće"],["Slušalice","Zvučnik"],
-    ["Knjiga","Časopis"],["Olovka","Kemijska"],["Bilježnica","Rokovnik"],
-    ["Šešir","Kačket"],["Čizme","Tenisice"],["Sandale","Papuče"],
-    ["Krevet","Kauč"],["Stol","Pult"],["Stolica","Fotelja"],
-    ["Hladnjak","Zamrzivač"],["Tava","Lonac"],["Nož","Škare"],
-    ["Gitara","Ukulele"],["Klavir","Sintesajzer"],["Bubnjevi","Marimba"],
-    ["Kamera","Videokamera"],["Dron","RC auto"],
-    ["Lopta","Frisbee"],["Karte","Šah"]
+    ["Mobitel","Tablet"],["Laptop","Tablet"],["Televizor","Projektor"],["Automobil","Motor"],["Bicikl","Skateboard"],["Motor","Moped"],["Kišobran","Kabanica"],["Torba","Ruksak"],["Novčanik","Torbica"],["Sat","Budilnik"],["Naočale","Sunčane naočale"],["Slušalice","Zvučnik"],["Knjiga","Tablet"],["Olovka","Kemijska"],["Bilježnica","Rokovnik"],["Šešir","Kačket"],["Čizme","Tenisice"],["Sandale","Papuče"],["Krevet","Kauč"],["Stol","Polica"],["Stolica","Fotelja"],["Hladnjak","Zamrzivač"],["Tava","Lonac"],["Nož","Vilica"],["Gitara","Ukulele"],["Klavir","Harmonika"],["Bubnjevi","Činele"],["Kamera","Telefon"],["Lopta","Frisbee"],["Karte","Šah"],["Sapun","Šampon"],["Četkica za zube","Konac za zube"],["Ručnik","Ogrtač"],["Punjač","Produžni kabel"],["Baterijska lampa","Svijeća"],["Metla","Usisavač"],["Pegla","Sušilo za kosu"]
   ],
   "Filmovi i serije": [
-    ["Titanic","Pearl Harbor"],["The Godfather","Scarface"],
-    ["Inception","The Matrix"],["The Dark Knight","Batman"],
-    ["Pulp Fiction","Reservoir Dogs"],
-    ["Game of Thrones","House of the Dragon"],
-    ["Breaking Bad","Better Call Saul"],
-    ["Stranger Things","Dark"],["Friends","Seinfeld"],
-    ["The Office","Parks and Recreation"],
-    ["Squid Game","Hunger Games"],["Money Heist","Lupin"],
-    ["Peaky Blinders","Boardwalk Empire"],
-    ["True Detective","Mindhunter"],
-    ["Narcos","Sicario"],["1917","Dunkirk"],
-    ["Interstellar","Gravity"],["Dune","Avatar"],
-    ["Avengers","Justice League"],
-    ["Harry Potter","Narnia"],["Star Wars","Star Trek"],
-    ["Parasite","Oldboy"],["Chernobyl","The Terror"],
-    ["Succession","Billions"],["Euphoria","Skins"],
-    ["Sherlock","Elementary"],["The Wire","The Shield"]
+    ["Titanic","Pearl Harbor"],["The Godfather","Scarface"],["Inception","The Matrix"],["The Dark Knight","Joker"],["Pulp Fiction","Reservoir Dogs"],["Game of Thrones","House of the Dragon"],["Breaking Bad","Better Call Saul"],["Stranger Things","Dark"],["Friends","The Office"],["The Office","Brooklyn 99"],["Squid Game","Hunger Games"],["Money Heist","Lupin"],["Peaky Blinders","Boardwalk Empire"],["Narcos","Sicario"],["1917","Dunkirk"],["Interstellar","Gravity"],["Dune","Avatar"],["Avengers","Justice League"],["Harry Potter","Narnia"],["Star Wars","Star Trek"],["Parasite","Oldboy"],["Chernobyl","Narcos"],["Succession","Breaking Bad"],["Euphoria","Skins"],["Sherlock","Breaking Bad"],["The Wire","The Shield"],["Wednesday","Coraline"],["Emily in Paris","Sex and the City"],["Ted Lasso","Abbott Elementary"],["Severance","Black Mirror"],["The Bear","Ramsay's Kitchen Nightmares"],["White Lotus","The Undoing"],["The Mandalorian","Andor"],["The Hobbit","Rings of Power"],["Cobra Kai","Karate Kid"],["Yellowstone","Outer Range"]
   ],
   "Profesije": [
-    ["Liječnik","Medicinska sestra"],["Zubar","Ortodont"],
-    ["Učitelj","Profesor"],["Odgajatelj","Babysitter"],
-    ["Policajac","Vatrogasac"],["Vojnik","Čuvar"],
-    ["Kuhar","Konobar"],["Pčelar","Farmer"],
-    ["Taksist","Vozač autobusa"],["Pilot","Stjuard"],
-    ["Arhitekt","Graditelj"],["Electricar","Vodoinstalater"],
-    ["Programer","Dizajner"],["Fotograf","Snimatelj"],
-    ["Glumac","Pjevač"],["Novinar","Urednik"],
-    ["Odvjetnik","Sudac"],["Frizer","Kozmetičar"],
-    ["Psiholog","Psihijatar"],["Nutricionist","Dijetetičar"],
-    ["Ekonomist","Računovođa"],["Farmer","Šumar"],
-    ["Lovac","Ribar"],["Tesar","Stolar"]
+    ["Liječnik","Medicinska sestra"],["Zubar","Ortodont"],["Učitelj","Trener"],["Odgajatelj","Babysitter"],["Policajac","Detektiv"],["Vojnik","Specijalac"],["Kuhar","Dostavljač hrane"],["Farmer","Vrtlar"],["Taksist","Vozač autobusa"],["Pilot","Stjuardesa"],["Arhitekt","Građevinar"],["Električar","Vodoinstalater"],["Programer","Serviser"],["Fotograf","Novinar"],["Glumac","Pjevač"],["Novinar","Urednik"],["Odvjetnik","Sudac"],["Frizer","Kozmetičar"],["Psiholog","Logoped"],["Trener","Fizioterapeut"],["Ekonomist","Računovođa"],["Šumar","Lovočuvar"],["Ribar","Lovac"],["Tesar","Stolar"],["Vozač kamiona","Dostavljač"],["Redatelj","Scenarist"],["Prevoditelj","Lektor"],["Bibliotekar","Arhivist"],["Socijalni radnik","Pedagog"],["Meteorolog","Geograf"],["Mehaničar","Autolimar"]
   ],
   "Glazba": [
-    ["Pop","Indie"],["Rock","Metal"],["Hip-hop","Rap"],
-    ["Jazz","Blues"],["Klasična glazba","Opera"],
-    ["Elektronika","Techno"],["House","Trance"],
-    ["Reggae","Ska"],["Folk","Country"],["Soul","R&B"],
-    ["Punk","Grunge"],["Funk","Disco"],
-    ["Gitara","Bas gitara"],["Bubnjevi","Perkusija"],
-    ["Klavir","Sintesajzer"],["Violina","Viola"],
-    ["Koncer","Festival"],["Album","EP"],
-    ["Spotify","Apple Music"],["Vinyl","CD"],
-    ["Grammy","MTV nagrade"]
+    ["Pop","Hip-hop"],["Rock","Elektronika"],["Jazz","Blues"],["Klasična","Film glazba"],["Elektronika","Techno"],["House","Trance"],["Reggae","Ska"],["Folk","Country"],["Soul","R&B"],["Punk","Grunge"],["Rap","Govor"],["Gitara","Bas gitara"],["Bubnjevi","Sintesajzer"],["Klavir","Harmonika"],["Violina","Viola"],["Koncert","Festival"],["Album","Single"],["Aplikacija","Radio"],["Ploča","Mobitel"],["Nagrada","MTV nagrada"],["Mikrofon","Zvučnik"],["Zbor","Bend"],["DJ","Producent"],["Balada","Himna"],["Disco","Funk"],["Coldplay","Radiohead"],["Beyoncé","Rihanna"],["Taylor Swift","Billie Eilish"],["Eminem","Kendrick Lamar"]
   ],
   "Svakodnevni život": [
     ["Jutarnja kava","Doručak"],["Buđenje","Alarm"],
@@ -148,19 +64,22 @@ const WORDS = {
     ["Bubamara","Leptir"],["Mravi","Pčele"]
   ],
   "Tehnologija": [
-    ["Mobitel","Pametni sat"],["Laptop","Tablet"],
-    ["WiFi","Bluetooth"],["Internet","Intranet"],
-    ["Email","SMS"],["WhatsApp","Telegram"],
-    ["Instagram","TikTok"],["YouTube","Netflix"],
-    ["Google","Bing"],["Chrome","Firefox"],
-    ["iPhone","Android"],["Windows","MacOS"],
-    ["USB","Bluetooth"],["Printer","Skener"],
-    ["Miš","Trackpad"],["Tipkovnica","Numpad"],
-    ["Monitor","Projektor"],["Kamera","Webcam"],
-    ["PlayStation","Xbox"],["Nintendo","PC gaming"],
-    ["Cloud","Hard disk"],["Lozinka","PIN"],
-    ["QR kod","Barcode"],["Robot","Dron"],
-    ["AI asistent","Chatbot"],["VR naočale","AR naočale"]
+    ["Mobitel","Pametni sat"],["Laptop","Tablet"],["WiFi","Bluetooth"],["Internet","Bez interneta"],["WhatsApp","Telegram"],["Signal","Viber"],["Instagram","TikTok"],["YouTube","Netflix"],["Google","Bing"],["Chrome","Firefox"],["iPhone","Android"],["Windows","Mac"],["USB","SD kartica"],["Printer","Skener"],["Miš","Touchpad"],["Tipkovnica","Dodirni ekran"],["Monitor","Projektor"],["Kamera","Webcam"],["PlayStation","Xbox"],["Nintendo","Steam Deck"],["Internet","USB"],["Lozinka","PIN"],["QR kod","Barcode"],["Robot","Dron"],["Asistent","Čovjek"],["VR","AR"],["Powerbank","Punjač"],["Pametna TV","IPTV"],["WiFi","Hotspot"]
+  ],
+  "Boje": [
+    ["Crvena","Narančasta"],["Plava","Tirkizna"],["Zelena","Maslinasta"],["Žuta","Zlatna"],["Ljubičasta","Indigo"],["Ružičasta","Breskva"],["Smeđa","Bež"],["Crna","Tamno siva"],["Bijela","Krem"],["Siva","Bijela"],["Bordo","Tamnocrvena"],["Tirkizna","Mintna"],["Limeta","Neon zelena"],["Koraljna","Losos"],["Lavanda","Lila"],["Teget","Plava"],["Smeđa","Čokolada"]
+  ],
+  "Prijevoz": [
+    ["Automobil","Kombi"],["Autobus","Taksi"],["Vlak","Avion"],["Avion","Helikopter"],["Bicikl","Romobil"],["Motor","Moped"],["Brod","Jedrilica"],["Taksi","Prijatelj vozi"],["Kamion","Traktor"],["Podmornica","Čamac"],["Žičara","Uspinjača"],["Kabriolet","Limuzina"],["Pickup","Džip"],["Kamp prikolica","Autodom"],["Električni auto","Benzinski auto"],["Električni romobil","Bicikl"]
+  ],
+  "Emocije": [
+    ["Sreća","Uzbuđenje"],["Tuga","Melankolija"],["Ljutnja","Frustracija"],["Strah","Uzbuđenje"],["Iznenađenje","Zbunjenost"],["Gađenje","Nelagoda"],["Ljubav","Divljenje"],["Zavist","Razočaranje"],["Ponos","Samopouzdanje"],["Stid","Neugoda"],["Krivnja","Žaljenje"],["Nada","Optimizam"],["Dosada","Umor"],["Zahvalnost","Ponos"],["Nostalgija","Čežnja"],["Panika","Strah"]
+  ],
+  "Godišnja doba i praznici": [
+    ["Proljeće","Ljeto"],["Jesen","Zima"],["Božić","Nova godina"],["Uskrs","Fašnik"],["Valentinovo","Majčin dan"],["Halloween","Maskenbal"],["Karneval","Maskenbal"],["Dan državnosti","Dan neovisnosti"],["Majčin dan","Očev dan"],["Proslava","Godišnjica"],["Ljetni odmor","Zimski odmor"],["Doček Nove godine","Silvestar"]
+  ],
+  "Hobiji": [
+    ["Slikanje","Fotografija"],["Fotografija","Snimanje videa"],["Kuhanje","Naručivanje hrane"],["Vrtlarstvo","Uzgoj biljaka"],["Šivanje","Pletenje"],["Čitanje","Podcast"],["Igranje igara","Sport"],["Kolekcionarstvo","Skupljanje marki"],["Planinarenje","Kampiranje"],["Ribolov","Lov"],["Plesanje","Pjevanje"],["Meditacija","Joga"],["Origami","Modelarstvo"],["3D printanje","Modelarstvo"],["Mađioničarstvo","Žongliranje"],["Podcasting","Blogging"],["Sudoku","Križaljka"],["Escape room","Društvene igre"]
   ]
 };
 
