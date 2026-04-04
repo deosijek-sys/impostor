@@ -1533,7 +1533,7 @@ function monitorMic(){
 // Perfect negotiation pattern: impolite = larger socket.id sends offer
 // ICE candidates buffered until remote description is set
 // ══════════════════════════════════════════════════════════════
-let iceQueues={};  // pid → [candidate, ...]
+// iceQueues: pid → [candidate, ...] (declared above with other globals)
 
 function makeICE(){
   return {iceServers:[
