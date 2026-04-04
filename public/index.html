@@ -1329,13 +1329,8 @@ function renderLobby(){
   $('l-code').textContent=G.code;
   const catLabel = G.hasCustomPair ? '✏️ Custom (Fair Play)' : G.category;
   $('l-cat').textContent=catLabel;
-  if(G.fairPlay&&G.hasCustomPair&&me&&me.isHost){
-    // sync toggle if needed
-    if(!customActive){
-      customActive=true;
-      if($('cfg-custom-toggle'))$('cfg-custom-toggle').checked=true;
-      if(typeof updateToggleUI==='function')updateToggleUI();
-    }
+  if(G.hasCustomPair&&me&&me.isHost&&!customActive){
+    if(typeof setCustomActive==='function')setCustomActive(true);
   }
   $('l-imps').textContent=G.impostorCount;
   $('rnd').textContent=G.roundNumber>0?`R${G.roundNumber}`:'';
@@ -1400,15 +1395,14 @@ function updateToggleUI(){
   $('cfg-cat').closest('.card').style.opacity=customActive?'0.4':'1';
   $('cfg-cat').disabled=customActive;
 }
-$('cfg-custom-toggle').onchange=()=>{
-  customActive=$('cfg-custom-toggle').checked;
+function setCustomActive(val){
+  customActive=val;
+  if($('cfg-custom-toggle'))$('cfg-custom-toggle').checked=val;
   updateToggleUI();
   if(!customActive){$('custom-err').style.display='none';emitCfg();}
-};
-$('toggle-pill').onclick=()=>{
-  $('cfg-custom-toggle').checked=!$('cfg-custom-toggle').checked;
-  $('cfg-custom-toggle').dispatchEvent(new Event('change'));
-};
+}
+$('cfg-custom-toggle').onchange=()=>setCustomActive($('cfg-custom-toggle').checked);
+$('toggle-pill').onclick=()=>setCustomActive(!customActive);
 $('cfg-citizen').oninput=$('cfg-impostor').oninput=()=>{if(customActive)emitCfg();};
 $('cfg-cat').onchange=$('cfg-disc').onchange=$('cfg-vote').onchange=emitCfg;
 $('imp-m').onclick=()=>{impCount=Math.max(1,impCount-1);$('imp-v').textContent=impCount;emitCfg();};
@@ -1439,7 +1433,8 @@ function setupReveal(){
   fback.className='fb '+(isImp?'imp-back':'cit-back');
   fback.innerHTML=buildFlipBack(isImp, myWord);
   $('fwrap').classList.remove('flip');
-  updateRevealProgress(0,G.players.length);
+  const activeCount=(G.players||[]).filter(p=>!p.isSpectator).length||G.players.length;
+  updateRevealProgress(0,activeCount);
   if(isImp){setTimeout(()=>{SFX.imp();toast('⚠ Ti si IMPOSTOR! Pazi što govoriš.',3500);},400);}
   wantMic(true);
 }
@@ -1671,7 +1666,8 @@ async function handleOffer(from,offer){
 
 function ensurePeerLinks(){
   if(!hasLiveMic())return;
-  (G.players||[]).forEach(p=>{
+  // Skip spectators (fair play host) — they have no mic
+  (G.players||[]).filter(p=>!p.isSpectator).forEach(p=>{
     if(p.id===socket.id)return;
     const pc=pcs[p.id];
     if(!pc){makePeer(p.id);return;}
@@ -1707,7 +1703,8 @@ socket.on('rtc-ice',async({from,candidate})=>{
 // Kad peer dobije mic — svi koji su impolite prema njemu iniciraju vezu
 socket.on('peer-mic-ready',({from})=>{
   if(!hasLiveMic())return;
-  if(!G.players?.find(p=>p.id===from))return;
+  const fromPlayer=G.players?.find(p=>p.id===from);
+  if(!fromPlayer||fromPlayer.isSpectator)return;
   // Svejedno — makePeer će odlučiti tko šalje offer via onnegotiationneeded
   if(!pcs[from]){makePeer(from);}
   else{
@@ -1876,7 +1873,7 @@ socket.on('connect',()=>{loadAudioPrefs();updateVoiceButtons();maybeResumeSessio
 socket.on('roomUpdated',room=>{
   G=room;me=meNow();
   if(G.state==='LOBBY'&&me?.isHost){
-    $('cfg-cat').value=G.category;
+    if(!G.hasCustomPair)$('cfg-cat').value=G.category;
     $('cfg-disc').value=G.discussionTime||120;
     $('cfg-vote').value=G.votingTime||60;
     impCount=G.impostorCount||1;
@@ -2025,12 +2022,16 @@ function showSpectatorScreen(words){
   if(!el)return;
   el.querySelector('#spec-citizen').textContent=words?.citizen||'?';
   el.querySelector('#spec-impostor').textContent=words?.impostor||'?';
+  el.querySelector('#spec-phase').textContent='Igrači otkrivaju uloge...';
+  const nb=el.querySelector('#spec-next-round');
+  if(nb)nb.style.display='none';
   show('s-spectator');
 }
 function updateSpectatorDiscScreen(room){
   const el=$('s-spectator');
-  if(!el){show('s-disc');return;}
-  el.querySelector('#spec-phase').textContent=room.state==='VOTING'?'Glasanje':'Rasprava';
+  if(!el)return;
+  const phase=el.querySelector('#spec-phase');
+  if(phase)phase.textContent=room.state==='VOTING'?'⚡ Glasanje u tijeku':'🗣️ Rasprava u tijeku';
   show('s-spectator');
 }
 </script>
