@@ -1333,6 +1333,100 @@ socket.on('kicked',({reason})=>{
 });
 socket.on('becameHost',()=>toast('✅ Sada ste host sobe'));
 
+// ── CORE ROOM EVENTS ──────────────────────────────────────────────────────────
+socket.on('error', (msg) => {
+  const errEl = $('j-err');
+  if (errEl) errEl.textContent = msg;
+  const btn = $('btn-create'); if (btn && btn.disabled) { btn.disabled = false; btn.textContent = 'Kreiraj novu sobu'; }
+  const btn2 = $('btn-join'); if (btn2 && btn2.disabled) { btn2.disabled = false; btn2.textContent = 'Pridruži se'; }
+  toast('⚠ ' + msg, 4000);
+});
+
+socket.on('roomCreated', (room) => {
+  G = room; me = meNow();
+  saveSession({ code: G.code, name: me?.name || '', playerToken: room.playerToken });
+  impCount = G.impostorCount || 1;
+  badge(); renderLobby(); show('s-lobby');
+  SFX.join(); toast('✅ Soba kreirana — kod: ' + G.code);
+});
+
+socket.on('roomJoined', (room) => {
+  G = room; me = meNow();
+  saveSession({ code: G.code, name: me?.name || '', playerToken: room.playerToken });
+  badge(); renderLobby(); show('s-lobby');
+  spinner(me?.name, null); SFX.join();
+});
+
+socket.on('sessionResumed', (payload) => {
+  G = payload; me = meNow();
+  myWord = me?.word || null; myRole = me?.role || null;
+  badge();
+  if (G.state === 'LOBBY') { renderLobby(); show('s-lobby'); }
+  else if (G.state === 'REVEAL') { setupReveal(); show('s-reveal'); }
+  else if (G.state === 'DISCUSSION') { setupDisc(G); show('s-disc'); }
+  else if (G.state === 'VOTING') { show('s-vote'); renderVoting && renderVoting(); }
+  else if (G.state === 'RESULTS') { show('s-res'); renderResults(); }
+  toast('↩ Nastavljate sesiju');
+});
+
+socket.on('resumeFailed', () => {
+  clearSession();
+  toast('⚠ Sesija istekla — unesite ime i kod ponovo', 4000);
+});
+
+// ── GAME FLOW EVENTS ──────────────────────────────────────────────────────────
+socket.on('gameStarted', (room) => {
+  G = room; me = meNow();
+  myWord = room.myWord; myRole = room.myRole;
+  if (me) { me.word = myWord; me.role = myRole; }
+  setupReveal(); show('s-reveal');
+});
+
+socket.on('revealProgress', ({ readyCount, total }) => {
+  updateRevealProgress(readyCount, total);
+});
+
+socket.on('startDiscussion', (room) => {
+  G = room; me = meNow();
+  if (me) { me.word = myWord; me.role = myRole; }
+  setupDisc(room); show('s-disc');
+  SFX.next && SFX.next();
+});
+
+socket.on('votingStarted', (room) => {
+  G = room; me = meNow();
+  if (me) { me.word = myWord; me.role = myRole; }
+  myVoteSubmitted = false; selVote = null;
+  const notice = $('tiebreak-notice'); if (notice) notice.style.display = 'none';
+  show('s-vote');
+  renderVoting && renderVoting();
+});
+
+socket.on('voteCast', ({ total, max }) => {
+  const el = $('vcnt-display'); if (el) el.textContent = `${total} / ${max}`;
+  const dots = $('vote-dots'); if (dots) { dots.innerHTML = ''; for(let i=0;i<max;i++){const d=document.createElement('div');d.className='vdot'+(i<total?' filled':'');dots.appendChild(d);} }
+});
+
+socket.on('gameEnded', (room) => {
+  G = room; me = meNow();
+  if (me) { me.word = room.myWord || myWord; me.role = room.myRole || myRole; }
+  myWord = me?.word || myWord; myRole = me?.role || myRole;
+  wantMic(false);
+  renderResults();
+  show('s-res');
+  const won = room.winnerRole && myRole && room.winnerRole === myRole;
+  launchConfetti && launchConfetti(won);
+  SFX.end && SFX.end();
+});
+
+socket.on('impostorGuessFailed', ({ guess }) => {
+  toast(`❌ Pogađanje "${guess}" nije točno — nastavlja se glasanje`, 4000);
+});
+
+socket.on('playerKickedMidGame', ({ kickedId, kickedName }) => {
+  toast(`⚠ ${kickedName} je izbačen iz igre`);
+});
+
 // ── MANAGE PLAYERS MODAL ──────────────────────────────────────────────────────
 $('btn-manage').onclick=()=>{renderManageModal();$('modal-manage').classList.add('on');};
 $('modal-close-manage').onclick=()=>$('modal-manage').classList.remove('on');
@@ -1968,6 +2062,146 @@ function launchConfetti(isWin) {
   }
   setTimeout(() => { overlay.innerHTML = ''; }, 4000);
 }
+
+// ── VOTING ────────────────────────────────────────────────────────────────────
+let myVoteSubmitted = false;
+
+function renderVoting() {
+  const isImp = myRole === 'IMPOSTOR';
+  const igbox = $('igbox');
+  if (igbox) igbox.style.display = isImp && !myVoteSubmitted ? 'block' : 'none';
+  const cfm = $('cfm'); if (cfm) cfm.style.display = 'none';
+  const vsent = $('vsent'); if (vsent) vsent.style.display = myVoteSubmitted ? 'block' : 'none';
+  const vwaiting = $('vwaiting'); if (vwaiting) vwaiting.style.display = 'none';
+  selVote = null;
+
+  const grid = $('vgrid'); if (!grid) return;
+  grid.innerHTML = '';
+  const activePlayers = (G.players || []).filter(p => !p.isSpectator);
+  const myToken = getSession().playerToken;
+  const myPlayer = G.players?.find(p => p.playerToken === myToken);
+
+  activePlayers.forEach(p => {
+    if (p.id === (myPlayer?.id || socket.id)) return; // can't vote for self
+    const card = document.createElement('div');
+    card.className = 'vcard';
+    card.dataset.id = p.id;
+    card.innerHTML = `<div class="av ${p.isHost?'r':''}">${ini(p.name)}</div><div class="vcard-name">${esc(p.name)}</div>`;
+    card.onclick = () => {
+      if (myVoteSubmitted) return;
+      selVote = p.id;
+      grid.querySelectorAll('.vcard').forEach(c => c.classList.toggle('sel', c.dataset.id === p.id));
+      const vtname = $('vtname'); if (vtname) vtname.textContent = p.name;
+      if (cfm) cfm.style.display = 'block';
+    };
+    grid.appendChild(card);
+  });
+}
+
+$('btn-cfm-cancel').onclick = () => { selVote = null; $('cfm').style.display = 'none'; $('vgrid').querySelectorAll('.vcard').forEach(c => c.classList.remove('sel')); };
+$('btn-cfm').onclick = () => {
+  if (!selVote) return;
+  socket.emit('castVote', { code: G.code, targetId: selVote });
+  myVoteSubmitted = true;
+  $('cfm').style.display = 'none';
+  $('igbox').style.display = 'none';
+  $('vsent').style.display = 'block';
+};
+$('ig-sub').onclick = () => {
+  const guess = $('ig-in')?.value?.trim(); if (!guess) return;
+  socket.emit('impostorGuess', { code: G.code, guess });
+  $('ig-in').value = '';
+};
+
+// Voting timer bar
+socket.on('timer', ({ phase, remaining }) => {
+  if (phase === 'discussion') {
+    const tv = $('disc-tv'), tf = $('disc-tf');
+    if (tv) tv.textContent = fmt(remaining);
+    if (tf) tf.style.width = `${Math.min(100, remaining / discTotal * 100)}%`;
+  }
+  if (phase === 'voting' || phase === 'tiebreaker') {
+    const tv = $('vote-tv'), tf = $('vote-tf');
+    if (tv) tv.textContent = fmt(remaining);
+    if (tf) tf.style.width = `${Math.min(100, remaining / voteTotal * 100)}%`;
+  }
+});
+
+// ── RESULTS ───────────────────────────────────────────────────────────────────
+function renderResults() {
+  const res = G.results || {};
+  const words = G.words || {};
+  const isTie = res.isTie;
+  const isImpWin = res.winner === 'IMPOSTORS';
+  const impostorNames = (res.impostors || []).join(', ') || '?';
+
+  // Banner
+  let emoji = '🎭', title = '—', sub = '';
+  if (isTie) { emoji = '⚖️'; title = 'Izjednačeno'; sub = 'Nitko nije izbačen.'; }
+  else if (isImpWin) { emoji = '🕵️'; title = 'Impostori pobjeđuju!'; sub = `${impostorNames} je prevarao agente.`; }
+  else { emoji = '✅'; title = 'Agenti pobjeđuju!'; sub = `Impostor ${impostorNames} je razotkriven.`; }
+
+  const remoji = $('remoji'); if (remoji) remoji.textContent = emoji;
+  const rtitle = $('rtitle'); if (rtitle) rtitle.textContent = title;
+  const rsub = $('rsub'); if (rsub) rsub.textContent = sub;
+
+  // Words
+  const rwR = $('rw-r'); if (rwR) rwR.textContent = words.citizen || '—';
+  const rwI = $('rw-i'); if (rwI) rwI.textContent = words.impostor || '—';
+
+  // Scoreboard
+  const sb = $('scoreboard');
+  if (sb) {
+    const sorted = [...(G.players || [])].sort((a, b) => (b.score || 0) - (a.score || 0));
+    sb.innerHTML = sorted.map((p, i) => {
+      const delta = (G.scoreDeltas || {})[p.playerToken] || 0;
+      const deltaStr = delta > 0 ? `<span style="color:var(--cg-dim)">+${delta}</span>` : delta < 0 ? `<span style="color:var(--cr-dim)">${delta}</span>` : '';
+      return `<div class="srow"><span class="srank">${i+1}.</span><span class="sname">${esc(p.name)}</span>${deltaStr}<span class="sscore">${p.score || 0}</span></div>`;
+    }).join('');
+  }
+
+  // Player debrief list
+  const rlist = $('rlist');
+  if (rlist) {
+    const tally = res.tally || {};
+    rlist.innerHTML = (G.players || []).filter(p => !p.isSpectator).map(p => {
+      const roleLabel = p.role === 'IMPOSTOR' ? '<span style="color:var(--cr-dim);font-size:10px;letter-spacing:1.5px;">IMPOSTOR</span>' : '<span style="color:var(--cg-dim);font-size:10px;letter-spacing:1.5px;">CITIZEN</span>';
+      const votes = tally[p.id] || 0;
+      const votesStr = votes ? `<span style="font-size:10px;color:var(--t3);">${votes} glas${votes===1?'':'a'}</span>` : '';
+      return `<div class="vrow"><div class="av ${p.role==='IMPOSTOR'?'r':'g'}">${ini(p.name)}</div><div class="vmeta"><div class="vname">${esc(p.name)}</div><div class="vsub">${roleLabel}</div></div>${votesStr}</div>`;
+    }).join('');
+  }
+
+  renderAllVoiceLists();
+  wantMic(true);
+
+  // Show/hide host buttons
+  const isHost = me && me.isHost;
+  $('btn-rst') && ($('btn-rst').style.display = isHost ? 'block' : 'none');
+}
+
+$('btn-again').onclick = () => socket.emit('playAgain', { code: G.code });
+$('btn-rst').onclick = () => socket.emit('resetScores', { code: G.code });
+$('btn-quit').onclick = () => {
+  socket.emit('leaveRoom', { code: G.code });
+  clearSession();
+  G = {}; me = null; myWord = null; myRole = null;
+  $('pb').classList.remove('on');
+  $('btn-leave-icon').style.display = 'none';
+  $('btn-rules-icon').style.display = 'none';
+  wantMic(false);
+  show('s-join');
+};
+
+// playAgain → server emits roomUpdated with state=LOBBY
+socket.on('roomUpdated', (room) => {
+  const wasResults = G.state === 'RESULTS';
+  G = room; me = meNow();
+  if (me && (me.word || myWord)) { me.word = myWord; me.role = myRole; }
+  renderLobby();
+  renderAllVoiceLists();
+  if (wasResults && G.state === 'LOBBY') { myWord = null; myRole = null; show('s-lobby'); }
+});
 
 // ══════════════════════════════════════════════════════════
 // TIE-BREAKER SOCKET HANDLER
