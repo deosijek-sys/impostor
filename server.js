@@ -341,6 +341,20 @@ io.on('connection', (socket) => {
     io.to(code).emit('roomUpdated', safeRoom(room));
   });
 
+  socket.on('kickPlayerMidGame', ({ code, targetId }) => {
+    const room = rooms.get(code);
+    if (!room || !room.players.find(p => p.id === socket.id && p.isHost)) return;
+    if (room.state !== 'DISCUSSION' && room.state !== 'VOTING') return;
+    const idx = room.players.findIndex(p => p.id === targetId);
+    if (idx === -1) return;
+    const kicked = room.players[idx];
+    const kickedName = kicked.name;
+    room.players.splice(idx, 1);
+    delete room.scores[scoreKey(kicked)];
+    io.to(code).emit('playerKickedMidGame', { kickedId: targetId, kickedName });
+    io.to(code).emit('roomUpdated', safeRoom(room));
+  });
+
   socket.on('transferHost', ({ code, targetId }) => {
     const room = rooms.get(code);
     if (!room || !room.players.find(p => p.id === socket.id && p.isHost)) return;

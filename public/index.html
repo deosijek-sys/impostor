@@ -5,241 +5,243 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="theme-color" content="#060608">
+<meta name="theme-color" content="#04040A">
 <title>IMPOSTOR</title>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
 <script src="/socket.io/socket.io.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
 :root{
-  --red:#C8384A;--rdim:#e05565;--rbg:rgba(200,56,74,.07);--rb:rgba(200,56,74,.22);
-  --gold:#C4A35A;--gbg:rgba(196,163,90,.07);--gb:rgba(196,163,90,.22);
-  --teal:#4A9E7A;--tbg:rgba(74,158,122,.07);--tb:rgba(74,158,122,.22);
-  --bg:#060608;--bg2:#0d0d10;--bg3:#131317;--bg4:#1a1a1f;--bg5:#222228;
-  --ln:rgba(255,255,255,.04);--ln2:rgba(255,255,255,.08);--ln3:rgba(255,255,255,.14);
-  --tx:#ece9e3;--tx2:#888;--tx3:#444;--tx4:#2a2a30;
-  --r:14px;--rs:10px;
+  /* Palette */
+  --cr:#D4314A;      --cr-dim:#e8556a;   --cr-bg:rgba(212,49,74,.08);  --cr-bd:rgba(212,49,74,.2);
+  --cg:#2E9E6B;      --cg-dim:#45c087;   --cg-bg:rgba(46,158,107,.08); --cg-bd:rgba(46,158,107,.2);
+  --ca:#C49A3C;      --ca-dim:#d4b060;   --ca-bg:rgba(196,154,60,.08); --ca-bd:rgba(196,154,60,.22);
+  /* Backgrounds */
+  --b0:#04040A;      --b1:#080812;       --b2:#0d0d1a;
+  --b3:#121220;      --b4:#181828;       --b5:#1e1e30;
+  /* Lines */
+  --l1:rgba(255,255,255,.04); --l2:rgba(255,255,255,.08); --l3:rgba(255,255,255,.13); --l4:rgba(255,255,255,.2);
+  /* Text */
+  --t1:#f0ecff;      --t2:#9090b0;       --t3:#50506a;    --t4:#2a2a40;
+  /* Radius */
+  --r:16px;          --rs:12px;          --rxs:8px;
   --safe-b:env(safe-area-inset-bottom,0px);
-  --gold-glow:rgba(196,163,90,.15);
-  --red-glow:rgba(200,56,74,.15);
 }
-html,body{height:100%;background:var(--bg);color:var(--tx);font-family:'Space Grotesk',sans-serif;overflow:hidden;}
-.app{height:100dvh;max-width:430px;margin:0 auto;display:flex;flex-direction:column;}
+html,body{height:100%;background:var(--b0);color:var(--t1);font-family:'DM Mono',monospace;overflow:hidden;}
+.app{height:100dvh;max-width:430px;margin:0 auto;display:flex;flex-direction:column;position:relative;}
 
-/* ── BAR */
-.bar{flex-shrink:0;height:54px;display:flex;align-items:center;justify-content:space-between;padding:0 18px;border-bottom:1px solid var(--ln);background:rgba(6,6,8,.97);backdrop-filter:blur(16px);position:relative;z-index:10;}
-.logo{font-family:'Cormorant Garamond',serif;font-size:18px;letter-spacing:6px;color:var(--gold);font-weight:600;text-transform:uppercase;}
+/* ─── NOISE OVERLAY ─────────────────────────────────────────────────────── */
+.app::before{
+  content:'';position:fixed;inset:0;max-width:430px;margin:0 auto;pointer-events:none;z-index:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+  opacity:.4;
+}
+
+/* ─── TOPBAR ─────────────────────────────────────────────────────────────── */
+.bar{
+  flex-shrink:0;height:56px;display:flex;align-items:center;justify-content:space-between;
+  padding:0 20px;border-bottom:1px solid var(--l1);
+  background:rgba(4,4,10,.92);backdrop-filter:blur(20px);position:relative;z-index:10;
+}
+.logo{
+  font-family:'Playfair Display',serif;font-size:16px;letter-spacing:5px;
+  color:var(--ca);font-weight:700;text-transform:uppercase;font-style:italic;
+}
 .bar-r{display:flex;align-items:center;gap:8px;}
-.pb{display:none;align-items:center;gap:8px;background:var(--bg3);border:1px solid var(--ln2);border-radius:999px;padding:4px 12px 4px 4px;font-size:11px;font-weight:500;color:var(--tx2);letter-spacing:.3px;}
+.pb{display:none;align-items:center;gap:8px;background:var(--b3);border:1px solid var(--l2);border-radius:999px;padding:5px 13px 5px 5px;font-size:10px;letter-spacing:.5px;color:var(--t2);}
 .pb.on{display:flex;}
-.pbav{width:26px;height:26px;border-radius:50%;background:var(--rbg);border:1px solid var(--rb);display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:11px;letter-spacing:1px;color:var(--rdim);}
-.rndbdg{font-family:'Cormorant Garamond',serif;font-size:12px;color:var(--tx3);letter-spacing:2px;}
-.ibtn{width:32px;height:32px;border-radius:50%;border:1px solid var(--ln2);background:none;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--tx3);flex-shrink:0;transition:border-color .15s,color .15s;}
-.ibtn:hover{color:var(--tx2);border-color:var(--ln3);}
+.pbav{width:26px;height:26px;border-radius:50%;background:var(--cr-bg);border:1px solid var(--cr-bd);display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:11px;color:var(--cr-dim);}
+.rndbdg{font-family:'DM Mono',monospace;font-size:11px;color:var(--t3);letter-spacing:2px;}
+.ibtn{width:34px;height:34px;border-radius:50%;border:1px solid var(--l2);background:none;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--t3);flex-shrink:0;transition:border-color .15s,color .15s;}
+.ibtn:hover{color:var(--t2);border-color:var(--l3);}
 
-/* ── SCROLL */
-.scroll{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;scrollbar-width:none;}
+/* ─── SCROLL ─────────────────────────────────────────────────────────────── */
+.scroll{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;scrollbar-width:none;position:relative;z-index:1;}
 .scroll::-webkit-scrollbar{display:none;}
 
-/* ── SCREENS */
-.sc{display:none;padding:28px 18px calc(60px + var(--safe-b));animation:fadeUp .3s cubic-bezier(.16,1,.3,1);}
+/* ─── SCREENS ────────────────────────────────────────────────────────────── */
+.sc{display:none;padding:28px 20px calc(64px + var(--safe-b));animation:fadeUp .32s cubic-bezier(.16,1,.3,1);}
 .sc.on{display:block;}
-@keyframes fadeUp{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:translateY(0);}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:translateY(0);}}
 
-/* ── TYPOGRAPHY */
-.lbl{font-size:9px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:var(--tx3);display:block;margin-bottom:7px;}
-.lr{color:rgba(200,56,74,.5);}
-.lt{color:rgba(74,158,122,.4);}
-.la{color:rgba(196,163,90,.45);}
-.disp{font-family:'Cormorant Garamond',serif;font-size:68px;letter-spacing:4px;color:var(--gold);line-height:.9;font-weight:600;}
-.ttl{font-family:'Cormorant Garamond',serif;font-size:38px;letter-spacing:1px;line-height:1.05;color:var(--tx);font-weight:500;}
+/* ─── TYPOGRAPHY ─────────────────────────────────────────────────────────── */
+.eyebrow{font-size:9px;font-weight:500;letter-spacing:3.5px;text-transform:uppercase;color:var(--t3);display:block;}
+.eyebrow.r{color:rgba(212,49,74,.5);}
+.eyebrow.g{color:rgba(46,158,107,.45);}
+.eyebrow.a{color:rgba(196,154,60,.5);}
+.headline{font-family:'Playfair Display',serif;font-size:52px;letter-spacing:-1px;color:var(--ca);line-height:.95;font-weight:900;}
+.title{font-family:'Playfair Display',serif;font-size:38px;letter-spacing:-.5px;line-height:1.05;color:var(--t1);font-weight:700;}
+.subtitle{font-size:12px;color:var(--t2);line-height:1.7;letter-spacing:.2px;}
 
-/* ── INPUTS */
+/* ─── INPUTS ─────────────────────────────────────────────────────────────── */
 input[type=text],input[type=number],select{
-  width:100%;background:var(--bg3);border:1px solid var(--ln2);border-radius:var(--rs);
-  color:var(--tx);font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:400;
-  padding:13px 14px;outline:none;transition:border-color .2s,background .2s;
+  width:100%;background:var(--b2);border:1px solid var(--l2);border-radius:var(--rs);
+  color:var(--t1);font-family:'DM Mono',monospace;font-size:14px;font-weight:400;
+  padding:14px 16px;outline:none;transition:border-color .2s,background .2s;
+  -webkit-appearance:none;
 }
-input:focus,select:focus{border-color:var(--gb);background:var(--bg2);}
-input::placeholder{color:var(--tx3);}
+input:focus,select:focus{border-color:var(--ca-bd);background:var(--b3);}
+input::placeholder{color:var(--t3);}
 select{appearance:none;cursor:pointer;}
 .sw{position:relative;}
-.sw::after{content:'▾';position:absolute;right:13px;top:50%;transform:translateY(-50%);color:var(--tx3);pointer-events:none;font-size:11px;}
+.sw::after{content:'▾';position:absolute;right:14px;top:50%;transform:translateY(-50%);color:var(--t3);pointer-events:none;font-size:11px;}
 
-/* ── BUTTONS */
-.btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:15px;border-radius:var(--r);border:none;font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:600;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:transform .12s,opacity .12s,background .15s;}
+/* ─── BUTTONS ────────────────────────────────────────────────────────────── */
+.btn{
+  display:flex;align-items:center;justify-content:center;gap:8px;width:100%;
+  padding:15px;border-radius:var(--r);border:none;
+  font-family:'DM Mono',monospace;font-size:11px;font-weight:500;letter-spacing:2.5px;
+  text-transform:uppercase;cursor:pointer;transition:transform .1s,opacity .12s,box-shadow .15s;
+}
 .btn:active{transform:scale(.97);}
-.bp{background:var(--gold);color:#060608;}
-.bp:hover{opacity:.9;}
-.bo{background:transparent;border:1px solid var(--ln2);color:var(--tx2);}
-.bo:hover{border-color:var(--ln3);color:var(--tx);}
-.bt{background:var(--tbg);border:1px solid var(--tb);color:var(--teal);}
-.ba{background:var(--gbg);border:1px solid var(--gb);color:var(--gold);}
-.bdng{background:var(--rbg);border:1px solid var(--rb);color:var(--rdim);}
-.bsm{padding:10px 16px;font-size:11px;border-radius:var(--rs);}
+.bp{background:var(--ca);color:#04040A;box-shadow:0 0 0 0 rgba(196,154,60,0);transition:transform .1s,box-shadow .2s;}
+.bp:hover{box-shadow:0 0 28px rgba(196,154,60,.25);}
+.bo{background:transparent;border:1px solid var(--l2);color:var(--t2);}
+.bo:hover{border-color:var(--l3);color:var(--t1);}
+.bg{background:var(--cg-bg);border:1px solid var(--cg-bd);color:var(--cg-dim);}
+.ba{background:var(--ca-bg);border:1px solid var(--ca-bd);color:var(--ca-dim);}
+.br{background:var(--cr-bg);border:1px solid var(--cr-bd);color:var(--cr-dim);}
+.bsm{padding:10px 16px;font-size:10px;border-radius:var(--rs);}
 .mb{margin-bottom:10px;}
 
-/* ── CARDS */
-.card{background:var(--bg2);border:1px solid var(--ln);border-radius:var(--r);padding:16px;}
-.cr{background:var(--rbg);border-color:var(--rb);}
-.ct{background:var(--tbg);border-color:var(--tb);}
-.ca{background:var(--gbg);border-color:var(--gb);}
+/* ─── CARDS ──────────────────────────────────────────────────────────────── */
+.card{background:var(--b2);border:1px solid var(--l1);border-radius:var(--r);padding:18px;}
+.card.cr{background:var(--cr-bg);border-color:var(--cr-bd);}
+.card.cg{background:var(--cg-bg);border-color:var(--cg-bd);}
+.card.ca{background:var(--ca-bg);border-color:var(--ca-bd);}
 
-/* ── DIVIDER */
-.div-l{display:flex;align-items:center;gap:12px;margin:16px 0;}
-.div-l::before,.div-l::after{content:'';flex:1;height:1px;background:var(--ln);}
-.div-l span{font-size:9px;letter-spacing:2.5px;text-transform:uppercase;color:var(--tx3);}
-
-/* ── PLAYER ROW */
-.pr{display:flex;align-items:center;gap:10px;padding:11px 13px;background:var(--bg2);border:1px solid var(--ln);border-radius:var(--rs);margin-bottom:6px;animation:fadeUp .18s ease;}
-.av{width:36px;height:36px;border-radius:10px;background:var(--bg4);border:1px solid var(--ln2);display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:11px;letter-spacing:1px;color:var(--tx2);flex-shrink:0;}
-.av.r{background:var(--rbg);border-color:var(--rb);color:var(--rdim);}
-.av.t{background:var(--tbg);border-color:var(--tb);color:var(--teal);}
-.av.g{background:var(--gbg);border-color:var(--gb);color:var(--gold);}
-.pi{flex:1;min-width:0;}
-.pn{font-size:13px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.ps{font-size:10px;color:var(--tx3);margin-top:2px;letter-spacing:.3px;}
-.dot{width:7px;height:7px;border-radius:50%;background:var(--bg5);flex-shrink:0;}
-.dot.on{background:var(--teal);}
-
-/* ── COUNTER */
-.ctr{display:flex;align-items:center;background:var(--bg3);border:1px solid var(--ln2);border-radius:var(--rs);overflow:hidden;}
-.cbtn{width:44px;height:44px;display:flex;align-items:center;justify-content:center;background:none;border:none;color:var(--tx2);font-size:22px;cursor:pointer;transition:background .1s;}
-.cbtn:hover{background:var(--bg4);color:var(--tx);}
-.cval{flex:1;text-align:center;font-family:'Cormorant Garamond',serif;font-size:24px;letter-spacing:2px;}
-
-/* ── GRID */
+/* ─── STAT GRID ──────────────────────────────────────────────────────────── */
 .sg{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;}
-.scard{background:var(--bg2);border:1px solid var(--ln);border-radius:var(--rs);padding:13px;}
-.sval{font-family:'Cormorant Garamond',serif;font-size:22px;letter-spacing:1px;line-height:1;margin-top:4px;}
+.scard{background:var(--b2);border:1px solid var(--l1);border-radius:var(--rs);padding:14px;}
+.sval{font-family:'Playfair Display',serif;font-size:24px;letter-spacing:.5px;line-height:1;margin-top:5px;}
+
+/* ─── DIVIDER ────────────────────────────────────────────────────────────── */
+.div-l{display:flex;align-items:center;gap:12px;margin:18px 0;}
+.div-l::before,.div-l::after{content:'';flex:1;height:1px;background:var(--l1);}
+.div-l span{font-size:9px;letter-spacing:2.5px;text-transform:uppercase;color:var(--t3);}
+
+/* ─── PLAYER ROW ─────────────────────────────────────────────────────────── */
+.pr{display:flex;align-items:center;gap:11px;padding:12px 14px;background:var(--b2);border:1px solid var(--l1);border-radius:var(--rs);margin-bottom:6px;animation:fadeUp .18s ease;}
+.av{width:38px;height:38px;border-radius:11px;background:var(--b4);border:1px solid var(--l2);display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:13px;color:var(--t2);flex-shrink:0;font-style:italic;}
+.av.r{background:var(--cr-bg);border-color:var(--cr-bd);color:var(--cr-dim);}
+.av.g{background:var(--cg-bg);border-color:var(--cg-bd);color:var(--cg-dim);}
+.av.a{background:var(--ca-bg);border-color:var(--ca-bd);color:var(--ca-dim);}
+.pi{flex:1;min-width:0;}
+.pn{font-size:13px;font-weight:400;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--t1);letter-spacing:.2px;}
+.ps{font-size:10px;color:var(--t3);margin-top:2px;letter-spacing:.5px;}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--b5);flex-shrink:0;}
+.dot.on{background:var(--cg);}
+
+/* ─── COUNTER ────────────────────────────────────────────────────────────── */
+.ctr{display:flex;align-items:center;background:var(--b3);border:1px solid var(--l2);border-radius:var(--rs);overflow:hidden;}
+.cbtn{width:46px;height:46px;display:flex;align-items:center;justify-content:center;background:none;border:none;color:var(--t2);font-size:24px;cursor:pointer;transition:background .1s;}
+.cbtn:hover{background:var(--b4);color:var(--t1);}
+.cval{flex:1;text-align:center;font-family:'Playfair Display',serif;font-size:26px;letter-spacing:2px;color:var(--t1);}
 
 /* ═══════════════════════════════════════════════════════════════
    PREMIUM FLIP CARD
 ═══════════════════════════════════════════════════════════════ */
 .fwrap{perspective:1400px;cursor:pointer;margin-bottom:20px;user-select:none;-webkit-user-select:none;}
-.finnr{width:100%;height:280px;position:relative;transform-style:preserve-3d;transition:transform .75s cubic-bezier(.23,.86,.39,.97);}
+.finnr{width:100%;height:290px;position:relative;transform-style:preserve-3d;transition:transform .8s cubic-bezier(.23,.86,.39,.97);}
 .fwrap.flip .finnr{transform:rotateY(180deg);}
 .ff,.fb{
   position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;
-  border-radius:20px;display:flex;flex-direction:column;align-items:center;justify-content:center;
-  padding:24px 20px;overflow:hidden;
+  border-radius:22px;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:28px 24px;overflow:hidden;
 }
-
-/* FRONT FACE — dark premium */
 .ff{
-  background:linear-gradient(145deg,#0e0e12 0%,#141419 50%,#0e0e12 100%);
-  border:1px solid rgba(255,255,255,.07);
-  box-shadow:0 2px 40px rgba(0,0,0,.6), inset 0 1px 0 rgba(255,255,255,.05);
+  background:linear-gradient(155deg,#0a0a18 0%,#10101f 50%,#080815 100%);
+  border:1px solid rgba(255,255,255,.06);
+  box-shadow:0 4px 60px rgba(0,0,0,.7),inset 0 1px 0 rgba(255,255,255,.04);
 }
-.ff::before{
-  content:'';position:absolute;inset:0;border-radius:20px;
-  background:repeating-linear-gradient(
-    0deg,transparent,transparent 28px,rgba(255,255,255,.015) 28px,rgba(255,255,255,.015) 29px
-  );pointer-events:none;
+.ff::after{
+  content:'';position:absolute;inset:0;border-radius:22px;pointer-events:none;
+  background:
+    radial-gradient(ellipse 60% 40% at 50% 0%,rgba(196,154,60,.04) 0%,transparent 70%),
+    repeating-linear-gradient(0deg,transparent,transparent 32px,rgba(255,255,255,.012) 32px,rgba(255,255,255,.012) 33px);
 }
-.ff-corner{
-  position:absolute;width:40px;height:40px;
-  border-color:rgba(196,163,90,.2);border-style:solid;
+.ff-corners span{position:absolute;width:36px;height:36px;border-color:rgba(196,154,60,.18);border-style:solid;}
+.ff-corners span:nth-child(1){top:16px;left:16px;border-width:1px 0 0 1px;border-radius:8px 0 0 0;}
+.ff-corners span:nth-child(2){top:16px;right:16px;border-width:1px 1px 0 0;border-radius:0 8px 0 0;}
+.ff-corners span:nth-child(3){bottom:16px;left:16px;border-width:0 0 1px 1px;border-radius:0 0 0 8px;}
+.ff-corners span:nth-child(4){bottom:16px;right:16px;border-width:0 1px 1px 0;border-radius:0 0 8px 0;}
+.ff-eye{
+  width:68px;height:68px;border-radius:50%;
+  border:1px solid rgba(196,154,60,.18);
+  background:radial-gradient(circle at 38% 38%,rgba(196,154,60,.07),transparent 65%);
+  display:flex;align-items:center;justify-content:center;margin-bottom:20px;
+  animation:eyePulse 3.5s ease-in-out infinite;
 }
-.ff-corner.tl{top:14px;left:14px;border-width:1px 0 0 1px;border-radius:6px 0 0 0;}
-.ff-corner.tr{top:14px;right:14px;border-width:1px 1px 0 0;border-radius:0 6px 0 0;}
-.ff-corner.bl{bottom:14px;left:14px;border-width:0 0 1px 1px;border-radius:0 0 0 6px;}
-.ff-corner.br{bottom:14px;right:14px;border-width:0 1px 1px 0;border-radius:0 0 6px 0;}
-.ff-eyeicon{
-  width:64px;height:64px;border-radius:50%;
-  border:1px solid rgba(196,163,90,.2);
-  background:radial-gradient(circle at 40% 40%,rgba(196,163,90,.08),transparent 70%);
-  display:flex;align-items:center;justify-content:center;margin-bottom:18px;
-  animation:eyePulse 3s ease-in-out infinite;
-}
-@keyframes eyePulse{0%,100%{box-shadow:0 0 0 0 rgba(196,163,90,0);}50%{box-shadow:0 0 0 8px rgba(196,163,90,.06);}}
-.ff-hint{font-family:'Cormorant Garamond',serif;font-size:22px;letter-spacing:3px;color:rgba(255,255,255,.35);margin-bottom:6px;font-weight:400;}
-.ff-sub{font-size:10px;letter-spacing:2px;color:var(--tx3);text-transform:uppercase;}
+@keyframes eyePulse{0%,100%{box-shadow:0 0 0 0 rgba(196,154,60,0),0 0 0 0 rgba(196,154,60,0);}50%{box-shadow:0 0 0 6px rgba(196,154,60,.05),0 0 24px rgba(196,154,60,.06);}}
+.ff-hint{font-family:'Playfair Display',serif;font-size:20px;letter-spacing:1px;color:rgba(255,255,255,.28);margin-bottom:5px;font-style:italic;}
+.ff-sub{font-size:9px;letter-spacing:3px;color:var(--t3);text-transform:uppercase;}
 
-/* BACK FACE — role reveal */
 .fb{transform:rotateY(180deg);}
-
-/* CITIZEN back */
 .fb.cit-back{
-  background:linear-gradient(160deg,#091810 0%,#0d2018 40%,#091810 100%);
-  border:1px solid rgba(74,158,122,.25);
-  box-shadow:0 0 60px rgba(74,158,122,.08),inset 0 1px 0 rgba(74,158,122,.1);
+  background:linear-gradient(160deg,#060f0b 0%,#0a1a12 40%,#060f0b 100%);
+  border:1px solid rgba(46,158,107,.22);
+  box-shadow:0 0 80px rgba(46,158,107,.07),inset 0 1px 0 rgba(46,158,107,.08);
 }
-/* IMPOSTOR back */
 .fb.imp-back{
-  background:linear-gradient(160deg,#150810 0%,#200d15 40%,#150810 100%);
-  border:1px solid rgba(200,56,74,.3);
-  box-shadow:0 0 60px rgba(200,56,74,.12),inset 0 1px 0 rgba(200,56,74,.12);
+  background:linear-gradient(160deg,#100408 0%,#1c080f 40%,#100408 100%);
+  border:1px solid rgba(212,49,74,.28);
+  box-shadow:0 0 80px rgba(212,49,74,.1),inset 0 1px 0 rgba(212,49,74,.1);
 }
-
-.fb-glow-ring{
-  position:absolute;width:220px;height:220px;border-radius:50%;
+.fb-glow{
+  position:absolute;width:240px;height:240px;border-radius:50%;
   top:50%;left:50%;transform:translate(-50%,-55%);pointer-events:none;
-  opacity:.4;
 }
-.cit-back .fb-glow-ring{background:radial-gradient(circle,rgba(74,158,122,.12) 0%,transparent 70%);}
-.imp-back .fb-glow-ring{background:radial-gradient(circle,rgba(200,56,74,.15) 0%,transparent 70%);}
-
-.fb-role-badge{
-  display:inline-flex;align-items:center;gap:6px;
-  padding:5px 14px 5px 10px;border-radius:999px;
-  font-size:9px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;
-  margin-bottom:14px;position:relative;z-index:1;
+.cit-back .fb-glow{background:radial-gradient(circle,rgba(46,158,107,.1) 0%,transparent 65%);}
+.imp-back .fb-glow{background:radial-gradient(circle,rgba(212,49,74,.12) 0%,transparent 65%);}
+.fb-badge{
+  display:inline-flex;align-items:center;gap:6px;padding:5px 14px 5px 10px;border-radius:999px;
+  font-size:9px;font-weight:500;letter-spacing:3px;text-transform:uppercase;margin-bottom:14px;position:relative;z-index:1;
 }
-.fb-role-badge.cit{background:rgba(74,158,122,.12);border:1px solid rgba(74,158,122,.3);color:#5fbf95;}
-.fb-role-badge.imp{background:rgba(200,56,74,.12);border:1px solid rgba(200,56,74,.35);color:#e05565;}
-.fb-role-dot{width:5px;height:5px;border-radius:50%;flex-shrink:0;}
-.fb-role-badge.cit .fb-role-dot{background:var(--teal);}
-.fb-role-badge.imp .fb-role-dot{background:var(--red);animation:mbl 1s infinite;}
-
-.fb-word-lbl{
-  font-size:9px;letter-spacing:3px;text-transform:uppercase;
-  margin-bottom:10px;position:relative;z-index:1;
-}
-.cit-back .fb-word-lbl{color:rgba(74,158,122,.5);}
-.imp-back .fb-word-lbl{color:rgba(200,56,74,.5);}
-
+.fb-badge.cit{background:rgba(46,158,107,.1);border:1px solid rgba(46,158,107,.28);color:var(--cg-dim);}
+.fb-badge.imp{background:rgba(212,49,74,.1);border:1px solid rgba(212,49,74,.32);color:var(--cr-dim);}
+.fb-dot{width:5px;height:5px;border-radius:50%;flex-shrink:0;}
+.fb-badge.cit .fb-dot{background:var(--cg);}
+.fb-badge.imp .fb-dot{background:var(--cr);animation:blink 1s infinite;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:.25;}}
+.fb-lbl{font-size:9px;letter-spacing:3.5px;text-transform:uppercase;margin-bottom:10px;position:relative;z-index:1;}
+.cit-back .fb-lbl{color:rgba(46,158,107,.45);}
+.imp-back .fb-lbl{color:rgba(212,49,74,.45);}
 .fb-word{
-  font-family:'Cormorant Garamond',serif;
-  font-size:48px;letter-spacing:2px;text-align:center;line-height:1.0;
-  word-break:break-word;hyphens:auto;max-width:100%;
-  margin-bottom:16px;position:relative;z-index:1;font-weight:600;
+  font-family:'Playfair Display',serif;font-size:50px;letter-spacing:-.5px;text-align:center;
+  line-height:1.0;word-break:break-word;hyphens:auto;max-width:100%;
+  margin-bottom:14px;position:relative;z-index:1;font-weight:900;
 }
-.cit-back .fb-word{color:#e8f5ee;text-shadow:0 0 40px rgba(74,158,122,.3);}
-.imp-back .fb-word{color:#fce8ea;text-shadow:0 0 40px rgba(200,56,74,.35);}
+.cit-back .fb-word{color:#edfaf3;text-shadow:0 0 50px rgba(46,158,107,.25);}
+.imp-back .fb-word{color:#fceef0;text-shadow:0 0 50px rgba(212,49,74,.3);}
+.fb-desc{font-size:11px;color:rgba(255,255,255,.25);letter-spacing:.3px;text-align:center;line-height:1.6;position:relative;z-index:1;}
+.imp-back .fb-desc{color:rgba(255,100,115,.22);}
 
-.fb-desc{
-  font-size:11px;color:rgba(255,255,255,.3);letter-spacing:.5px;
-  text-align:center;line-height:1.6;position:relative;z-index:1;
-}
-.imp-back .fb-desc{color:rgba(255,120,130,.3);}
+/* ─── MY WORD CHIP ────────────────────────────────────────────────────────── */
+.mywc{display:flex;align-items:center;gap:14px;padding:14px 16px;border-radius:var(--r);border:1px solid var(--l2);background:var(--b2);margin-bottom:14px;}
+.mywc-w{font-family:'Playfair Display',serif;font-size:32px;letter-spacing:-.5px;line-height:1;font-weight:700;}
+.mywc-lbl{font-size:9px;font-weight:500;letter-spacing:3px;text-transform:uppercase;color:var(--t3);margin-bottom:4px;}
 
-/* ── MY WORD CHIP (discussion) */
-.mywc{display:flex;align-items:center;gap:14px;padding:14px 16px;border-radius:var(--r);border:1px solid var(--ln2);background:var(--bg2);margin-bottom:14px;}
-.mywc-w{font-family:'Cormorant Garamond',serif;font-size:30px;letter-spacing:1px;line-height:1;font-weight:600;}
-.mywc-lbl{font-size:9px;font-weight:600;letter-spacing:2.5px;text-transform:uppercase;color:var(--tx3);margin-bottom:4px;}
-
-/* ── TIMER */
-.tcard{background:var(--bg2);border:1px solid var(--ln);border-radius:var(--r);padding:16px 18px;margin-bottom:14px;}
+/* ─── TIMER ──────────────────────────────────────────────────────────────── */
+.tcard{background:var(--b2);border:1px solid var(--l1);border-radius:var(--r);padding:16px 18px;margin-bottom:14px;}
 .tcard-top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px;}
-.tcard-lbl{font-size:9px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:var(--tx3);}
-.tcard-val{font-family:'Cormorant Garamond',serif;font-size:34px;letter-spacing:2px;color:var(--tx);line-height:1;transition:color .3s;font-weight:500;}
-.tbar-track{height:2px;background:var(--bg4);border-radius:999px;overflow:hidden;}
+.tcard-lbl{font-size:9px;font-weight:500;letter-spacing:3px;text-transform:uppercase;color:var(--t3);}
+.tcard-val{font-family:'Playfair Display',serif;font-size:36px;letter-spacing:1px;color:var(--t1);line-height:1;transition:color .3s;font-weight:700;}
+.tbar{height:2px;background:var(--b5);border-radius:999px;overflow:hidden;}
 .tbar-fill{height:100%;border-radius:999px;transition:width 1s linear,background .4s;}
 
-/* ── SPEAKER */
-.spkcard{border-radius:var(--r);padding:15px 18px;margin-bottom:14px;position:relative;overflow:hidden;border:1px solid var(--gb);background:var(--gbg);}
-.spkcard-lbl{font-size:9px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:var(--gold);opacity:.6;margin-bottom:5px;}
-.spkcard-name{font-family:'Cormorant Garamond',serif;font-size:30px;letter-spacing:2px;color:var(--gold);word-break:break-word;line-height:1.1;font-weight:600;}
+/* ─── SPEAKER ────────────────────────────────────────────────────────────── */
+.spkcard{border-radius:var(--r);padding:14px 18px;margin-bottom:14px;position:relative;overflow:hidden;border:1px solid var(--ca-bd);background:var(--ca-bg);}
+.spkcard::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--ca);border-radius:3px 0 0 3px;}
+.spkcard-lbl{font-size:9px;font-weight:500;letter-spacing:3px;text-transform:uppercase;color:rgba(196,154,60,.55);margin-bottom:4px;}
+.spkcard-name{font-family:'Playfair Display',serif;font-size:30px;letter-spacing:.5px;color:var(--ca);word-break:break-word;line-height:1.1;font-weight:700;}
 
-/* ── MIC */
-.mic{display:flex;align-items:center;gap:9px;padding:10px 13px;background:var(--bg2);border:1px solid var(--ln);border-radius:var(--rs);margin-bottom:12px;}
-.mled{width:7px;height:7px;border-radius:50%;background:var(--tx3);flex-shrink:0;transition:background .2s;}
-.mled.live{background:var(--red);animation:mbl 1s infinite;}
-@keyframes mbl{0%,100%{opacity:1;}50%{opacity:.3;}}
-.mtxt{font-size:11px;color:var(--tx2);flex:1;letter-spacing:.3px;}
+/* ─── MIC ────────────────────────────────────────────────────────────────── */
+.mic{display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--b2);border:1px solid var(--l1);border-radius:var(--rs);margin-bottom:12px;}
+.mled{width:7px;height:7px;border-radius:50%;background:var(--t3);flex-shrink:0;transition:background .2s;}
+.mled.live{background:var(--cr);animation:blink 1s infinite;}
+.mtxt{font-size:10px;color:var(--t2);flex:1;letter-spacing:.5px;}
 .mwaves{display:flex;align-items:center;gap:2px;}
-.mwaves span{display:block;width:3px;border-radius:2px;background:var(--rdim);}
+.mwaves span{display:block;width:3px;border-radius:2px;background:var(--cr-dim);}
 .mwaves span:nth-child(1){height:5px;animation:wv .8s 0s ease-in-out infinite;}
 .mwaves span:nth-child(2){height:10px;animation:wv .8s .1s ease-in-out infinite;}
 .mwaves span:nth-child(3){height:7px;animation:wv .8s .2s ease-in-out infinite;}
@@ -247,172 +249,172 @@ select{appearance:none;cursor:pointer;}
 .mwaves span:nth-child(5){height:4px;animation:wv .8s .15s ease-in-out infinite;}
 @keyframes wv{0%,100%{transform:scaleY(.3);}50%{transform:scaleY(1.2);}}
 
-.vpanel{background:var(--bg2);border:1px solid var(--ln);border-radius:var(--r);padding:13px;margin-bottom:12px;}
+/* ─── VOICE PANEL ────────────────────────────────────────────────────────── */
+.vpanel{background:var(--b2);border:1px solid var(--l1);border-radius:var(--r);padding:14px;margin-bottom:12px;}
 .vhead{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px;}
-.vtitle{font-size:9px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--tx3);}
+.vtitle{font-size:9px;font-weight:500;letter-spacing:3px;text-transform:uppercase;color:var(--t3);}
 .vactions{display:flex;gap:6px;}
-.vbtn{padding:7px 12px;border-radius:999px;border:1px solid var(--ln2);background:var(--bg3);color:var(--tx2);font-size:10px;font-weight:600;letter-spacing:1px;cursor:pointer;transition:border-color .15s,color .15s;}
-.vbtn.live{border-color:var(--tb);color:var(--teal);background:var(--tbg);}
-.vbtn.muted{border-color:var(--rb);color:var(--rdim);background:var(--rbg);}
-.vlist{display:flex;flex-direction:column;gap:5px;}
-.vrow{display:flex;align-items:center;gap:8px;padding:9px 11px;background:var(--bg3);border:1px solid var(--ln);border-radius:var(--rs);transition:border-color .2s;}
-.vrow.speaking{border-color:rgba(74,158,122,.3);}
+.vbtn{padding:7px 12px;border-radius:999px;border:1px solid var(--l2);background:var(--b3);color:var(--t2);font-size:10px;font-weight:400;letter-spacing:.5px;cursor:pointer;transition:border-color .15s,color .15s;font-family:'DM Mono',monospace;}
+.vbtn.live{border-color:var(--cg-bd);color:var(--cg-dim);background:var(--cg-bg);}
+.vbtn.muted{border-color:var(--cr-bd);color:var(--cr-dim);background:var(--cr-bg);}
+.vlist-voice{display:flex;flex-direction:column;gap:5px;}
+.vrow{display:flex;align-items:center;gap:9px;padding:9px 12px;background:var(--b3);border:1px solid var(--l1);border-radius:var(--rxs);transition:border-color .2s;}
+.vrow.speaking{border-color:rgba(46,158,107,.28);}
 .vmeta{flex:1;min-width:0;}
-.vname{font-size:12px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.vsub{font-size:10px;color:var(--tx3);margin-top:1px;}
-.vmeter{width:52px;height:4px;background:var(--bg5);border-radius:999px;overflow:hidden;flex-shrink:0;}
-.vmeter>span{display:block;height:100%;width:0%;background:var(--teal);transition:width .1s linear;}
-.vtoggle{padding:5px 9px;border-radius:999px;border:1px solid var(--ln2);background:transparent;color:var(--tx2);font-size:9px;font-weight:700;letter-spacing:1px;cursor:pointer;flex-shrink:0;transition:border-color .15s,color .15s;}
-.vtoggle.on{border-color:var(--rb);color:var(--rdim);background:var(--rbg);}
+.vname{font-size:12px;font-weight:400;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--t1);}
+.vsub{font-size:10px;color:var(--t3);margin-top:1px;letter-spacing:.3px;}
+.vmeter{width:48px;height:4px;background:var(--b5);border-radius:999px;overflow:hidden;flex-shrink:0;}
+.vmeter>span{display:block;height:100%;width:0%;background:var(--cg);transition:width .1s linear;}
+.vtoggle{padding:5px 10px;border-radius:999px;border:1px solid var(--l2);background:transparent;color:var(--t2);font-size:9px;font-weight:400;letter-spacing:.5px;cursor:pointer;flex-shrink:0;transition:border-color .15s,color .15s;font-family:'DM Mono',monospace;}
+.vtoggle.on{border-color:var(--cr-bd);color:var(--cr-dim);background:var(--cr-bg);}
 
-/* ── HOST STRIP */
-.hstrip{background:var(--bg2);border:1px solid var(--ln);border-radius:var(--r);padding:13px;margin-bottom:12px;}
-.hstrip-title{font-size:9px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--tx3);margin-bottom:10px;}
+/* ─── HOST STRIP ─────────────────────────────────────────────────────────── */
+.hstrip{background:var(--b2);border:1px solid var(--l1);border-radius:var(--r);padding:14px;margin-bottom:12px;}
+.hstrip-lbl{font-size:9px;font-weight:500;letter-spacing:3px;text-transform:uppercase;color:var(--t3);margin-bottom:10px;}
 .hstrip-btns{display:flex;gap:7px;flex-wrap:wrap;}
-.hstrip-btn{padding:9px 14px;border-radius:999px;border:1px solid var(--ln2);background:var(--bg3);color:var(--tx2);font-family:'Space Grotesk',sans-serif;font-size:11px;letter-spacing:1px;font-weight:600;cursor:pointer;transition:border-color .15s,color .15s,background .15s;}
-.hstrip-btn:hover{border-color:var(--ln3);color:var(--tx);}
-.hstrip-btn.danger{border-color:var(--rb);color:var(--rdim);}
-.hstrip-btn.danger:hover{background:var(--rbg);}
-.hstrip-btn.prim{border-color:var(--tb);color:var(--teal);}
-.hstrip-btn.prim:hover{background:var(--tbg);}
-.hstrip-btn.amb{border-color:var(--gb);color:var(--gold);}
-.hstrip-btn.amb:hover{background:var(--gbg);}
+.hbtn{padding:9px 15px;border-radius:999px;border:1px solid var(--l2);background:var(--b3);color:var(--t2);font-family:'DM Mono',monospace;font-size:10px;letter-spacing:1px;font-weight:400;cursor:pointer;transition:border-color .15s,color .15s,background .15s;}
+.hbtn:hover{border-color:var(--l3);color:var(--t1);}
+.hbtn.r{border-color:var(--cr-bd);color:var(--cr-dim);}
+.hbtn.r:hover{background:var(--cr-bg);}
+.hbtn.g{border-color:var(--cg-bd);color:var(--cg-dim);}
+.hbtn.g:hover{background:var(--cg-bg);}
+.hbtn.a{border-color:var(--ca-bd);color:var(--ca-dim);}
+.hbtn.a:hover{background:var(--ca-bg);}
 
-/* ── VOTE */
-.vote-header{margin-bottom:20px;}
-.vote-phase-label{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
-.vote-phase-dot{width:5px;height:5px;border-radius:50%;background:var(--red);animation:mbl 1s infinite;flex-shrink:0;}
+/* ─── VOTE SCREEN ────────────────────────────────────────────────────────── */
+.vote-phase-label{display:flex;align-items:center;gap:8px;margin-bottom:10px;}
+.vote-phase-dot{width:5px;height:5px;border-radius:50%;background:var(--cr);animation:blink 1s infinite;flex-shrink:0;}
 .vlist-vote{display:flex;flex-direction:column;gap:8px;margin-bottom:16px;}
 .vcard{
   display:flex;align-items:center;gap:14px;padding:14px 16px;
-  background:var(--bg2);border:1px solid var(--ln);border-radius:var(--r);
+  background:var(--b2);border:1px solid var(--l1);border-radius:var(--r);
   cursor:pointer;transition:border-color .2s,background .2s,transform .1s;
   position:relative;overflow:hidden;
 }
-.vcard::before{content:'';position:absolute;left:0;top:0;bottom:0;width:2px;background:transparent;transition:background .2s,opacity .2s;border-radius:2px;}
+.vcard::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:transparent;transition:background .2s;border-radius:2px;}
 .vcard:active{transform:scale(.99);}
-.vcard.sel{border-color:var(--rb);background:var(--rbg);}
-.vcard.sel::before{background:var(--red);}
-.vcav{width:42px;height:42px;border-radius:12px;background:var(--bg4);border:1px solid var(--ln2);display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:13px;color:var(--tx2);flex-shrink:0;transition:border-color .15s,background .15s,color .15s;}
-.vcard.sel .vcav{border-color:var(--rb);color:var(--rdim);background:var(--rbg);}
+.vcard.sel{border-color:var(--cr-bd);background:var(--cr-bg);}
+.vcard.sel::before{background:var(--cr);}
+.vcav{width:44px;height:44px;border-radius:13px;background:var(--b4);border:1px solid var(--l2);display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:14px;color:var(--t2);flex-shrink:0;transition:border-color .15s,background .15s,color .15s;font-style:italic;}
+.vcard.sel .vcav{border-color:var(--cr-bd);color:var(--cr-dim);background:var(--cr-bg);}
 .vcard-info{flex:1;min-width:0;}
-.vcard-name{font-size:15px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.vcard-sub{font-size:10px;color:var(--tx3);margin-top:2px;letter-spacing:.3px;}
-.vcard-check{width:22px;height:22px;border-radius:50%;background:var(--red);display:flex;align-items:center;justify-content:center;flex-shrink:0;opacity:0;transition:opacity .2s;transform:scale(.7);transition:opacity .2s,transform .2s;}
+.vcard-name{font-size:14px;font-weight:400;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--t1);}
+.vcard-sub{font-size:10px;color:var(--t3);margin-top:2px;letter-spacing:.3px;}
+.vcard-check{width:22px;height:22px;border-radius:50%;background:var(--cr);display:flex;align-items:center;justify-content:center;flex-shrink:0;opacity:0;transform:scale(.6);transition:opacity .2s,transform .2s;}
 .vcard.sel .vcard-check{opacity:1;transform:scale(1);}
-.vcard-tally{font-family:'Cormorant Garamond',serif;font-size:18px;color:var(--tx3);flex-shrink:0;min-width:24px;text-align:right;}
-
 .vote-progress{margin-bottom:16px;}
 .vote-count-row{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px;}
-.vote-count-label{font-size:9px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:var(--tx3);}
-.vote-count-val{font-family:'Cormorant Garamond',serif;font-size:18px;color:var(--tx3);}
 .vote-dots{display:flex;gap:5px;flex-wrap:wrap;}
-.vote-dot{width:8px;height:8px;border-radius:50%;background:var(--bg5);transition:background .4s,transform .3s;}
-.vote-dot.cast{background:var(--red);transform:scale(1.1);}
-
-.cfm{background:var(--bg2);border:1px solid var(--ln2);border-left:2px solid var(--red);border-radius:var(--r);padding:16px;margin-bottom:14px;display:none;}
+.vote-dot{width:8px;height:8px;border-radius:50%;background:var(--b5);transition:background .4s,transform .3s;}
+.vote-dot.cast{background:var(--cr);transform:scale(1.15);}
+.cfm{background:var(--b2);border:1px solid var(--l2);border-left:3px solid var(--cr);border-radius:var(--r);padding:18px;margin-bottom:14px;display:none;}
 .cfm.on{display:block;animation:fadeUp .18s ease;}
-.cfm-title{font-size:9px;font-weight:600;letter-spacing:2.5px;text-transform:uppercase;color:var(--rdim);margin-bottom:8px;}
-.cfm-name{font-family:'Cormorant Garamond',serif;font-size:28px;letter-spacing:1px;color:var(--tx);margin-bottom:14px;line-height:1;font-weight:500;}
+.cfm-lbl{font-size:9px;font-weight:500;letter-spacing:2.5px;text-transform:uppercase;color:var(--cr-dim);margin-bottom:8px;}
+.cfm-name{font-family:'Playfair Display',serif;font-size:30px;letter-spacing:.5px;color:var(--t1);margin-bottom:14px;line-height:1;font-weight:700;}
 .cfm-actions{display:flex;gap:8px;}
 .cfm-actions .btn{flex:1;}
-
-.vsent-card{background:var(--bg2);border:1px solid var(--tb);border-radius:var(--r);padding:20px;text-align:center;margin-bottom:14px;display:none;}
+.vsent-card{background:var(--b2);border:1px solid var(--cg-bd);border-radius:var(--r);padding:20px;text-align:center;margin-bottom:14px;display:none;}
 .vsent-card.on{display:block;animation:fadeUp .2s ease;}
 .vsent-icon{font-size:28px;margin-bottom:8px;}
-.vsent-title{font-family:'Cormorant Garamond',serif;font-size:24px;letter-spacing:2px;color:var(--teal);margin-bottom:4px;font-weight:500;}
-.vsent-sub{font-size:11px;color:var(--tx3);}
-
-/* Waiting state while voting */
-.vwaiting-info{
-  background:var(--bg2);border:1px solid var(--ln);border-radius:var(--r);
-  padding:18px 16px;text-align:center;margin-bottom:14px;display:none;
-}
+.vsent-title{font-family:'Playfair Display',serif;font-size:24px;letter-spacing:1px;color:var(--cg-dim);margin-bottom:4px;font-weight:700;}
+.vsent-sub{font-size:11px;color:var(--t3);}
+.vwaiting-info{background:var(--b2);border:1px solid var(--l1);border-radius:var(--r);padding:18px 16px;text-align:center;margin-bottom:14px;display:none;}
 .vwaiting-info.on{display:block;}
-.vwaiting-info .wi-title{font-family:'Cormorant Garamond',serif;font-size:22px;letter-spacing:2px;color:var(--tx2);margin-bottom:4px;}
-.vwaiting-info .wi-sub{font-size:11px;color:var(--tx3);}
-
-/* Impostor guess */
-.igbox{background:var(--rbg);border:1px solid var(--rb);border-radius:var(--r);padding:16px;margin-bottom:14px;display:none;}
+.vwaiting-info .wi-title{font-family:'Playfair Display',serif;font-size:22px;letter-spacing:1px;color:var(--t2);margin-bottom:4px;}
+.vwaiting-info .wi-sub{font-size:11px;color:var(--t3);}
+.igbox{background:var(--cr-bg);border:1px solid var(--cr-bd);border-radius:var(--r);padding:16px;margin-bottom:14px;display:none;}
 .igbox.on{display:block;animation:fadeUp .2s ease;}
-.igbox-title{font-size:9px;font-weight:600;letter-spacing:2.5px;text-transform:uppercase;color:var(--rdim);margin-bottom:5px;}
-.igbox-sub{font-size:12px;color:var(--tx2);line-height:1.6;margin-bottom:12px;}
+.igbox-title{font-size:9px;font-weight:500;letter-spacing:2.5px;text-transform:uppercase;color:var(--cr-dim);margin-bottom:5px;}
+.igbox-sub{font-size:12px;color:var(--t2);line-height:1.7;margin-bottom:12px;}
 .igrow{display:flex;gap:8px;}
 .igrow input{flex:1;}
-.igrow button{flex-shrink:0;padding:13px 16px;border-radius:var(--rs);border:none;background:var(--red);color:#fff;font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:700;letter-spacing:1px;cursor:pointer;transition:opacity .15s;}
+.igrow button{flex-shrink:0;padding:14px 16px;border-radius:var(--rs);border:none;background:var(--cr);color:#fff;font-family:'DM Mono',monospace;font-size:11px;font-weight:500;letter-spacing:1px;cursor:pointer;transition:opacity .15s;}
 .igrow button:hover{opacity:.85;}
 
-/* ── SCOREBOARD */
-.srow{display:flex;align-items:center;gap:9px;padding:11px 13px;background:var(--bg2);border:1px solid var(--ln);border-radius:var(--rs);margin-bottom:6px;}
-.srk{font-family:'Cormorant Garamond',serif;font-size:16px;color:var(--tx3);width:20px;flex-shrink:0;}
-.srk.g{color:#d4a832;}.srk.s{color:#aaaabc;}.srk.b{color:#9e7028;}
-.spt{font-family:'Cormorant Garamond',serif;font-size:22px;margin-left:auto;color:var(--tx);}
-.sdelta{font-size:9px;font-weight:700;padding:2px 6px;border-radius:999px;margin-left:5px;letter-spacing:.5px;}
-.sdelta.up{background:var(--tbg);color:var(--teal);}
-.sdelta.z{background:var(--bg4);color:var(--tx3);}
+/* ─── SCOREBOARD ─────────────────────────────────────────────────────────── */
+.srow{display:flex;align-items:center;gap:10px;padding:12px 14px;background:var(--b2);border:1px solid var(--l1);border-radius:var(--rs);margin-bottom:6px;}
+.srk{font-family:'Playfair Display',serif;font-size:17px;color:var(--t3);width:22px;flex-shrink:0;}
+.srk.gold{color:#d4a832;}.srk.silver{color:#9898b0;}.srk.bronze{color:#9e7028;}
+.spt{font-family:'Playfair Display',serif;font-size:24px;margin-left:auto;color:var(--t1);}
+.sdelta{font-size:9px;font-weight:400;padding:2px 7px;border-radius:999px;margin-left:5px;letter-spacing:.5px;}
+.sdelta.up{background:var(--cg-bg);color:var(--cg-dim);}
+.sdelta.z{background:var(--b4);color:var(--t3);}
 
-/* ── RESULT */
-.rbanner{padding:30px 18px;text-align:center;border-radius:var(--r);margin-bottom:16px;position:relative;overflow:hidden;}
-.rbanner.win{background:var(--tbg);border:1px solid var(--tb);}
-.rbanner.lose{background:var(--rbg);border:1px solid var(--rb);}
-.rbanner.tie{background:var(--gbg);border:1px solid var(--gb);}
-.remoji{font-size:40px;margin-bottom:8px;line-height:1;}
-.rtitle{font-family:'Cormorant Garamond',serif;font-size:36px;letter-spacing:2px;line-height:1;color:var(--tx);font-weight:600;}
-.rsub{font-size:12px;color:var(--tx2);margin-top:8px;line-height:1.6;}
-.rrow{display:flex;align-items:center;gap:9px;padding:11px 13px;border-radius:var(--rs);background:var(--bg2);border:1px solid var(--ln);margin-bottom:6px;}
-.rrow.ir{background:var(--rbg);border-color:var(--rb);}
+/* ─── RESULTS ────────────────────────────────────────────────────────────── */
+.rbanner{padding:32px 20px;text-align:center;border-radius:var(--r);margin-bottom:18px;position:relative;overflow:hidden;}
+.rbanner.win{background:var(--cg-bg);border:1px solid var(--cg-bd);}
+.rbanner.lose{background:var(--cr-bg);border:1px solid var(--cr-bd);}
+.rbanner.tie{background:var(--ca-bg);border:1px solid var(--ca-bd);}
+.rbanner::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 0%,rgba(255,255,255,.03),transparent 70%);pointer-events:none;}
+.remoji{font-size:42px;margin-bottom:10px;line-height:1;}
+.rtitle{font-family:'Playfair Display',serif;font-size:38px;letter-spacing:.5px;line-height:1.05;color:var(--t1);font-weight:900;}
+.rsub{font-size:13px;color:var(--t2);margin-top:8px;line-height:1.7;}
+.rrow{display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:var(--rs);background:var(--b2);border:1px solid var(--l1);margin-bottom:6px;}
+.rrow.ir{background:var(--cr-bg);border-color:var(--cr-bd);}
 
-/* ── REVEAL PROGRESS */
-.revprog{background:var(--bg2);border:1px solid var(--ln);border-radius:var(--r);padding:15px;margin-bottom:16px;}
-.revprog-bar{height:2px;background:var(--bg4);border-radius:999px;overflow:hidden;margin-top:8px;}
-.revprog-fill{height:100%;background:var(--teal);border-radius:999px;transition:width .5s ease;}
+/* ─── REVEAL PROGRESS ────────────────────────────────────────────────────── */
+.revprog{background:var(--b2);border:1px solid var(--l1);border-radius:var(--r);padding:15px;margin-bottom:16px;}
+.revprog-bar{height:2px;background:var(--b4);border-radius:999px;overflow:hidden;margin-top:8px;}
+.revprog-fill{height:100%;background:var(--cg);border-radius:999px;transition:width .5s ease;}
 
-/* ── RULES */
-.rstep{display:flex;gap:12px;margin-bottom:12px;align-items:flex-start;}
-.rnum{font-family:'Cormorant Garamond',serif;font-size:20px;color:var(--red);flex-shrink:0;width:22px;line-height:1.2;}
-.rtxt{font-size:13px;color:var(--tx2);line-height:1.75;}
-.rtxt strong{color:var(--tx);font-weight:600;}
+/* ─── RULES ──────────────────────────────────────────────────────────────── */
+.rstep{display:flex;gap:12px;margin-bottom:14px;align-items:flex-start;}
+.rnum{font-family:'Playfair Display',serif;font-size:22px;color:var(--cr);flex-shrink:0;width:24px;line-height:1.2;}
+.rtxt{font-size:13px;color:var(--t2);line-height:1.8;}
+.rtxt strong{color:var(--t1);font-weight:500;}
 
-/* ── MISC */
-.err{font-size:11px;color:var(--rdim);font-weight:500;margin-top:5px;min-height:14px;}
-.wait{text-align:center;font-size:9px;color:var(--tx3);letter-spacing:2px;text-transform:uppercase;padding:10px;}
+/* ─── MISC ───────────────────────────────────────────────────────────────── */
+.err{font-size:11px;color:var(--cr-dim);font-weight:400;margin-top:5px;min-height:14px;letter-spacing:.3px;}
+.wait{text-align:center;font-size:9px;color:var(--t3);letter-spacing:2.5px;text-transform:uppercase;padding:12px;}
 .rowb{display:flex;justify-content:space-between;align-items:center;}
-.g4{margin-bottom:4px;}.g8{margin-bottom:8px;}.g10{margin-bottom:10px;}.g12{margin-bottom:12px;}.g14{margin-bottom:14px;}.g16{margin-bottom:16px;}.g20{margin-bottom:20px;}.g24{margin-bottom:24px;}
-.divider{height:1px;background:var(--ln);margin:16px 0;}
+.g4{margin-bottom:4px;}.g8{margin-bottom:8px;}.g10{margin-bottom:10px;}.g12{margin-bottom:12px;}
+.g14{margin-bottom:14px;}.g16{margin-bottom:16px;}.g20{margin-bottom:20px;}.g24{margin-bottom:24px;}
+.divider{height:1px;background:var(--l1);margin:16px 0;}
+.live-row{display:flex;align-items:center;gap:9px;margin-bottom:16px;}
+.live-dot{width:5px;height:5px;border-radius:50%;background:var(--cr);animation:blink 1s infinite;flex-shrink:0;}
+.live-lbl{font-size:9px;font-weight:500;letter-spacing:3.5px;text-transform:uppercase;color:var(--cr-dim);}
 
-/* ── LIVE DOT */
-.live-row{display:flex;align-items:center;gap:8px;margin-bottom:16px;}
-.live-dot{width:5px;height:5px;border-radius:50%;background:var(--red);animation:mbl 1s infinite;flex-shrink:0;}
-.live-label{font-size:9px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:var(--rdim);}
-
-/* ── TOAST */
-.toast{position:fixed;top:62px;left:50%;transform:translateX(-50%);background:rgba(20,20,25,.97);border:1px solid var(--ln3);border-radius:10px;padding:8px 16px;font-size:12px;font-weight:500;color:var(--tx);z-index:999;display:none;white-space:nowrap;max-width:88vw;overflow:hidden;text-overflow:ellipsis;letter-spacing:.3px;backdrop-filter:blur(12px);}
+/* ─── TOAST ──────────────────────────────────────────────────────────────── */
+.toast{
+  position:fixed;top:64px;left:50%;transform:translateX(-50%);
+  background:rgba(12,12,24,.96);border:1px solid var(--l3);border-radius:10px;
+  padding:9px 18px;font-size:11px;font-weight:400;color:var(--t1);z-index:999;
+  display:none;white-space:nowrap;max-width:88vw;overflow:hidden;text-overflow:ellipsis;
+  letter-spacing:.5px;backdrop-filter:blur(16px);
+}
 .toast.on{display:block;animation:fadeUp .18s ease;}
 
-/* ── SPINNER */
-.spinov{position:fixed;inset:0;background:rgba(6,6,8,.97);z-index:500;display:none;flex-direction:column;align-items:center;justify-content:center;gap:12px;}
+/* ─── SPINNER ────────────────────────────────────────────────────────────── */
+.spinov{position:fixed;inset:0;background:rgba(4,4,10,.97);z-index:500;display:none;flex-direction:column;align-items:center;justify-content:center;gap:12px;}
 .spinov.on{display:flex;}
-.spn-sub{font-size:9px;letter-spacing:4px;color:var(--tx3);text-transform:uppercase;}
-.spn-name{font-family:'Cormorant Garamond',serif;font-size:52px;letter-spacing:4px;color:var(--gold);text-align:center;padding:0 20px;animation:fadeUp .3s ease;font-weight:500;}
-.spn-hint{font-size:9px;color:var(--tx3);letter-spacing:2px;text-transform:uppercase;}
+.spn-sub{font-size:9px;letter-spacing:4px;color:var(--t3);text-transform:uppercase;}
+.spn-name{font-family:'Playfair Display',serif;font-size:54px;letter-spacing:1px;color:var(--ca);text-align:center;padding:0 20px;animation:fadeUp .3s ease;font-weight:900;font-style:italic;}
+.spn-hint{font-size:9px;color:var(--t3);letter-spacing:2.5px;text-transform:uppercase;}
 
-/* ── MODAL */
-.modal-ov{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:800;display:none;align-items:flex-end;justify-content:center;}
+/* ─── MODAL ──────────────────────────────────────────────────────────────── */
+.modal-ov{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:800;display:none;align-items:flex-end;justify-content:center;}
 .modal-ov.on{display:flex;}
-.modal{background:var(--bg2);border:1px solid var(--ln2);border-radius:var(--r) var(--r) 0 0;padding:22px 18px calc(32px + var(--safe-b));width:100%;max-width:430px;animation:mup .25s cubic-bezier(.16,1,.3,1);}
-@keyframes mup{from{opacity:0;transform:translateY(30px);}to{opacity:1;transform:translateY(0);}}
-.modal-title{font-family:'Cormorant Garamond',serif;font-size:26px;letter-spacing:2px;color:var(--tx);font-weight:500;}
-.modal-close{background:none;border:none;color:var(--tx3);cursor:pointer;font-size:20px;}
+.modal{
+  background:var(--b2);border:1px solid var(--l2);border-radius:var(--r) var(--r) 0 0;
+  padding:24px 20px calc(36px + var(--safe-b));width:100%;max-width:430px;
+  animation:mup .28s cubic-bezier(.16,1,.3,1);
+}
+@keyframes mup{from{opacity:0;transform:translateY(32px);}to{opacity:1;transform:translateY(0);}}
+.modal-title{font-family:'Playfair Display',serif;font-size:26px;letter-spacing:.5px;color:var(--t1);font-weight:700;}
+.modal-close{background:none;border:none;color:var(--t3);cursor:pointer;font-size:18px;padding:4px;}
 .modal-list{display:flex;flex-direction:column;gap:7px;margin-bottom:16px;}
-.modal-item{display:flex;align-items:center;gap:11px;padding:11px 13px;background:var(--bg3);border:1px solid var(--ln);border-radius:var(--rs);cursor:pointer;transition:border-color .15s;}
-.modal-item:hover{border-color:var(--ln2);}
+.modal-item{display:flex;align-items:center;gap:12px;padding:12px 14px;background:var(--b3);border:1px solid var(--l1);border-radius:var(--rs);transition:border-color .15s;}
+.modal-item:hover{border-color:var(--l2);}
 .modal-item-btns{display:flex;gap:6px;margin-left:auto;}
-.modal-ibtn{padding:5px 11px;border-radius:999px;border:1px solid var(--ln2);background:none;color:var(--tx3);font-size:10px;font-weight:600;letter-spacing:1px;cursor:pointer;transition:border-color .15s,color .15s;}
-.modal-ibtn.kick{border-color:var(--rb);color:var(--rdim);}
-.modal-ibtn.host{border-color:var(--tb);color:var(--teal);}
+.modal-ibtn{padding:5px 12px;border-radius:999px;border:1px solid var(--l2);background:none;color:var(--t3);font-size:10px;font-weight:400;letter-spacing:.5px;cursor:pointer;transition:border-color .15s,color .15s;font-family:'DM Mono',monospace;}
+.modal-ibtn.kick{border-color:var(--cr-bd);color:var(--cr-dim);}
+.modal-ibtn.kick:hover{background:var(--cr-bg);}
+.modal-ibtn.host{border-color:var(--cg-bd);color:var(--cg-dim);}
+.modal-ibtn.host:hover{background:var(--cg-bg);}
+.modal-note{font-size:11px;color:var(--t3);letter-spacing:.3px;line-height:1.6;}
 
-/* ── ONBOARDING */
-#ob{background:linear-gradient(180deg,#080810 0%,#060608 100%);}
+/* ─── ONBOARDING ─────────────────────────────────────────────────────────── */
+#ob{background:linear-gradient(180deg,#070712 0%,#04040A 100%);}
 </style>
 </head>
 <body>
@@ -425,7 +427,7 @@ select{appearance:none;cursor:pointer;}
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
       </button>
       <button class="ibtn" id="btn-leave-icon" style="display:none;" title="Napusti sobu">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--rdim)" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--cr-dim)" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
       </button>
       <div class="pb" id="pb"><div class="pbav" id="pbav">—</div><span id="pbname">—</span></div>
     </div>
@@ -435,19 +437,20 @@ select{appearance:none;cursor:pointer;}
 
     <!-- JOIN -->
     <div class="sc on" id="s-join">
-      <div style="margin-bottom:40px;margin-top:10px;">
-        <div style="font-size:9px;font-weight:600;letter-spacing:3.5px;text-transform:uppercase;color:var(--tx3);margin-bottom:12px;">Pristup misiji</div>
-        <div style="font-family:'Cormorant Garamond',serif;font-size:46px;letter-spacing:1px;color:var(--tx);line-height:1.0;font-weight:500;">Agentski<br>Identitet</div>
+      <div style="margin-bottom:44px;margin-top:8px;">
+        <div class="eyebrow g12">Pristup misiji</div>
+        <div class="headline g8">Agentski<br>Identitet</div>
+        <p class="subtitle">Unesite ime i kod sobe za pristup.</p>
       </div>
-      <span class="lbl g4">Vaše ime</span>
+      <span class="eyebrow g8">Vaše ime</span>
       <input type="text" id="j-name" placeholder="Ime agenta..." autocomplete="off" autocorrect="off" autocapitalize="words" class="g14"/>
-      <span class="lbl g4">Kod sobe <span style="color:var(--tx3)">(za pristupanje)</span></span>
-      <input type="text" id="j-code" placeholder="ABCD" maxlength="4" class="g10" style="text-transform:uppercase;font-family:'Cormorant Garamond',serif;font-size:26px;letter-spacing:12px;" autocomplete="off" autocorrect="off"/>
+      <span class="eyebrow g8">Kod sobe <span style="color:var(--t4)">(za pristupanje)</span></span>
+      <input type="text" id="j-code" placeholder="ABCD" maxlength="4" class="g10" style="text-transform:uppercase;font-family:'Playfair Display',serif;font-size:28px;letter-spacing:14px;font-weight:700;" autocomplete="off" autocorrect="off"/>
       <div class="err g14" id="j-err"></div>
       <button class="btn bp mb" id="btn-join">Pridruži se</button>
       <div class="div-l"><span>ili</span></div>
       <button class="btn bo mb" id="btn-create">Kreiraj novu sobu</button>
-      <button class="btn bo" id="btn-rules-join" style="border-color:var(--rb);color:var(--rdim);font-size:11px;padding:11px;">
+      <button class="btn bo" id="btn-rules-join" style="border-color:var(--cr-bd);color:var(--cr-dim);font-size:10px;padding:12px;">
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
         Kako se igra?
       </button>
@@ -456,18 +459,18 @@ select{appearance:none;cursor:pointer;}
     <!-- LOBBY -->
     <div class="sc" id="s-lobby">
       <div style="margin-bottom:24px;">
-        <span class="lbl lr">Kod sobe</span>
-        <h1 class="disp" id="l-code" style="margin-bottom:6px;">ABCD</h1>
-        <div style="font-size:11px;color:var(--tx3);letter-spacing:.5px;">Podijelite kod s prijateljima</div>
+        <div class="eyebrow r g8">Kod sobe</div>
+        <h1 class="headline g8" id="l-code" style="font-size:64px;letter-spacing:6px;">ABCD</h1>
+        <p class="subtitle">Podijelite kod s prijateljima</p>
       </div>
       <div class="sg g16">
-        <div class="scard ct"><span class="lbl lt">Kategorija</span><div class="sval" id="l-cat" style="font-size:14px;color:var(--teal);">—</div></div>
-        <div class="scard cr"><span class="lbl lr">Impostori</span><div class="sval" id="l-imps" style="color:var(--red);">1</div></div>
+        <div class="scard cg"><span class="eyebrow g g8">Kategorija</span><div class="sval" id="l-cat" style="font-size:14px;color:var(--cg-dim);">—</div></div>
+        <div class="scard cr"><span class="eyebrow r g8">Impostori</span><div class="sval" id="l-imps" style="color:var(--cr);">1</div></div>
       </div>
 
       <div id="hcfg" style="display:none;">
         <div class="card g16">
-          <span class="lbl g4">Kategorija</span>
+          <span class="eyebrow g8">Kategorija</span>
           <div class="sw g12">
             <select id="cfg-cat">
               <option value="Hrana">🍕 Hrana i piće</option>
@@ -483,31 +486,31 @@ select{appearance:none;cursor:pointer;}
               <option value="Tehnologija">💻 Tehnologija</option>
             </select>
           </div>
-          <span class="lbl g4">Broj impostora</span>
+          <span class="eyebrow g8">Broj impostora</span>
           <div class="ctr g12">
             <button class="cbtn" id="imp-m">−</button>
             <div class="cval" id="imp-v">1</div>
             <button class="cbtn" id="imp-p">+</button>
           </div>
           <div class="sg" style="margin-bottom:0;">
-            <div><span class="lbl g4">Rasprava (sek)</span><input type="number" id="cfg-disc" value="120" min="30" max="300" style="padding:10px 11px;font-size:13px;"/></div>
-            <div><span class="lbl g4">Glasanje (sek)</span><input type="number" id="cfg-vote" value="60" min="20" max="120" style="padding:10px 11px;font-size:13px;"/></div>
+            <div><span class="eyebrow g8">Rasprava (sek)</span><input type="number" id="cfg-disc" value="120" min="30" max="300" style="padding:11px 12px;font-size:13px;"/></div>
+            <div><span class="eyebrow g8">Glasanje (sek)</span><input type="number" id="cfg-vote" value="60" min="20" max="120" style="padding:11px 12px;font-size:13px;"/></div>
           </div>
         </div>
       </div>
 
       <div class="rowb g10">
-        <span class="lbl" style="margin-bottom:0;">Igrači</span>
-        <div style="display:flex;align-items:center;gap:8px;">
-          <span id="rcount" style="font-size:10px;color:var(--tx3);"></span>
+        <span class="eyebrow" style="margin-bottom:0;">Igrači</span>
+        <div style="display:flex;align-items:center;gap:9px;">
+          <span id="rcount" style="font-size:10px;color:var(--t3);letter-spacing:.5px;"></span>
           <button id="btn-manage" class="ibtn" style="display:none;" title="Upravljaj igračima">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
           </button>
         </div>
       </div>
       <div id="plist" class="g14"></div>
-      <div class="err g6" id="l-err"></div>
-      <button class="btn bt mb" id="btn-ready">Spreman</button>
+      <div class="err g8" id="l-err"></div>
+      <button class="btn bg mb" id="btn-ready">Spreman</button>
       <button class="btn bp mb" id="btn-start" style="display:none;">▶ Pokretanje misije</button>
       <div class="wait" id="l-wait">Čekanje na hosta...</div>
     </div>
@@ -515,40 +518,34 @@ select{appearance:none;cursor:pointer;}
     <!-- REVEAL -->
     <div class="sc" id="s-reveal">
       <div class="g16">
-        <span class="lbl lr">Protokol identiteta</span>
-        <h2 class="ttl g16">Otkrij<br>svoju ulogu</h2>
+        <span class="eyebrow r g8">Protokol identiteta</span>
+        <h2 class="title g16">Otkrij<br>svoju ulogu</h2>
       </div>
 
-      <!-- PREMIUM FLIP CARD -->
       <div class="fwrap" id="fwrap">
         <div class="finnr">
-          <!-- FRONT -->
           <div class="ff">
-            <div class="ff-corner tl"></div>
-            <div class="ff-corner tr"></div>
-            <div class="ff-corner bl"></div>
-            <div class="ff-corner br"></div>
-            <div class="ff-eyeicon">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="rgba(196,163,90,.6)" stroke-width="1.4"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            <div class="ff-corners"><span></span><span></span><span></span><span></span></div>
+            <div class="ff-eye">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="rgba(196,154,60,.55)" stroke-width="1.4"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
             </div>
             <div class="ff-hint">Tapni za otkrivanje</div>
             <div class="ff-sub">Osigurajte privatnost</div>
           </div>
-          <!-- BACK — populated by JS -->
           <div class="fb" id="fback"></div>
         </div>
       </div>
 
       <div class="revprog g14" id="revprog">
         <div class="rowb">
-          <span style="font-size:11px;color:var(--tx2);">Tko je potvrdio ulogu</span>
-          <span id="rev-count" style="font-family:'Cormorant Garamond',serif;font-size:18px;color:var(--tx3);">0/0</span>
+          <span style="font-size:11px;color:var(--t2);letter-spacing:.3px;">Tko je potvrdio ulogu</span>
+          <span id="rev-count" style="font-family:'Playfair Display',serif;font-size:18px;color:var(--t3);">0/0</span>
         </div>
         <div class="revprog-bar"><div class="revprog-fill" id="rev-fill" style="width:0%"></div></div>
       </div>
       <button class="btn bp mb" id="btn-rev-done">Vidio sam — Potvrdi ✓</button>
       <div id="reroll-wrap" style="display:none;margin-top:0;">
-        <button class="btn bo bsm" id="btn-reroll" style="border-color:var(--gb);color:var(--gold);">↻ Promijeni riječ</button>
+        <button class="btn ba bsm" id="btn-reroll">↻ Promijeni riječ</button>
       </div>
     </div>
 
@@ -556,14 +553,14 @@ select{appearance:none;cursor:pointer;}
     <div class="sc" id="s-disc">
       <div class="live-row">
         <div class="live-dot"></div>
-        <span class="live-label">Live · Rasprava</span>
+        <span class="live-lbl">Live · Rasprava</span>
       </div>
       <div class="tcard" id="disc-tcard">
         <div class="tcard-top">
           <span class="tcard-lbl">Preostalo</span>
           <span class="tcard-val" id="disc-tv">—</span>
         </div>
-        <div class="tbar-track"><div class="tbar-fill" id="disc-tf" style="background:var(--teal);width:100%;"></div></div>
+        <div class="tbar"><div class="tbar-fill" id="disc-tf" style="background:var(--cg);width:100%;"></div></div>
       </div>
       <div class="spkcard g14" id="spkcard">
         <div class="spkcard-lbl">Govori sada</div>
@@ -589,14 +586,15 @@ select{appearance:none;cursor:pointer;}
             <button class="vbtn" id="btn-audio-unlock" type="button">Audio</button>
           </div>
         </div>
-        <div class="vlist" id="voice-list"></div>
+        <div class="vlist-voice" id="voice-list"></div>
       </div>
       <div class="hstrip" id="disc-hstrip" style="display:none;">
-        <div class="hstrip-title">Host kontrole</div>
+        <div class="hstrip-lbl">Host kontrole</div>
         <div class="hstrip-btns">
-          <button class="hstrip-btn prim" id="btn-nxt-spk">Sljedeći →</button>
-          <button class="hstrip-btn amb" id="btn-ext-disc">+30 sek</button>
-          <button class="hstrip-btn danger" id="btn-start-vote">Glasanje</button>
+          <button class="hbtn g" id="btn-nxt-spk">Sljedeći →</button>
+          <button class="hbtn a" id="btn-ext-disc">+30 sek</button>
+          <button class="hbtn r" id="btn-start-vote">Glasanje</button>
+          <button class="hbtn r" id="btn-kick-disc" style="display:none;">Izbaci igrača</button>
         </div>
       </div>
       <div class="wait" id="disc-wait">Čekanje na hosta da pokrene glasanje...</div>
@@ -604,13 +602,13 @@ select{appearance:none;cursor:pointer;}
 
     <!-- VOTING -->
     <div class="sc" id="s-vote">
-      <div class="vote-header">
+      <div style="margin-bottom:20px;">
         <div class="vote-phase-label">
           <div class="vote-phase-dot"></div>
-          <span style="font-size:9px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:var(--rdim);">Protokol selekcije</span>
+          <span style="font-size:9px;font-weight:500;letter-spacing:3.5px;text-transform:uppercase;color:var(--cr-dim);">Protokol selekcije</span>
         </div>
-        <div style="font-family:'Cormorant Garamond',serif;font-size:46px;letter-spacing:1px;color:var(--tx);line-height:1;margin-bottom:6px;font-weight:500;">Glasanje</div>
-        <div style="font-size:12px;color:var(--tx3);">Jedan glas — konačna odluka.</div>
+        <div class="title g6">Glasanje</div>
+        <p class="subtitle">Jedan glas — konačna odluka.</p>
       </div>
 
       <div class="tcard" id="vote-tcard" style="margin-bottom:16px;">
@@ -618,7 +616,7 @@ select{appearance:none;cursor:pointer;}
           <span class="tcard-lbl">Preostalo</span>
           <span class="tcard-val" id="vote-tv">—</span>
         </div>
-        <div class="tbar-track"><div class="tbar-fill" id="vote-tf" style="background:var(--red);width:100%;"></div></div>
+        <div class="tbar"><div class="tbar-fill" id="vote-tf" style="background:var(--cr);width:100%;"></div></div>
       </div>
 
       <div class="igbox" id="igbox">
@@ -632,33 +630,29 @@ select{appearance:none;cursor:pointer;}
 
       <div class="vote-progress">
         <div class="vote-count-row">
-          <span class="vote-count-label">Glasovi</span>
-          <span class="vote-count-val" id="vcnt-display">0 / 0</span>
+          <span class="eyebrow">Glasovi</span>
+          <span style="font-family:'Playfair Display',serif;font-size:18px;color:var(--t3);" id="vcnt-display">0 / 0</span>
         </div>
         <div class="vote-dots" id="vote-dots"></div>
       </div>
 
-      <!-- Player list -->
       <div class="vlist-vote" id="vgrid"></div>
 
-      <!-- Confirm panel -->
       <div class="cfm" id="cfm">
-        <div class="cfm-title">Potvrda glasanja</div>
+        <div class="cfm-lbl">Potvrda glasanja</div>
         <div class="cfm-name" id="vtname">—</div>
         <div class="cfm-actions">
-          <button class="btn bo bsm" id="btn-cfm-cancel" style="color:var(--tx3);">Odustani</button>
+          <button class="btn bo bsm" id="btn-cfm-cancel" style="color:var(--t3);">Odustani</button>
           <button class="btn bp bsm" id="btn-cfm">Glasam za ovog</button>
         </div>
       </div>
 
-      <!-- Sent state -->
       <div class="vsent-card" id="vsent">
         <div class="vsent-icon">✓</div>
         <div class="vsent-title">Glas poslan</div>
         <div class="vsent-sub" id="vcnt">Čekanje ostalih igrača...</div>
       </div>
 
-      <!-- Waiting info for non-voted players after all voted -->
       <div class="vwaiting-info" id="vwaiting">
         <div class="wi-title">Rezultati dolaze...</div>
         <div class="wi-sub">Svi su glasali, obrađujem...</div>
@@ -673,8 +667,8 @@ select{appearance:none;cursor:pointer;}
         <div class="rsub" id="rsub"></div>
       </div>
       <div class="sg g14">
-        <div class="scard ct"><span class="lbl lt">Prava riječ</span><div class="sval" id="rw-r" style="font-size:15px;color:var(--teal);">—</div></div>
-        <div class="scard cr"><span class="lbl lr">Impostor riječ</span><div class="sval" id="rw-i" style="font-size:15px;color:var(--red);">—</div></div>
+        <div class="scard cg"><span class="eyebrow g g8">Prava riječ</span><div class="sval" id="rw-r" style="font-size:15px;color:var(--cg-dim);">—</div></div>
+        <div class="scard cr"><span class="eyebrow r g8">Impostor riječ</span><div class="sval" id="rw-i" style="font-size:15px;color:var(--cr-dim);">—</div></div>
       </div>
       <div class="vpanel g12" id="res-voice">
         <div class="vhead">
@@ -684,11 +678,11 @@ select{appearance:none;cursor:pointer;}
             <button class="vbtn" id="btn-audio-unlock-res" type="button">Audio</button>
           </div>
         </div>
-        <div class="vlist" id="voice-list-res"></div>
+        <div class="vlist-voice" id="voice-list-res"></div>
       </div>
-      <span class="lbl g10">Bodovnica</span>
+      <span class="eyebrow g10">Bodovnica</span>
       <div id="scoreboard" class="g14"></div>
-      <span class="lbl g10">Debrief</span>
+      <span class="eyebrow g10">Debrief</span>
       <div id="rlist" class="g20"></div>
       <button class="btn bp mb" id="btn-again">Nova runda</button>
       <button class="btn ba mb" id="btn-rst" style="display:none;">Resetiraj bodove</button>
@@ -697,29 +691,29 @@ select{appearance:none;cursor:pointer;}
 
     <!-- RULES -->
     <div class="sc" id="s-rules">
-      <button class="btn bo bsm mb" id="btn-rbk" style="width:auto;padding:8px 14px;font-size:11px;">← Natrag</button>
-      <div style="margin-bottom:24px;">
-        <span class="lbl lr">Protokol misije</span>
-        <h2 class="ttl">Pravila<br>igre</h2>
+      <button class="btn bo bsm mb" id="btn-rbk" style="width:auto;padding:9px 16px;font-size:10px;">← Natrag</button>
+      <div style="margin-bottom:26px;">
+        <span class="eyebrow r g8">Protokol misije</span>
+        <h2 class="title">Pravila<br>igre</h2>
       </div>
       <div class="g16">
-        <span class="lbl">Cilj igre</span>
+        <span class="eyebrow g8">Cilj igre</span>
         <div class="card cr g14">
           <p class="rtxt">Svi igrači dobiju <strong>tajnu riječ</strong>. Jedan ili više su <strong>impostori</strong> — oni dobiju <strong>drugu, različitu riječ iz iste kategorije</strong>. Npr. citizens dobiju "Pizza", impostor dobije "Burek".</p>
         </div>
       </div>
       <div class="g16">
-        <span class="lbl">Tijek igre</span>
+        <span class="eyebrow g8">Tijek igre</span>
         <div class="rstep"><span class="rnum">1</span><p class="rtxt"><strong>Otkrivanje</strong> — Svaki igrač tapne kartu, pogleda svoju tajnu ulogu i klikne "Vidio sam".</p></div>
         <div class="rstep"><span class="rnum">2</span><p class="rtxt"><strong>Rasprava</strong> — Slobodna diskusija. Opisujte svoju riječ bez da je direktno kažete.</p></div>
         <div class="rstep"><span class="rnum">3</span><p class="rtxt"><strong>Glasanje</strong> — Svi glasaju tko je impostor. Igrač s najviše glasova je izbačen.</p></div>
         <div class="rstep"><span class="rnum">4</span><p class="rtxt"><strong>Rezultati</strong> — Otkriva se tko je bio impostor i koje su bile obje tajne riječi.</p></div>
       </div>
       <div class="g16">
-        <span class="lbl">Bodovanje</span>
-        <div class="rstep"><span class="rnum" style="color:var(--teal);">✓</span><p class="rtxt"><strong>Citizens pobijede</strong>: svaki citizen koji je glasao ispravno dobiva <strong>+2 boda</strong>.</p></div>
-        <div class="rstep"><span class="rnum" style="color:var(--red);">✗</span><p class="rtxt"><strong>Impostor preživi glasanje</strong>: <strong>+3 boda</strong> svakom impostoru.</p></div>
-        <div class="rstep"><span class="rnum" style="color:var(--gold);">★</span><p class="rtxt"><strong>Impostor pogodi pravu riječ</strong>: <strong>+4 boda</strong> pogađaču, <strong>+2</strong> ostalim impostorima.</p></div>
+        <span class="eyebrow g8">Bodovanje</span>
+        <div class="rstep"><span class="rnum" style="color:var(--cg);">✓</span><p class="rtxt"><strong>Citizens pobijede</strong>: svaki citizen koji je glasao ispravno dobiva <strong>+2 boda</strong>.</p></div>
+        <div class="rstep"><span class="rnum" style="color:var(--cr);">✗</span><p class="rtxt"><strong>Impostor preživi glasanje</strong>: <strong>+3 boda</strong> svakom impostoru.</p></div>
+        <div class="rstep"><span class="rnum" style="color:var(--ca);">★</span><p class="rtxt"><strong>Impostor pogodi pravu riječ</strong>: <strong>+4 boda</strong> pogađaču, <strong>+2</strong> ostalim impostorima.</p></div>
       </div>
       <button class="btn bp" id="btn-rbk2">Razumijem — Igrajmo!</button>
     </div>
@@ -728,73 +722,73 @@ select{appearance:none;cursor:pointer;}
 </div>
 
 <!-- ONBOARDING -->
-<div id="ob" style="display:none;position:fixed;inset:0;z-index:9999;flex-direction:column;align-items:center;justify-content:space-between;padding:48px 24px 40px;">
+<div id="ob" style="display:none;position:fixed;inset:0;z-index:9999;flex-direction:column;align-items:center;justify-content:space-between;padding:52px 24px 44px;">
   <div style="flex:1;width:100%;max-width:400px;display:flex;align-items:center;justify-content:center;">
     <div class="obs" style="text-align:center;">
-      <div style="font-size:76px;margin-bottom:28px;">🎭</div>
-      <div style="font-size:9px;letter-spacing:4px;color:var(--tx3);margin-bottom:12px;font-weight:600;font-family:'Space Grotesk',sans-serif;">Dobrodošli u</div>
-      <div style="font-family:'Cormorant Garamond',serif;font-size:60px;letter-spacing:4px;color:var(--gold);line-height:1;margin-bottom:20px;font-weight:600;">Impostor</div>
-      <p style="color:var(--tx2);font-size:15px;line-height:1.7;max-width:300px;margin:0 auto;font-family:'Space Grotesk',sans-serif;">Party igra za <strong style="color:var(--tx);">3–10 igrača</strong> u kojoj jedan igrač skriva svoju tajnu i pokušava proći <strong style="color:var(--tx);">neopaženo</strong>.</p>
+      <div style="font-size:80px;margin-bottom:28px;">🎭</div>
+      <div style="font-size:9px;letter-spacing:4px;color:var(--t3);margin-bottom:14px;font-weight:400;font-family:'DM Mono',monospace;text-transform:uppercase;">Dobrodošli u</div>
+      <div style="font-family:'Playfair Display',serif;font-size:58px;letter-spacing:2px;color:var(--ca);line-height:1;margin-bottom:22px;font-weight:900;font-style:italic;">Impostor</div>
+      <p style="color:var(--t2);font-size:14px;line-height:1.8;max-width:300px;margin:0 auto;font-family:'DM Mono',monospace;">Party igra za <strong style="color:var(--t1);">3–10 igrača</strong> u kojoj jedan igrač skriva svoju tajnu i pokušava proći <strong style="color:var(--t1);">neopaženo</strong>.</p>
     </div>
     <div class="obs" style="display:none;text-align:center;">
-      <div style="font-size:70px;margin-bottom:24px;">🎯</div>
-      <div style="font-size:9px;letter-spacing:4px;color:var(--tx3);margin-bottom:12px;font-weight:600;">Tajna misija</div>
-      <div style="font-family:'Cormorant Garamond',serif;font-size:44px;letter-spacing:2px;color:var(--gold);line-height:1;margin-bottom:22px;font-weight:500;">Dvije različite<br>riječi</div>
-      <div style="display:flex;gap:14px;justify-content:center;margin-bottom:18px;">
-        <div style="background:var(--tbg);border:1px solid var(--tb);border-radius:14px;padding:16px 22px;">
-          <div style="font-size:9px;font-weight:700;letter-spacing:2px;color:var(--teal);margin-bottom:8px;">Citizens</div>
-          <div style="font-family:'Cormorant Garamond',serif;font-size:28px;color:var(--teal);font-weight:600;">Pizza</div>
+      <div style="font-size:72px;margin-bottom:24px;">🎯</div>
+      <div style="font-size:9px;letter-spacing:4px;color:var(--t3);margin-bottom:14px;font-weight:400;text-transform:uppercase;">Tajna misija</div>
+      <div style="font-family:'Playfair Display',serif;font-size:42px;letter-spacing:.5px;color:var(--ca);line-height:1;margin-bottom:24px;font-weight:900;">Dvije različite<br>riječi</div>
+      <div style="display:flex;gap:14px;justify-content:center;margin-bottom:20px;">
+        <div style="background:var(--cg-bg);border:1px solid var(--cg-bd);border-radius:16px;padding:18px 24px;">
+          <div style="font-size:9px;font-weight:400;letter-spacing:2px;color:var(--cg-dim);margin-bottom:10px;text-transform:uppercase;">Citizens</div>
+          <div style="font-family:'Playfair Display',serif;font-size:30px;color:var(--cg-dim);font-weight:900;">Pizza</div>
         </div>
-        <div style="background:var(--rbg);border:1px solid var(--rb);border-radius:14px;padding:16px 22px;">
-          <div style="font-size:9px;font-weight:700;letter-spacing:2px;color:var(--rdim);margin-bottom:8px;">Impostor</div>
-          <div style="font-family:'Cormorant Garamond',serif;font-size:28px;color:var(--red);font-weight:600;">Burek</div>
+        <div style="background:var(--cr-bg);border:1px solid var(--cr-bd);border-radius:16px;padding:18px 24px;">
+          <div style="font-size:9px;font-weight:400;letter-spacing:2px;color:var(--cr-dim);margin-bottom:10px;text-transform:uppercase;">Impostor</div>
+          <div style="font-family:'Playfair Display',serif;font-size:30px;color:var(--cr);font-weight:900;">Burek</div>
         </div>
       </div>
-      <p style="color:var(--tx2);font-size:13px;line-height:1.7;max-width:300px;margin:0 auto;">Svi citizens dobiju <strong style="color:var(--tx);">istu</strong> riječ. Impostor dobije <strong style="color:var(--tx);">srodnu, ali drugu</strong>.</p>
+      <p style="color:var(--t2);font-size:13px;line-height:1.7;max-width:300px;margin:0 auto;">Svi citizens dobiju <strong style="color:var(--t1);">istu</strong> riječ. Impostor dobije <strong style="color:var(--t1);">srodnu, ali drugu</strong>.</p>
     </div>
     <div class="obs" style="display:none;text-align:center;width:100%;">
-      <div style="font-size:60px;margin-bottom:18px;">🔍</div>
-      <div style="font-size:9px;letter-spacing:4px;color:var(--tx3);margin-bottom:12px;font-weight:600;">Kako se igra</div>
-      <div style="font-family:'Cormorant Garamond',serif;font-size:44px;letter-spacing:2px;color:var(--teal);line-height:1;margin-bottom:20px;font-weight:500;">4 koraka</div>
+      <div style="font-size:62px;margin-bottom:18px;">🔍</div>
+      <div style="font-size:9px;letter-spacing:4px;color:var(--t3);margin-bottom:14px;font-weight:400;text-transform:uppercase;">Kako se igra</div>
+      <div style="font-family:'Playfair Display',serif;font-size:42px;letter-spacing:.5px;color:var(--cg-dim);line-height:1;margin-bottom:22px;font-weight:900;">4 koraka</div>
       <div style="display:flex;flex-direction:column;gap:8px;max-width:320px;margin:0 auto;">
-        <div style="display:flex;align-items:center;gap:13px;background:var(--bg3);border:1px solid var(--ln);border-radius:12px;padding:11px 14px;">
-          <div style="width:28px;height:28px;border-radius:50%;background:var(--rbg);color:var(--rdim);font-family:'Cormorant Garamond',serif;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:15px;font-weight:600;">1</div>
-          <div style="font-size:13px;color:var(--tx2);line-height:1.5;text-align:left;"><strong style="color:var(--tx);">Otkrivanje</strong> — tapni kartu, vidi svoju ulogu</div>
+        <div style="display:flex;align-items:center;gap:14px;background:var(--b3);border:1px solid var(--l1);border-radius:14px;padding:12px 16px;">
+          <div style="width:30px;height:30px;border-radius:50%;background:var(--cr-bg);color:var(--cr-dim);font-family:'Playfair Display',serif;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:16px;font-weight:700;">1</div>
+          <div style="font-size:13px;color:var(--t2);line-height:1.5;text-align:left;"><strong style="color:var(--t1);">Otkrivanje</strong> — tapni kartu, vidi svoju ulogu</div>
         </div>
-        <div style="display:flex;align-items:center;gap:13px;background:var(--bg3);border:1px solid var(--ln);border-radius:12px;padding:11px 14px;">
-          <div style="width:28px;height:28px;border-radius:50%;background:var(--gbg);color:var(--gold);font-family:'Cormorant Garamond',serif;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:15px;font-weight:600;">2</div>
-          <div style="font-size:13px;color:var(--tx2);line-height:1.5;text-align:left;"><strong style="color:var(--tx);">Rasprava</strong> — opisuj svoju riječ, ali je ne reci</div>
+        <div style="display:flex;align-items:center;gap:14px;background:var(--b3);border:1px solid var(--l1);border-radius:14px;padding:12px 16px;">
+          <div style="width:30px;height:30px;border-radius:50%;background:var(--ca-bg);color:var(--ca-dim);font-family:'Playfair Display',serif;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:16px;font-weight:700;">2</div>
+          <div style="font-size:13px;color:var(--t2);line-height:1.5;text-align:left;"><strong style="color:var(--t1);">Rasprava</strong> — opisuj svoju riječ, ali je ne reci</div>
         </div>
-        <div style="display:flex;align-items:center;gap:13px;background:var(--bg3);border:1px solid var(--ln);border-radius:12px;padding:11px 14px;">
-          <div style="width:28px;height:28px;border-radius:50%;background:var(--tbg);color:var(--teal);font-family:'Cormorant Garamond',serif;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:15px;font-weight:600;">3</div>
-          <div style="font-size:13px;color:var(--tx2);line-height:1.5;text-align:left;"><strong style="color:var(--tx);">Glasanje</strong> — tko je impostor?</div>
+        <div style="display:flex;align-items:center;gap:14px;background:var(--b3);border:1px solid var(--l1);border-radius:14px;padding:12px 16px;">
+          <div style="width:30px;height:30px;border-radius:50%;background:var(--cg-bg);color:var(--cg-dim);font-family:'Playfair Display',serif;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:16px;font-weight:700;">3</div>
+          <div style="font-size:13px;color:var(--t2);line-height:1.5;text-align:left;"><strong style="color:var(--t1);">Glasanje</strong> — tko je impostor?</div>
         </div>
-        <div style="display:flex;align-items:center;gap:13px;background:var(--bg3);border:1px solid var(--ln);border-radius:12px;padding:11px 14px;">
-          <div style="width:28px;height:28px;border-radius:50%;background:var(--gbg);color:var(--gold);font-family:'Cormorant Garamond',serif;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:15px;font-weight:600;">4</div>
-          <div style="font-size:13px;color:var(--tx2);line-height:1.5;text-align:left;"><strong style="color:var(--tx);">Rezultati</strong> — otkriva se tko je bio impostor</div>
+        <div style="display:flex;align-items:center;gap:14px;background:var(--b3);border:1px solid var(--l1);border-radius:14px;padding:12px 16px;">
+          <div style="width:30px;height:30px;border-radius:50%;background:var(--ca-bg);color:var(--ca-dim);font-family:'Playfair Display',serif;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:16px;font-weight:700;">4</div>
+          <div style="font-size:13px;color:var(--t2);line-height:1.5;text-align:left;"><strong style="color:var(--t1);">Rezultati</strong> — otkriva se tko je bio impostor</div>
         </div>
       </div>
     </div>
     <div class="obs" style="display:none;text-align:center;">
-      <div style="font-size:70px;margin-bottom:24px;">🏆</div>
-      <div style="font-size:9px;letter-spacing:4px;color:var(--tx3);margin-bottom:12px;font-weight:600;">Bodovanje</div>
-      <div style="font-family:'Cormorant Garamond',serif;font-size:44px;letter-spacing:2px;line-height:1;margin-bottom:20px;font-weight:500;">Budi <span style="color:var(--red);">pametan</span></div>
+      <div style="font-size:72px;margin-bottom:24px;">🏆</div>
+      <div style="font-size:9px;letter-spacing:4px;color:var(--t3);margin-bottom:14px;font-weight:400;text-transform:uppercase;">Bodovanje</div>
+      <div style="font-family:'Playfair Display',serif;font-size:42px;letter-spacing:.5px;line-height:1;margin-bottom:22px;font-weight:900;">Budi <span style="color:var(--cr);">pametan</span></div>
       <div style="display:flex;flex-direction:column;gap:8px;max-width:320px;margin:0 auto 18px;">
-        <div style="background:var(--tbg);border:1px solid var(--tb);border-radius:999px;padding:10px 18px;font-size:13px;color:var(--teal);">Citizen uhvati impostora → <strong>+2 boda</strong></div>
-        <div style="background:var(--rbg);border:1px solid var(--rb);border-radius:999px;padding:10px 18px;font-size:13px;color:var(--rdim);">Impostor preživi glasanje → <strong>+3 boda</strong></div>
-        <div style="background:var(--gbg);border:1px solid var(--gb);border-radius:999px;padding:10px 18px;font-size:13px;color:var(--gold);">Impostor pogodi pravu riječ → <strong>+4 boda</strong></div>
+        <div style="background:var(--cg-bg);border:1px solid var(--cg-bd);border-radius:999px;padding:11px 20px;font-size:12px;color:var(--cg-dim);">Citizen uhvati impostora → <strong>+2 boda</strong></div>
+        <div style="background:var(--cr-bg);border:1px solid var(--cr-bd);border-radius:999px;padding:11px 20px;font-size:12px;color:var(--cr-dim);">Impostor preživi glasanje → <strong>+3 boda</strong></div>
+        <div style="background:var(--ca-bg);border:1px solid var(--ca-bd);border-radius:999px;padding:11px 20px;font-size:12px;color:var(--ca-dim);">Impostor pogodi pravu riječ → <strong>+4 boda</strong></div>
       </div>
     </div>
   </div>
   <div id="ob-dots" style="display:flex;gap:8px;align-items:center;margin-bottom:24px;">
-    <div class="obd" style="width:22px;height:6px;border-radius:4px;background:var(--gold);transition:all .25s;cursor:pointer;" onclick="obGo(0)"></div>
-    <div class="obd" style="width:6px;height:6px;border-radius:50%;background:var(--bg5);transition:all .25s;cursor:pointer;" onclick="obGo(1)"></div>
-    <div class="obd" style="width:6px;height:6px;border-radius:50%;background:var(--bg5);transition:all .25s;cursor:pointer;" onclick="obGo(2)"></div>
-    <div class="obd" style="width:6px;height:6px;border-radius:50%;background:var(--bg5);transition:all .25s;cursor:pointer;" onclick="obGo(3)"></div>
+    <div class="obd" style="width:22px;height:6px;border-radius:4px;background:var(--ca);transition:all .25s;cursor:pointer;" onclick="obGo(0)"></div>
+    <div class="obd" style="width:6px;height:6px;border-radius:50%;background:var(--b5);transition:all .25s;cursor:pointer;" onclick="obGo(1)"></div>
+    <div class="obd" style="width:6px;height:6px;border-radius:50%;background:var(--b5);transition:all .25s;cursor:pointer;" onclick="obGo(2)"></div>
+    <div class="obd" style="width:6px;height:6px;border-radius:50%;background:var(--b5);transition:all .25s;cursor:pointer;" onclick="obGo(3)"></div>
   </div>
   <div style="display:flex;gap:10px;width:100%;max-width:400px;">
-    <button onclick="obSkip()" style="padding:15px 18px;border-radius:14px;border:1px solid var(--ln2);background:transparent;font-family:'Space Grotesk',sans-serif;font-size:12px;letter-spacing:1px;font-weight:600;color:var(--tx3);cursor:pointer;text-transform:uppercase;">Preskoči</button>
-    <button id="ob-next" onclick="obNext()" style="flex:1;padding:15px;border-radius:14px;border:none;font-family:'Space Grotesk',sans-serif;font-size:13px;letter-spacing:2px;font-weight:700;background:var(--gold);color:#060608;cursor:pointer;text-transform:uppercase;">Dalje</button>
+    <button onclick="obSkip()" style="padding:15px 18px;border-radius:14px;border:1px solid var(--l2);background:transparent;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:1.5px;font-weight:400;color:var(--t3);cursor:pointer;text-transform:uppercase;">Preskoči</button>
+    <button id="ob-next" onclick="obNext()" style="flex:1;padding:15px;border-radius:14px;border:none;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:2.5px;font-weight:500;background:var(--ca);color:#04040A;cursor:pointer;text-transform:uppercase;">Dalje</button>
   </div>
 </div>
 
@@ -811,24 +805,36 @@ select{appearance:none;cursor:pointer;}
 <!-- MANAGE PLAYERS MODAL -->
 <div class="modal-ov" id="modal-manage">
   <div class="modal">
-    <div class="rowb" style="margin-bottom:16px;">
+    <div class="rowb" style="margin-bottom:18px;">
       <span class="modal-title">Upravljaj igračima</span>
       <button class="modal-close" id="modal-close-manage">✕</button>
     </div>
     <div class="modal-list" id="modal-plist"></div>
-    <p style="font-size:11px;color:var(--tx3);letter-spacing:.3px;">KICK uklanja igrača iz sobe. HOST prenosi ulogu domaćina.</p>
+    <p class="modal-note">KICK uklanja igrača iz sobe. HOST prenosi ulogu domaćina.</p>
+  </div>
+</div>
+
+<!-- KICK IN DISCUSSION MODAL -->
+<div class="modal-ov" id="modal-kick-disc">
+  <div class="modal">
+    <div class="rowb" style="margin-bottom:18px;">
+      <span class="modal-title">Izbaci igrača</span>
+      <button class="modal-close" id="modal-close-kick-disc">✕</button>
+    </div>
+    <p class="modal-note" style="margin-bottom:14px;">Odaberite igrača kojeg želite ukloniti iz igre. Ova akcija je trajna za ovu rundu.</p>
+    <div class="modal-list" id="modal-kick-disc-list"></div>
   </div>
 </div>
 
 <!-- LEAVE CONFIRM MODAL -->
 <div class="modal-ov" id="modal-leave">
   <div class="modal">
-    <div class="rowb" style="margin-bottom:16px;">
+    <div class="rowb" style="margin-bottom:18px;">
       <span class="modal-title">Napusti sobu?</span>
       <button class="modal-close" id="modal-close-leave">✕</button>
     </div>
-    <p style="font-size:13px;color:var(--tx2);margin-bottom:18px;line-height:1.7;">Jeste li sigurni? Vaši bodovi bit će izgubljeni.</p>
-    <button class="btn bdng mb" id="btn-leave-confirm">Da, napusti sobu</button>
+    <p class="subtitle" style="margin-bottom:20px;">Jeste li sigurni? Vaši bodovi bit će izgubljeni.</p>
+    <button class="btn br mb" id="btn-leave-confirm">Da, napusti sobu</button>
     <button class="btn bo" id="btn-leave-cancel">Ostani</button>
   </div>
 </div>
@@ -954,7 +960,7 @@ function renderVoiceList(targetId){
   (G.players||[]).forEach(p=>{
     const row=document.createElement('div');row.className='vrow';row.dataset.vrow=p.id;
     const muted=!!remoteMuted[p.id];
-    row.innerHTML=`<div class="av ${p.id===socket.id?'t':(p.isHost?'r':'')}">${ini(p.name)}</div>
+    row.innerHTML=`<div class="av ${p.id===socket.id?'g':(p.isHost?'r':'')}">${ini(p.name)}</div>
       <div class="vmeta"><div class="vname">${esc(p.name)}</div><div class="vsub">${esc(speakerStatus(p.id))}</div></div>
       <div class="vmeter" data-vmeter="${p.id}"><span></span></div>
       ${p.id===socket.id?`<button class="vtoggle ${selfMuted?'on':''}" data-self-toggle="1">${selfMuted?'Unmute':'Mute'}</button>`:`<button class="vtoggle ${muted?'on':''}" data-peer-toggle="${p.id}">${muted?'Unmute':'Mute'}</button>`}`;
@@ -1029,6 +1035,27 @@ function renderManageModal(){
   });
 }
 
+// ── KICK IN DISCUSSION MODAL ──────────────────────────────────────────────────
+$('modal-close-kick-disc').onclick=()=>$('modal-kick-disc').classList.remove('on');
+function renderKickDiscModal(){
+  const list=$('modal-kick-disc-list');list.innerHTML='';
+  (G.players||[]).forEach(p=>{
+    if(p.id===socket.id)return;
+    const d=document.createElement('div');d.className='modal-item';
+    d.innerHTML=`<div class="av">${ini(p.name)}</div>
+      <div class="pi"><div class="pn">${esc(p.name)}</div><div class="ps">Igrač</div></div>
+      <div class="modal-item-btns">
+        <button class="modal-ibtn kick" data-id="${p.id}">Izbaci</button>
+      </div>`;
+    list.appendChild(d);
+  });
+  list.querySelectorAll('.modal-ibtn.kick').forEach(btn=>btn.onclick=()=>{
+    socket.emit('kickPlayerMidGame',{code:G.code,targetId:btn.dataset.id});
+    $('modal-kick-disc').classList.remove('on');
+    toast('Igrač izbačen iz igre');
+  });
+}
+
 // ── JOIN ──────────────────────────────────────────────────────────────────────
 $('btn-join').onclick=()=>{
   const name=$('j-name').value.trim(),code=$('j-code').value.trim().toUpperCase(),err=$('j-err');
@@ -1073,19 +1100,19 @@ function renderLobby(){
     const sc=p.score??0;
     const offline=p.isConnected===false;
     const d=document.createElement('div');d.className='pr';
-    d.style.opacity=offline?'.5':'1';
+    d.style.opacity=offline?'.45':'1';
     d.innerHTML=`<div class="av ${p.isHost?'r':''}">${ini(p.name)}</div>
       <div class="pi">
-        <div class="pn">${esc(p.name)}${offline?' <span style="font-size:9px;color:var(--tx3);">(offline)</span>':''}</div>
+        <div class="pn">${esc(p.name)}${offline?' <span style="font-size:9px;color:var(--t3);">(offline)</span>':''}</div>
         <div class="ps">${p.isHost?'Host · Leader':'Operative'}</div>
       </div>
-      <div style="font-family:'Cormorant Garamond',serif;font-size:15px;color:var(--tx3);margin-right:5px;">${sc}pt</div>
+      <div style="font-family:'Playfair Display',serif;font-size:16px;color:var(--t3);margin-right:6px;font-style:italic;">${sc}pt</div>
       <div class="dot ${p.isReady?'on':''}"></div>`;
     list.appendChild(d);
   });
   const mr=me&&me.isReady;
   $('btn-ready').textContent=mr?'Nije spreman':'Spreman';
-  $('btn-ready').className=`btn ${mr?'bo':'bt'} mb`;
+  $('btn-ready').className=`btn ${mr?'bo':'bg'} mb`;
 }
 function emitCfg(){socket.emit('updateConfig',{code:G.code,category:$('cfg-cat').value,impostors:impCount,discussionTime:parseInt($('cfg-disc').value)||120,votingTime:parseInt($('cfg-vote').value)||60});}
 $('cfg-cat').onchange=$('cfg-disc').onchange=$('cfg-vote').onchange=emitCfg;
@@ -1102,12 +1129,9 @@ function buildFlipBack(isImp, word){
   const wordDesc=isImp?'Tvoja varijanta':'Vaša prava riječ';
   const bottomDesc=isImp?'Slušaj pažljivo i ne odaj se':'Opisi svoju riječ, ali je ne kaži';
   return `
-    <div class="fb-glow-ring"></div>
-    <div class="fb-role-badge ${roleCls}">
-      <div class="fb-role-dot"></div>
-      ${roleLabel}
-    </div>
-    <div class="fb-word-lbl">${wordDesc}</div>
+    <div class="fb-glow"></div>
+    <div class="fb-badge ${roleCls}"><div class="fb-dot"></div>${roleLabel}</div>
+    <div class="fb-lbl">${wordDesc}</div>
     <div class="fb-word">${esc(word||'?')}</div>
     <div class="fb-desc">${bottomDesc}</div>`;
 }
@@ -1133,7 +1157,7 @@ $('btn-rev-done').onclick=()=>{
   socket.emit('playerReady',{code:G.code});
   $('btn-rev-done').disabled=true;
   $('btn-rev-done').textContent='Potvrđeno ✓';
-  $('btn-rev-done').style.opacity='.5';
+  $('btn-rev-done').style.opacity='.4';
 };
 $('btn-reroll').onclick=()=>{socket.emit('rerollWord',{code:G.code});toast('↻ Nova riječ u pripremi...');};
 socket.on('wordRerolled',room=>{myWord=room.myWord;myRole=room.myRole;G=room;me=meNow();if(me){me.word=myWord;me.role=myRole;}setupReveal();toast('↻ Riječ promijenjena');SFX.next();});
@@ -1142,13 +1166,14 @@ socket.on('wordRerolled',room=>{myWord=room.myWord;myRole=room.myRole;G=room;me=
 function setupDisc(room){
   const isHost=me&&me.isHost;
   $('disc-hstrip').style.display=isHost?'block':'none';
+  $('btn-kick-disc').style.display=isHost&&(G.players||[]).length>2?'inline-flex':'none';
   $('disc-wait').style.display=isHost?'none':'block';
   discTotal=room.discussionTime||120;
   const isImp=myRole==='IMPOSTOR';
   const wd=$('mywc-w');const rt=$('mywc-tag');const mwc=$('mywc');
-  if(wd){wd.textContent=myWord||'?';wd.style.color=isImp?'var(--rdim)':'var(--teal)';}
-  if(rt){rt.innerHTML=`<span style="font-size:9px;font-weight:600;letter-spacing:2px;text-transform:uppercase;padding:3px 10px;border-radius:999px;background:${isImp?'var(--rbg)':'var(--tbg)'};border:1px solid ${isImp?'var(--rb)':'var(--tb)'};color:${isImp?'var(--rdim)':'var(--teal)'}">${isImp?'IMPOSTOR':'CITIZEN'}</span>`;}
-  if(mwc){mwc.style.borderColor=isImp?'var(--rb)':'var(--tb)';mwc.style.background=isImp?'var(--rbg)':'var(--tbg)';}
+  if(wd){wd.textContent=myWord||'?';wd.style.color=isImp?'var(--cr-dim)':'var(--cg-dim)';}
+  if(rt){rt.innerHTML=`<span style="font-size:9px;font-weight:400;letter-spacing:2.5px;text-transform:uppercase;padding:4px 12px;border-radius:999px;background:${isImp?'var(--cr-bg)':'var(--cg-bg)'};border:1px solid ${isImp?'var(--cr-bd)':'var(--cg-bd)'};color:${isImp?'var(--cr-dim)':'var(--cg-dim)'}">${isImp?'IMPOSTOR':'CITIZEN'}</span>`;}
+  if(mwc){mwc.style.borderColor=isImp?'var(--cr-bd)':'var(--cg-bd)';mwc.style.background=isImp?'var(--cr-bg)':'var(--cg-bg)';}
   if(room.firstSpeakerName)$('spk-name').textContent=room.firstSpeakerName;
   renderAllVoiceLists();
   updateVoiceButtons();
@@ -1157,6 +1182,7 @@ function setupDisc(room){
 $('btn-nxt-spk').onclick=()=>{SFX.next();socket.emit('nextSpeaker',{code:G.code});};
 $('btn-ext-disc').onclick=()=>{socket.emit('extendDiscussion',{code:G.code,seconds:30});toast('+30 sekundi dodano');SFX.next();};
 $('btn-start-vote').onclick=()=>socket.emit('startVoting',{code:G.code});
+$('btn-kick-disc').onclick=()=>{renderKickDiscModal();$('modal-kick-disc').classList.add('on');};
 socket.on('speakerChanged',({name})=>{$('spk-name').textContent=name||'—';toast(`🎤 ${name} govori`);SFX.next();});
 socket.on('timerExtended',({phase,added})=>{toast(`+${added}s dodano!`);});
 
@@ -1168,7 +1194,7 @@ function makeAudio(id){
 }
 function removeAudio(pid){stopRemoteMonitor(pid);const au=document.getElementById('au-'+pid);if(au){au.srcObject=null;au.remove();}setVoiceLevel(pid,0);}
 function hasLiveMic(){return !!(micStream&&micStream.getAudioTracks().some(t=>t.readyState==='live'));}
-function setMicUi(state,msg){$('mtxt').textContent=msg;$('mled').classList.toggle('live',state==='live');$('mwaves').style.display=state==='live'?'flex':'none';if(state!=='live')$('mled').style.background='var(--tx3)';}
+function setMicUi(state,msg){$('mtxt').textContent=msg;$('mled').classList.toggle('live',state==='live');$('mwaves').style.display=state==='live'?'flex':'none';if(state!=='live')$('mled').style.background='var(--t3)';}
 function scheduleMicEnsure(delay=500){clearTimeout(micRestartTimer);micRestartTimer=setTimeout(()=>{if(micWanted)initMic({force:true});},delay);}
 function teardownPeerGraph(){Object.entries(pcs).forEach(([pid,pc])=>{try{pc.onicecandidate=null;pc.ontrack=null;pc.close();}catch(e){}removeAudio(pid);});pcs={};pendingOffers=[];}
 function stopMic({fullStop=true}={}){
@@ -1219,7 +1245,7 @@ function monitorMic(){
       if(!alive||!micStream)return;
       an.getByteFrequencyData(buf);
       const avg=buf.reduce((s,v)=>s+v,0)/buf.length;
-      $('mled').style.background=selfMuted?'var(--tx3)':(avg>12?'var(--red)':'var(--teal)');
+      $('mled').style.background=selfMuted?'var(--t3)':(avg>12?'var(--cr)':'var(--cg)');
       setVoiceLevel(socket.id,selfMuted?0:(avg*1.8));
       requestAnimationFrame(tick);
     })();
@@ -1289,15 +1315,15 @@ socket.on('timer',({phase,remaining})=>{
   if(phase==='discussion'){
     const pct=Math.max(0,remaining/discTotal*100);
     const bar=$('disc-tf'),val=$('disc-tv');
-    if(bar){bar.style.width=pct+'%';bar.style.background=pct<25?'var(--red)':pct<50?'var(--gold)':'var(--teal)';}
-    if(val){val.textContent=fmt(remaining);val.style.color=remaining<=10?'var(--red)':remaining<=30?'var(--gold)':'var(--tx)';}
+    if(bar){bar.style.width=pct+'%';bar.style.background=pct<25?'var(--cr)':pct<50?'var(--ca)':'var(--cg)';}
+    if(val){val.textContent=fmt(remaining);val.style.color=remaining<=10?'var(--cr)':remaining<=30?'var(--ca)':'var(--t1)';}
     if(remaining===30||remaining===10)SFX.warn();
     if(remaining>0&&remaining<=5)SFX.tick();
   } else if(phase==='voting'){
     const pct=Math.max(0,remaining/voteTotal*100);
     const bar=$('vote-tf'),val=$('vote-tv');
-    if(bar){bar.style.width=pct+'%';bar.style.background=pct<25?'var(--red)':pct<50?'var(--gold)':'var(--red)';}
-    if(val){val.textContent=fmt(remaining);val.style.color=remaining<=10?'var(--red)':'var(--tx)';}
+    if(bar){bar.style.width=pct+'%';bar.style.background=pct<25?'var(--cr)':pct<50?'var(--ca)':'var(--cr)';}
+    if(val){val.textContent=fmt(remaining);val.style.color=remaining<=10?'var(--cr)':'var(--t1)';}
     if(remaining===10)SFX.warn();
     if(remaining>0&&remaining<=5){SFX.tick();toast(`⚠ Glasanje završava za ${remaining}s`);}
   }
@@ -1305,10 +1331,8 @@ socket.on('timer',({phase,remaining})=>{
 
 // ── VOTING ────────────────────────────────────────────────────────────────────
 let myVoteSubmitted=false;
-
 function renderVoting(){
-  myVoteSubmitted=false;
-  selVote=null;
+  myVoteSubmitted=false;selVote=null;
   $('cfm').classList.remove('on');
   $('vsent').classList.remove('on');$('vsent').style.display='';
   $('vwaiting').classList.remove('on');
@@ -1316,7 +1340,6 @@ function renderVoting(){
   $('igbox').style.display='';
   const isImp=myRole==='IMPOSTOR';
   $('igbox').className=`igbox${isImp?' on':''}`;
-  // Build vote dots
   const dotsEl=$('vote-dots');
   if(dotsEl){
     dotsEl.innerHTML='';
@@ -1325,7 +1348,7 @@ function renderVoting(){
   const cntEl=$('vcnt-display');if(cntEl)cntEl.textContent=`0 / ${G.players.length}`;
   const grid=$('vgrid');grid.innerHTML='';
   G.players.forEach(p=>{
-    if(p.id===socket.id)return; // can't vote for yourself
+    if(p.id===socket.id)return;
     const c=document.createElement('div');c.className='vcard';c.id='vc-'+p.id;
     c.innerHTML=`<div class="vcav">${ini(p.name)}</div>
       <div class="vcard-info">
@@ -1349,7 +1372,7 @@ $('btn-cfm').onclick=()=>{
   myVoteSubmitted=true;
   socket.emit('castVote',{code:G.code,targetId:selVote});
   $('cfm').classList.remove('on');
-  $('vgrid').style.opacity='.35';$('vgrid').style.pointerEvents='none';
+  $('vgrid').style.opacity='.3';$('vgrid').style.pointerEvents='none';
   $('igbox').style.display='none';
   $('vsent').style.display='block';$('vsent').classList.add('on');
 };
@@ -1365,10 +1388,7 @@ socket.on('voteCast',data=>{
   const disp=$('vcnt-display');if(disp)disp.textContent=`${data.total} / ${data.max}`;
   const dots=document.querySelectorAll('#vote-dots .vote-dot');
   dots.forEach((d,i)=>{d.classList.toggle('cast',i<data.total);});
-  // If all voted and I haven't voted yet, show waiting state
-  if(data.total>=data.max&&!myVoteSubmitted){
-    $('vwaiting').classList.add('on');
-  }
+  if(data.total>=data.max&&!myVoteSubmitted){$('vwaiting').classList.add('on');}
 });
 
 // ── RESULTS ───────────────────────────────────────────────────────────────────
@@ -1380,24 +1400,22 @@ function renderResults(){
   else{b.className='rbanner lose';$('rtitle').textContent='Misija kompromitirana!';$('remoji').textContent='💀';$('rsub').textContent=`${esc(res.votedOutName||'?')} nije bio impostor.`;SFX.lose();}
   $('rw-r').textContent=G.words?.citizen||'—';
   $('rw-i').textContent=G.words?.impostor||'—';
-  // Scoreboard
   const sb=$('scoreboard');sb.innerHTML='';
   const sorted=[...G.players].sort((a,b)=>(b.score||0)-(a.score||0));
   sorted.forEach((p,i)=>{
     const pts=p.score||0,isImp=p.role==='IMPOSTOR';
     const delta=G.scoreDeltas?.[p.playerToken||p.id]??G.scoreDeltas?.[p.id]??0;
-    const rk=i===0?'g':i===1?'s':i===2?'b':'';
+    const rk=i===0?'gold':i===1?'silver':i===2?'bronze':'';
     const d=document.createElement('div');d.className='srow';
-    d.innerHTML=`<span class="srk ${rk}">${i+1}</span><div class="av ${isImp?'r':'t'}">${ini(p.name)}</div><div class="pi"><div class="pn">${esc(p.name)}</div><div class="ps">${isImp?'IMPOSTOR':'CITIZEN'}</div></div><div class="spt">${pts}<span class="sdelta ${delta>0?'up':'z'}">+${delta}</span></div>`;
+    d.innerHTML=`<span class="srk ${rk}">${i+1}</span><div class="av ${isImp?'r':'g'}">${ini(p.name)}</div><div class="pi"><div class="pn">${esc(p.name)}</div><div class="ps">${isImp?'IMPOSTOR':'CITIZEN'}</div></div><div class="spt">${pts}<span class="sdelta ${delta>0?'up':'z'}">+${delta}</span></div>`;
     sb.appendChild(d);
   });
-  // Debrief
   const rl=$('rlist');rl.innerHTML='';
   G.players.forEach(p=>{
     const isImp=p.role==='IMPOSTOR',vf=G.players.find(v=>v.id===G.votes?.[p.id]);
-    const wordLabel=p.word?`<span style="font-family:'Cormorant Garamond',serif;font-size:13px;letter-spacing:1px;color:${isImp?'var(--rdim)':'var(--teal)'};background:${isImp?'var(--rbg)':'var(--tbg)'};border:1px solid ${isImp?'var(--rb)':'var(--tb)'};border-radius:5px;padding:2px 8px;">${esc(p.word)}</span>`:'' ;
+    const wordLabel=p.word?`<span style="font-family:'Playfair Display',serif;font-size:13px;letter-spacing:.5px;color:${isImp?'var(--cr-dim)':'var(--cg-dim)'};background:${isImp?'var(--cr-bg)':'var(--cg-bg)'};border:1px solid ${isImp?'var(--cr-bd)':'var(--cg-bd)'};border-radius:6px;padding:2px 8px;">${esc(p.word)}</span>`:'';
     const d=document.createElement('div');d.className=`rrow${isImp?' ir':''}`;
-    d.innerHTML=`<div class="av ${isImp?'r':'t'}">${ini(p.name)}</div><div class="pi"><div class="pn">${esc(p.name)} ${wordLabel}</div><div class="ps">Glasao za: ${vf?esc(vf.name):'—'}</div></div><span style="font-size:9px;font-weight:600;letter-spacing:2px;padding:3px 9px;border-radius:999px;background:${isImp?'var(--rbg)':'var(--tbg)'};border:1px solid ${isImp?'var(--rb)':'var(--tb)'};color:${isImp?'var(--rdim)':'var(--teal)'};">${isImp?'IMPOSTOR':'CITIZEN'}</span>`;
+    d.innerHTML=`<div class="av ${isImp?'r':'g'}">${ini(p.name)}</div><div class="pi"><div class="pn">${esc(p.name)} ${wordLabel}</div><div class="ps">Glasao za: ${vf?esc(vf.name):'—'}</div></div><span style="font-size:9px;font-weight:400;letter-spacing:2.5px;padding:3px 10px;border-radius:999px;background:${isImp?'var(--cr-bg)':'var(--cg-bg)'};border:1px solid ${isImp?'var(--cr-bd)':'var(--cg-bd)'};color:${isImp?'var(--cr-dim)':'var(--cg-dim)'};">${isImp?'IMPOSTOR':'CITIZEN'}</span>`;
     rl.appendChild(d);
   });
   $('btn-rst').style.display=me&&me.isHost?'flex':'none';
@@ -1447,6 +1465,10 @@ socket.on('roomUpdated',room=>{
   if((G.state==='DISCUSSION'||G.state==='RESULTS')&&micWanted){scheduleMicEnsure(200);setTimeout(()=>ensurePeerLinks(),350);}
   renderAllVoiceLists();
   if(G.state==='LOBBY'){wantMic(false);if(!$('s-lobby').classList.contains('on'))show('s-lobby');renderLobby();}
+  if(G.state==='DISCUSSION'&&me?.isHost){
+    const kickBtn=$('btn-kick-disc');
+    if(kickBtn)kickBtn.style.display=(G.players||[]).length>2?'inline-flex':'none';
+  }
 });
 
 socket.on('gameStarted',room=>{
@@ -1476,6 +1498,21 @@ socket.on('gameEnded',room=>{
   show('s-res');renderResults();wantMic(true);
   setTimeout(()=>ensurePeerLinks(),400);unlockAudio();
 });
+socket.on('playerKickedMidGame',({kickedId,kickedName})=>{
+  if(kickedId===socket.id){
+    clearSession();show('s-join');G={};me=null;myWord=null;myRole=null;
+    $('pb').classList.remove('on');$('btn-leave-icon').style.display='none';
+    wantMic(false);toast(`⚠ Host te uklonio iz igre.`,4000);
+  } else {
+    G.players=(G.players||[]).filter(p=>p.id!==kickedId);
+    toast(`${kickedName} je uklonjen iz igre.`);
+    renderAllVoiceLists();
+    if($('s-disc').classList.contains('on')&&me?.isHost){
+      const kickBtn=$('btn-kick-disc');
+      if(kickBtn)kickBtn.style.display=(G.players||[]).length>2?'inline-flex':'none';
+    }
+  }
+});
 socket.on('error',msg=>{$('j-err').textContent=msg;$('l-err').textContent=msg;toast('⚠ '+msg);});
 
 // ── ONBOARDING ────────────────────────────────────────────────────────────────
@@ -1486,11 +1523,11 @@ function obShow(){
   var d=document.querySelectorAll('.obd');
   for(var i=0;i<s.length;i++) s[i].style.display=i===obCur?'flex':'none';
   for(var i=0;i<d.length;i++){
-    if(i===obCur){d[i].style.width='22px';d[i].style.borderRadius='4px';d[i].style.background='var(--gold)';}
-    else{d[i].style.width='6px';d[i].style.borderRadius='50%';d[i].style.background='var(--bg5)';}
+    if(i===obCur){d[i].style.width='22px';d[i].style.borderRadius='4px';d[i].style.background='var(--ca)';}
+    else{d[i].style.width='6px';d[i].style.borderRadius='50%';d[i].style.background='var(--b5)';}
   }
   var b=document.getElementById('ob-next');
-  if(b){b.textContent=obCur===3?'Igrajmo!':'Dalje';b.style.background=obCur===3?'var(--teal)':'var(--gold)';}
+  if(b){b.textContent=obCur===3?'Igrajmo!':'Dalje';b.style.background=obCur===3?'var(--cg)':'var(--ca)';}
 }
 function obNext(){if(obCur<3){obCur++;obShow();}else{obSkip();}}
 function obGo(n){obCur=n;obShow();}
@@ -1505,7 +1542,6 @@ function obSkip(){
   if(localStorage.getItem(OB_KEY)){el.style.display='none';return;}
   el.style.display='flex';
   obShow();
-  // Swipe
   var startX=0,startY=0,dx=0,active=false,locked=false;
   var THRESHOLD=50;
   function dragStart(x,y){startX=x;startY=y;dx=0;active=true;locked=false;}
