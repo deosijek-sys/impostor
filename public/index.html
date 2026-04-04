@@ -779,7 +779,7 @@ select{appearance:none;cursor:pointer;}
     <!-- TIEBREAKER HINT (shown inside voting screen) -->
     <div id="tiebreak-notice" style="display:none;" class="tiebreak-banner">
       <div class="tiebreak-title">⚖️ Drugi krug glasanja</div>
-      <div class="tiebreak-sub">Glasanje je izjednačeno! Glasajte između <span id="tb-names" style="color:var(--ca-dim);"></span> — samo 40 sekundi.</div>
+      <div class="tiebreak-sub">Glasanje je izjednačeno — nitko nije izbačen. Lista igrača je sužena. Glasajte ponovo!</div>
     </div>
 
       <div style="margin-bottom:20px;">
@@ -1166,6 +1166,26 @@ select{appearance:none;cursor:pointer;}
     <button class="btn br mb" id="btn-leave-confirm">Da, napusti sobu</button>
     <button class="btn bo" id="btn-leave-cancel">Ostani</button>
   </div>
+
+  <!-- ═══ STATS MODAL ════════════════════════════════════════ -->
+  <div class="stats-modal" id="stats-modal">
+    <div class="stats-header">
+      <span class="stats-title">Povijest igara</span>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <button class="btn br bsm" style="width:auto;padding:8px 14px;" onclick="clearGameHistory()">Obriši sve</button>
+        <button class="ibtn" onclick="document.getElementById('stats-modal').classList.remove('on')" style="font-size:16px;">✕</button>
+      </div>
+    </div>
+    <div class="stats-body">
+      <div class="stats-summary" id="stats-summary"></div>
+      <span class="eyebrow" style="margin-bottom:10px;display:block;">Zadnje igre</span>
+      <div id="stats-list"></div>
+    </div>
+  </div>
+
+  <!-- ═══ CONFETTI OVERLAY ════════════════════════════════════ -->
+  <div class="reveal-overlay" id="confetti-overlay"></div>
+
 </div>
 
 <script>
@@ -1949,7 +1969,7 @@ socket.on('timer',({phase,remaining})=>{
 
 // ── VOTING ────────────────────────────────────────────────────────────────────
 let myVoteSubmitted=false;
-function renderVoting(filterIds){
+function renderVoting(){
   myVoteSubmitted=false;selVote=null;
   $('cfm').classList.remove('on');
   $('vsent').classList.remove('on');$('vsent').style.display='';
@@ -1967,7 +1987,6 @@ function renderVoting(filterIds){
   const grid=$('vgrid');grid.innerHTML='';
   G.players.forEach(p=>{
     if(p.id===socket.id)return;
-    if(filterIds && !filterIds.includes(p.id))return;
     const c=document.createElement('div');c.className='vcard';c.id='vc-'+p.id;
     c.innerHTML=`<div class="vcav">${ini(p.name)}</div>
       <div class="vcard-info">
@@ -2412,23 +2431,13 @@ socket.on('tieBreakerStarted', (room) => {
   G = room; me = meNow(); if (me) { me.word = myWord; me.role = myRole; }
   voteTotal = room.duration || 40;
   myVoteSubmitted = false;
-  // Show tiebreaker notice inside voting screen
+  // Show neutral notice — full player list, no hints
   const notice = $('tiebreak-notice');
-  if (notice) {
-    notice.style.display = 'block';
-    const names = $('tb-names');
-    if (names && room.candidates) names.textContent = room.candidates.map(c => c.name).join(' vs ');
-  }
-  // Render only tie candidates in vote list
+  if (notice) notice.style.display = 'block';
   show('s-vote');
-  renderVotingFiltered(room.candidates ? room.candidates.map(c => c.id) : null);
-  toast('⚖️ Drugi krug glasanja!');
+  renderVoting(); // full list, no filtering — fair for all group sizes
+  toast('⚖️ Izjednačeno! Glasajte ponovo.');
 });
-
-function renderVotingFiltered(allowedIds) {
-  // Same as renderVoting but optionally filter to only certain targets
-  renderVoting(allowedIds);
-}
 
 </script>
 </body>
