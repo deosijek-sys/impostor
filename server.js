@@ -290,7 +290,7 @@ io.on('connection', (socket) => {
       }
     }
 
-    if (room.players.length >= 10) return socket.emit('error', 'Soba je puna (max 10).');
+    if (room.players.length >= 20) return socket.emit('error', 'Soba je puna (max 20).');
     const nameTaken = room.players.find(p =>
       p.name.toLowerCase() === (playerName||'').toLowerCase() &&
       p.isConnected !== false &&
@@ -551,6 +551,8 @@ io.on('connection', (socket) => {
     if (!voter || voter.voted) return; // already voted
     if (targetId === socket.id) return; // can't vote self
     if (!room.players.find(p => p.id === targetId)) return; // target must exist
+    // In tie-breaker, only allow voting for candidates
+    if (room.tieBreakerCandidates && !room.tieBreakerCandidates.includes(targetId)) return;
     room.votes[socket.id] = targetId;
     voter.voted = true;
     const total = Object.keys(room.votes).length;
@@ -600,8 +602,35 @@ io.on('connection', (socket) => {
     for (const [id, cnt] of Object.entries(tally)) {
       if (cnt > maxV) { maxV = cnt; votedOutId = id; }
     }
-    const tied = Object.entries(tally).filter(([, c]) => c === maxV).length > 1
-      || Object.keys(tally).length === 0; // no votes = tie
+    const tiedCandidates = Object.entries(tally).filter(([, c]) => c === maxV).map(([id]) => id);
+    const tied = tiedCandidates.length > 1 || Object.keys(tally).length === 0;
+
+    // TIE-BREAK: second vote only among tied candidates (one time)
+    if (tied && !room.isTieBreaker && tiedCandidates.length >= 2) {
+      room.isTieBreaker = true;
+      room.tieBreakerCandidates = tiedCandidates;
+      room.state = 'VOTING';
+      room.votes = {};
+      room.players.forEach(p => { p.voted = false; });
+      const tbTime = Math.min(room.votingTime, 40);
+      io.to(code).emit('tieBreakerStarted', {
+        ...safeRoom(room),
+        candidates: tiedCandidates.map(id => {
+          const p = room.players.find(p => p.id === id);
+          return { id, name: p?.name || '?' };
+        }),
+        duration: tbTime
+      });
+      startTimer(code, tbTime,
+        t => io.to(code).emit('timer', { phase: 'tiebreaker', remaining: t }),
+        () => { if (rooms.get(code)?.state === 'VOTING') finalizeVotes(code); }
+      );
+      return;
+    }
+
+    // After tie-breaker or if still tied, resolve normally
+    room.isTieBreaker = false;
+    room.tieBreakerCandidates = null;
     const votedOut = (!tied && votedOutId) ? room.players.find(p => p.id === votedOutId) : null;
     const isImp = !tied && votedOut?.role === 'IMPOSTOR';
 
@@ -612,7 +641,8 @@ io.on('connection', (socket) => {
       isImpostor: isImp,
       winner: isImp ? 'CITIZENS' : 'IMPOSTORS',
       impostors: room.players.filter(p => p.role === 'IMPOSTOR').map(p => p.name),
-      tally, reason: 'vote', impostorGuessedCorrectly: false
+      tally, reason: 'vote', impostorGuessedCorrectly: false,
+      wasTieBreaker: true
     };
     calcScores(room);
     const gr2 = buildResults(room);
@@ -698,7 +728,7 @@ io.on('connection', (socket) => {
     const room = rooms.get(code);
     if (!room) return;
     clearTimer(code);
-    room.state = 'LOBBY'; room.votes = {}; room.results = null; room.words = null; room.scoreDeltas = {};
+    room.state = 'LOBBY'; room.votes = {}; room.results = null; room.words = null; room.scoreDeltas = {}; room.isTieBreaker = false; room.tieBreakerCandidates = null;
     room.speakOrder = []; room.currentSpeakerIdx = 0; room.impostorGuess = null;
     room.players.forEach(p => { p.isReady = p.isHost; delete p.role; delete p.word; delete p.hasRevealed; delete p.voted; });
     io.to(code).emit('roomUpdated', safeRoom(room));

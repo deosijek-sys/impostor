@@ -1,0 +1,18 @@
+{
+  "name": "IMPOSTOR",
+  "short_name": "Impostor",
+  "description": "Party igra za 3–20 igrača",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#030308",
+  "theme_color": "#04040A",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' fill='%23030308'/><text x='256' y='330' font-size='280' text-anchor='middle' fill='%23E8B84B'>🎭</text></svg>",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
