@@ -495,9 +495,17 @@ io.on('connection', (socket) => {
   socket.on('castVote', ({ code, targetId }) => {
     const room = rooms.get(code);
     if (!room || room.state !== 'VOTING' || room.votes[socket.id]) return;
+    // Ne dopusti glasanje za sebe
+    if (targetId === socket.id) return;
+    // Ne dopusti glasanje za igrača koji nije u sobi
+    if (!room.players.find(p => p.id === targetId)) return;
     room.votes[socket.id] = targetId;
+    // Označi igrača kao glasača
+    const voter = room.players.find(p => p.id === socket.id);
+    if (voter) voter.voted = true;
     const total = Object.keys(room.votes).length;
     io.to(code).emit('voteCast', { total, max: room.players.length });
+    io.to(code).emit('roomUpdated', safeRoom(room));
     if (total === room.players.length) finalizeVotes(code);
   });
 
@@ -512,6 +520,7 @@ io.on('connection', (socket) => {
       room.state = 'RESULTS';
       room.results = {
         winner: 'IMPOSTORS', reason: 'guess', impostorGuessedCorrectly: true,
+        guesserToken: scoreKey(p),
         isTie: false, votedOutId: null, votedOutName: null, isImpostor: false,
         impostors: room.players.filter(p => p.role === 'IMPOSTOR').map(p => p.name),
         tally: {}
@@ -548,7 +557,7 @@ io.on('connection', (socket) => {
     io.to(code).emit('gameEnded', buildResults(room));
   }
 
-  // ── BODOVANJE — ispravljeno ───────────────────────────────────────────────
+  // ── BODOVANJE ─────────────────────────────────────────────────────────────
   // Citizens pobijede (impostor uhvaćen):
   //   - Svaki citizen koji je glasao za impostora: +2 boda
   //   - Svaki citizen koji NIJE glasao za impostora: +0 bodova
@@ -580,13 +589,13 @@ io.on('connection', (socket) => {
         // Impostori ne dobivaju ništa kad izgube
       });
     } else if (room.results.impostorGuessedCorrectly) {
-      // Poseban slučaj — impostor pogodio riječ
+      // Poseban slučaj — impostor pogodio pravu riječ
+      // Pogađač: +4, ostali impostori: +2
+      const guesserToken = room.results.guesserToken;
       room.players.forEach(p => {
         const key = scoreKey(p);
         if (p.role === 'IMPOSTOR') {
-          // Provjeri je li ovaj impostor pogodio (samo jedan može pogoditi)
-          // Dajemo svim impostorima +2, pogađač dobiva +4
-          const delta = 3; // svi impostori dobivaju bodove
+          const delta = key === guesserToken ? 4 : 2;
           room.scores[key] = (room.scores[key] || 0) + delta;
           room.scoreDeltas[key] = delta;
         }
