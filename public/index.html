@@ -60,6 +60,12 @@ html,body{height:100%;background:var(--b0);color:var(--t1);font-family:var(--ff-
 /* ─── SCROLL ─────────────────────────────────────────────────────────────── */
 .scroll{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;scrollbar-width:none;position:relative;z-index:1;}
 .scroll::-webkit-scrollbar{display:none;}
+.toggle-wrap{cursor:pointer;display:flex;align-items:center;}
+.toggle-pill{width:44px;height:24px;border-radius:999px;border:1px solid var(--l3);background:var(--b3);position:relative;transition:background .2s,border-color .2s;}
+.toggle-pill::after{content:'';position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:50%;background:var(--t3);transition:transform .2s,background .2s;}
+.toggle-pill.on{background:rgba(196,152,48,.18);border-color:var(--ca-bd);}
+.toggle-pill.on::after{transform:translateX(20px);background:var(--ca-dim);}
+.spectator-badge{display:inline-flex;align-items:center;gap:6px;padding:5px 12px;border-radius:999px;background:rgba(196,152,48,.1);border:1px solid rgba(196,152,48,.25);font-size:10px;letter-spacing:1.5px;color:var(--ca-dim);text-transform:uppercase;}
 
 /* ─── SCREENS ────────────────────────────────────────────────────────────── */
 .sc{display:none;padding:28px 20px calc(64px + var(--safe-b));animation:fadeUp .32s cubic-bezier(.16,1,.3,1);}
@@ -669,11 +675,6 @@ select{appearance:none;cursor:pointer;}
               <option value="Svakodnevni život">☀️ Svakodnevni život</option>
               <option value="Priroda">🌿 Priroda</option>
               <option value="Tehnologija">💻 Tehnologija</option>
-              <option value="Boje">🎨 Boje</option>
-              <option value="Prijevoz">🚗 Prijevoz</option>
-              <option value="Emocije">❤️ Emocije</option>
-              <option value="Godišnja doba i praznici">🎄 Godišnja doba i praznici</option>
-              <option value="Hobiji">🎯 Hobiji</option>
             </select>
           </div>
           <span class="eyebrow g8">Broj impostora</span>
@@ -685,6 +686,31 @@ select{appearance:none;cursor:pointer;}
           <div class="sg" style="margin-bottom:0;">
             <div><span class="eyebrow g8">Rasprava (sek)</span><input type="number" id="cfg-disc" value="120" min="30" max="300" style="padding:11px 12px;font-size:13px;"/></div>
             <div><span class="eyebrow g8">Glasanje (sek)</span><input type="number" id="cfg-vote" value="60" min="20" max="120" style="padding:11px 12px;font-size:13px;"/></div>
+          </div>
+        </div>
+
+        <!-- CUSTOM PAIR -->
+        <div class="card g16" id="custom-pair-card" style="border-color:rgba(196,152,48,.25);background:rgba(196,152,48,.04);">
+          <div class="rowb" style="align-items:flex-start;">
+            <div>
+              <span class="eyebrow a g8">✏️ Custom par</span>
+              <p style="font-size:11px;color:var(--t3);line-height:1.6;margin-top:2px;">Hostov fair play mod — host ne igra i zna obje riječi</p>
+            </div>
+            <label class="toggle-wrap" style="flex-shrink:0;margin-top:2px;">
+              <input type="checkbox" id="cfg-custom-toggle" style="display:none;">
+              <div class="toggle-pill" id="toggle-pill"></div>
+            </label>
+          </div>
+          <div id="custom-inputs" style="display:none;" class="g12">
+            <div>
+              <span class="eyebrow g8">Građani vide</span>
+              <input type="text" id="cfg-citizen" maxlength="40" placeholder="npr. Macbook" style="padding:11px 12px;font-size:13px;"/>
+            </div>
+            <div>
+              <span class="eyebrow g8">Impostor vidi</span>
+              <input type="text" id="cfg-impostor" maxlength="40" placeholder="npr. Dell laptop" style="padding:11px 12px;font-size:13px;"/>
+            </div>
+            <div class="err" id="custom-err" style="display:none;"></div>
           </div>
         </div>
       </div>
@@ -982,6 +1008,39 @@ select{appearance:none;cursor:pointer;}
   </div>
 </div>
 
+<!-- SPECTATOR (FAIR PLAY HOST) -->
+<div class="sc" id="s-spectator">
+  <div style="margin-bottom:28px;">
+    <span class="eyebrow a g8">Fair Play Mod</span>
+    <h2 class="title g12">Ti si<br><span style="color:var(--ca-dim);">Voditelj</span></h2>
+    <p class="subtitle">Znaš obje riječi — ostani miran i ne odaj se 🤫</p>
+  </div>
+
+  <div class="card g20" style="border-color:rgba(196,152,48,.3);background:rgba(196,152,48,.05);text-align:center;">
+    <div>
+      <span class="eyebrow g g8">Građani vide</span>
+      <div id="spec-citizen" style="font-family:var(--ff-serif);font-size:42px;color:var(--cg-dim);font-weight:300;letter-spacing:-.5px;margin-top:4px;">—</div>
+    </div>
+    <div style="width:100%;height:1px;background:var(--l1);"></div>
+    <div>
+      <span class="eyebrow r g8">Impostor vidi</span>
+      <div id="spec-impostor" style="font-family:var(--ff-serif);font-size:42px;color:var(--cr-dim);font-weight:300;letter-spacing:-.5px;margin-top:4px;">—</div>
+    </div>
+  </div>
+
+  <div id="spec-phase-wrap" style="margin-top:20px;">
+    <div class="card" style="text-align:center;padding:16px;">
+      <span class="eyebrow g8" id="spec-phase">Čekanje na igrače...</span>
+      <p class="subtitle" style="margin-top:6px;font-size:11px;">Promatraš igru — ne možeš glasati</p>
+    </div>
+  </div>
+
+  <div style="margin-top:24px;display:flex;flex-direction:column;gap:10px;">
+    <button class="btn bp mb" id="spec-next-round" style="display:none;">▶ Sljedeća runda</button>
+    <button class="btn bo" id="spec-leave" style="margin-top:0;">Napusti sobu</button>
+  </div>
+</div>
+
 <!-- TOAST -->
 <div class="toast" id="toast"></div>
 
@@ -1268,13 +1327,23 @@ $('btn-create').onclick=()=>{
 function renderLobby(){
   if(!G||!$('l-code'))return;
   $('l-code').textContent=G.code;
-  $('l-cat').textContent=G.category;
+  const catLabel = G.hasCustomPair ? '✏️ Custom (Fair Play)' : G.category;
+  $('l-cat').textContent=catLabel;
+  if(G.fairPlay&&G.hasCustomPair&&me&&me.isHost){
+    // sync toggle if needed
+    if(!customActive){
+      customActive=true;
+      if($('cfg-custom-toggle'))$('cfg-custom-toggle').checked=true;
+      if(typeof updateToggleUI==='function')updateToggleUI();
+    }
+  }
   $('l-imps').textContent=G.impostorCount;
   $('rnd').textContent=G.roundNumber>0?`R${G.roundNumber}`:'';
   const rc=G.players.filter(p=>p.isReady).length;
   $('rcount').textContent=`${rc}/${G.players.length} spreman`;
   const isHost=me&&me.isHost;
   $('hcfg').style.display=isHost?'block':'none';
+  if($('custom-pair-card'))$('custom-pair-card').style.display=isHost?'block':'none';
   $('btn-manage').style.display=isHost&&G.players.length>1?'flex':'none';
   $('l-wait').style.display=isHost?'none':'block';
   $('btn-start').style.display='none';
@@ -1304,7 +1373,43 @@ function renderLobby(){
   $('btn-ready').textContent=mr?'Nije spreman':'Spreman';
   $('btn-ready').className=`btn ${mr?'bo':'bg'} mb`;
 }
-function emitCfg(){socket.emit('updateConfig',{code:G.code,category:$('cfg-cat').value,impostors:impCount,discussionTime:parseInt($('cfg-disc').value)||120,votingTime:parseInt($('cfg-vote').value)||60});}
+let customActive=false;
+function emitCfg(){
+  if(customActive){
+    const c=$('cfg-citizen').value.trim();
+    const i=$('cfg-impostor').value.trim();
+    if(c&&i&&c.toLowerCase()!==i.toLowerCase()){
+      $('custom-err').style.display='none';
+      socket.emit('updateConfig',{code:G.code,category:'custom',impostors:impCount,
+        discussionTime:parseInt($('cfg-disc').value)||120,votingTime:parseInt($('cfg-vote').value)||60,
+        customPair:{citizen:c,impostor:i}});
+    } else {
+      $('custom-err').textContent=(!c||!i)?'Unesite obje riječi.':'Citizen i Impostor ne smiju biti iste riječi.';
+      $('custom-err').style.display='block';
+    }
+  } else {
+    socket.emit('updateConfig',{code:G.code,category:$('cfg-cat').value,impostors:impCount,
+      discussionTime:parseInt($('cfg-disc').value)||120,votingTime:parseInt($('cfg-vote').value)||60,
+      customPair:null});
+  }
+}
+function updateToggleUI(){
+  const pill=$('toggle-pill');
+  pill.classList.toggle('on',customActive);
+  $('custom-inputs').style.display=customActive?'block':'none';
+  $('cfg-cat').closest('.card').style.opacity=customActive?'0.4':'1';
+  $('cfg-cat').disabled=customActive;
+}
+$('cfg-custom-toggle').onchange=()=>{
+  customActive=$('cfg-custom-toggle').checked;
+  updateToggleUI();
+  if(!customActive){$('custom-err').style.display='none';emitCfg();}
+};
+$('toggle-pill').onclick=()=>{
+  $('cfg-custom-toggle').checked=!$('cfg-custom-toggle').checked;
+  $('cfg-custom-toggle').dispatchEvent(new Event('change'));
+};
+$('cfg-citizen').oninput=$('cfg-impostor').oninput=()=>{if(customActive)emitCfg();};
 $('cfg-cat').onchange=$('cfg-disc').onchange=$('cfg-vote').onchange=emitCfg;
 $('imp-m').onclick=()=>{impCount=Math.max(1,impCount-1);$('imp-v').textContent=impCount;emitCfg();};
 $('imp-p').onclick=()=>{impCount=Math.min(3,impCount+1);$('imp-v').textContent=impCount;emitCfg();};
@@ -1791,7 +1896,12 @@ socket.on('gameStarted',room=>{
   myWord=room.myWord;myRole=room.myRole;G=room;me=meNow();
   if(me){me.word=myWord;me.role=myRole;}
   $('rnd').textContent=`R${G.roundNumber}`;
-  wantMic(false);show('s-reveal');setupReveal();
+  wantMic(false);
+  if(myRole==='SPECTATOR'){
+    showSpectatorScreen(room.words);
+  } else {
+    show('s-reveal');setupReveal();
+  }
 });
 socket.on('revealProgress',({readyCount,total})=>{
   updateRevealProgress(readyCount,total);
@@ -1800,15 +1910,33 @@ socket.on('revealProgress',({readyCount,total})=>{
 socket.on('startDiscussion',room=>{
   G=room;me=meNow();if(me){me.word=myWord;me.role=myRole;}
   discTotal=room.discussionTime||120;voteTotal=room.votingTime||60;
-  show('s-disc');setupDisc(room);
-  if(room.firstSpeakerName)spinner(room.firstSpeakerName,null);
-  setTimeout(()=>ensurePeerLinks(),400);
+  if(myRole==='SPECTATOR'){
+    updateSpectatorDiscScreen(room);
+  } else {
+    show('s-disc');setupDisc(room);
+    if(room.firstSpeakerName)spinner(room.firstSpeakerName,null);
+    setTimeout(()=>ensurePeerLinks(),400);
+  }
 });
 socket.on('votingStarted',room=>{
   G=room;me=meNow();if(me){me.word=myWord;me.role=myRole;}
-  voteTotal=room.votingTime||60;wantMic(false);show('s-vote');renderVoting();
+  voteTotal=room.votingTime||60;wantMic(false);
+  if(myRole==='SPECTATOR'){
+    updateSpectatorDiscScreen(room);
+    toast('Glasanje u tijeku — vi gledate');
+  } else {
+    show('s-vote');renderVoting();
+  }
 });
 socket.on('gameEnded',room=>{
+  if(myRole==='SPECTATOR'){
+    const btn=$('spec-next-round');
+    if(btn){btn.style.display='flex';}
+    const phase=$('spec-phase');
+    if(phase)phase.textContent='Runda završena';
+    show('s-spectator');
+    return;
+  }
   myWord=room.myWord??myWord;myRole=room.myRole??myRole;
   G=room;me=meNow();if(me){me.word=myWord;me.role=myRole;}
   show('s-res');renderResults();wantMic(true);
@@ -1883,6 +2011,28 @@ function obSkip(){
 })();
 
 maybeResumeSession();
+
+// ── SPECTATOR (FAIR PLAY HOST) ────────────────────────────────────────────────
+// Buttons wired after DOM ready — using event delegation
+document.addEventListener('click', e => {
+  if(e.target.id==='spec-next-round') socket.emit('startGame',{code:G.code});
+  if(e.target.id==='spec-leave') socket.emit('leaveRoom',{code:G.code});
+});
+let spectatorWords=null;
+function showSpectatorScreen(words){
+  spectatorWords=words;
+  const el=$('s-spectator');
+  if(!el)return;
+  el.querySelector('#spec-citizen').textContent=words?.citizen||'?';
+  el.querySelector('#spec-impostor').textContent=words?.impostor||'?';
+  show('s-spectator');
+}
+function updateSpectatorDiscScreen(room){
+  const el=$('s-spectator');
+  if(!el){show('s-disc');return;}
+  el.querySelector('#spec-phase').textContent=room.state==='VOTING'?'Glasanje':'Rasprava';
+  show('s-spectator');
+}
 </script>
 </body>
 </html>
