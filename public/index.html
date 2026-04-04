@@ -696,7 +696,7 @@ select{appearance:none;cursor:pointer;}
               <span class="eyebrow a g8">✏️ Custom par</span>
               <p style="font-size:11px;color:var(--t3);line-height:1.6;margin-top:2px;">Hostov fair play mod — host ne igra i zna obje riječi</p>
             </div>
-            <label class="toggle-wrap" style="flex-shrink:0;margin-top:2px;">
+            <label class="toggle-wrap" style="flex-shrink:0;margin-top:2px;" onclick="event.stopPropagation()">
               <input type="checkbox" id="cfg-custom-toggle" style="display:none;">
               <div class="toggle-pill" id="toggle-pill"></div>
             </label>
@@ -1408,7 +1408,6 @@ function setCustomActive(val){
   if(!customActive){$('custom-err').style.display='none';emitCfg();}
 }
 $('cfg-custom-toggle').onchange=()=>setCustomActive($('cfg-custom-toggle').checked);
-$('toggle-pill').onclick=()=>setCustomActive(!customActive);
 $('cfg-citizen').oninput=$('cfg-impostor').oninput=()=>{if(customActive)emitCfg();};
 $('cfg-citizen').onfocus=$('cfg-impostor').onfocus=()=>{customInputFocused=true;};
 $('cfg-citizen').onblur=$('cfg-impostor').onblur=()=>{customInputFocused=false;};
