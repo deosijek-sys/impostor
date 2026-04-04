@@ -554,10 +554,10 @@ io.on('connection', (socket) => {
     room.votes[socket.id] = targetId;
     voter.voted = true;
     const total = Object.keys(room.votes).length;
-    const max = room.players.length;
+    const max = room.players.filter(p => p.role !== 'SPECTATOR').length;
     io.to(code).emit('voteCast', { total, max });
     io.to(code).emit('roomUpdated', safeRoom(room));
-    // All players voted → finalize immediately
+    // All active players voted (spectators excluded) → finalize immediately
     if (total >= max) {
       finalizeVotes(code);
     }

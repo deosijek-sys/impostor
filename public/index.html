@@ -629,8 +629,18 @@ select{appearance:none;cursor:pointer;}
       <div id="plist" class="g14"></div>
       <div class="err g8" id="l-err"></div>
       <button class="btn bg mb" id="btn-ready">Spreman</button>
+      <div id="host-fairplay-notice" style="display:none;margin-bottom:12px;background:rgba(196,152,48,.07);border:1px solid rgba(196,152,48,.2);border-radius:14px;padding:12px 16px;">
+        <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--ca-dim);margin-bottom:5px;font-weight:400;">🎭 Ti si voditelj ove runde</div>
+        <p style="font-size:12px;color:var(--t2);line-height:1.65;">Postavio si custom riječi pa igraš kao <strong style="color:var(--ca-dim);">voditelj</strong> — nećeš dobiti ulogu niti glasovati, ali znat ćeš obje tajne riječi. Tvoja uloga je voditi raspravu i paziti da nitko ne para pravila.</p>
+      </div>
       <button class="btn bp mb" id="btn-start" style="display:none;">▶ Pokretanje misije</button>
-      <div class="wait" id="l-wait">Čekanje na hosta...</div>
+      <div id="l-wait">
+        <div class="wait" id="l-wait-text">Čekanje na hosta...</div>
+        <div id="l-custom-notice" style="display:none;margin-top:10px;background:rgba(196,152,48,.07);border:1px solid rgba(196,152,48,.2);border-radius:14px;padding:14px 16px;">
+          <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--ca-dim);margin-bottom:6px;font-weight:400;">ℹ️ Custom riječi — Fair Play mod</div>
+          <p style="font-size:12px;color:var(--t2);line-height:1.7;">Host je postavio <strong style="color:var(--t1);">vlastite tajne riječi</strong> i igra u ulozi <strong style="color:var(--ca-dim);">voditelja</strong> — zna obje riječi, ali <strong style="color:var(--t1);">ne dobiva ulogu ni ne glasuje</strong>. Voditelj vodi raspravu i pazi da nitko ne vara.</p>
+        </div>
+      </div>
     </div>
 
     <!-- REVEAL -->
@@ -814,25 +824,118 @@ select{appearance:none;cursor:pointer;}
         <span class="eyebrow r g8">Protokol misije</span>
         <h2 class="title">Pravila<br>igre</h2>
       </div>
+
+      <!-- CIlJ -->
       <div class="g16">
-        <span class="eyebrow g8">Cilj igre</span>
-        <div class="card cr g14">
-          <p class="rtxt">Svi igrači dobiju <strong>tajnu riječ</strong>. Jedan ili više su <strong>impostori</strong> — oni dobiju <strong>drugu, različitu riječ iz iste kategorije</strong>. Npr. citizens dobiju "Pizza", impostor dobije "Burek".</p>
+        <span class="eyebrow g8">Što je Impostor?</span>
+        <div class="card g14">
+          <p class="rtxt">Party igra za <strong>3–10 igrača</strong>. Svi dobiju tajnu riječ — ali jedan (ili više) igrača su <strong>impostori</strong> i dobiju <em>drugu, srodnu</em> riječ. Npr. svi citizens dobiju <strong>Pizza</strong>, a impostor dobije <strong>Burek</strong>. Impostor mora proći neopaženo — citizens moraju otkriti tko je impostor.</p>
         </div>
       </div>
+
+      <!-- TIJEK -->
       <div class="g16">
-        <span class="eyebrow g8">Tijek igre</span>
-        <div class="rstep"><span class="rnum">1</span><p class="rtxt"><strong>Otkrivanje</strong> — Svaki igrač tapne kartu, pogleda svoju tajnu ulogu i klikne "Vidio sam".</p></div>
-        <div class="rstep"><span class="rnum">2</span><p class="rtxt"><strong>Rasprava</strong> — Slobodna diskusija. Opisujte svoju riječ bez da je direktno kažete.</p></div>
-        <div class="rstep"><span class="rnum">3</span><p class="rtxt"><strong>Glasanje</strong> — Svi glasaju tko je impostor. Igrač s najviše glasova je izbačen.</p></div>
-        <div class="rstep"><span class="rnum">4</span><p class="rtxt"><strong>Rezultati</strong> — Otkriva se tko je bio impostor i koje su bile obje tajne riječi.</p></div>
+        <span class="eyebrow g8">Tijek jedne runde</span>
+        <div class="rstep"><span class="rnum">1</span><p class="rtxt"><strong>Otkrivanje</strong> — Svaki igrač tapne kartu i vidi svoju tajnu riječ i ulogu (Citizen ili Impostor). Tap "Vidio sam" kad si spreman — čeka se dok svi ne potvrde.</p></div>
+        <div class="rstep"><span class="rnum">2</span><p class="rtxt"><strong>Rasprava</strong> — Svaki igrač redom opisuje svoju tajnu riječ, bez da je direktno kaže. Npr. za "Pizza" možeš reći "okrugla, peče se u pećnici" — ali ne "to je talijanska hrana". Impostor sluša i pokušava blefirati s drugom riječju.</p></div>
+        <div class="rstep"><span class="rnum">3</span><p class="rtxt"><strong>Glasanje</strong> — Svi istovremeno glasaju tko misle da je impostor. Igrač s <em>najviše</em> glasova biva izbačen. Ako je izjednačeno — nitko nije izbačen i impostor pobjeđuje.</p></div>
+        <div class="rstep"><span class="rnum">4</span><p class="rtxt"><strong>Pogađanje (samo impostor)</strong> — Tijekom glasanja, impostor može pokušati pogoditi pravu citizen riječ. Ako pogodi, <em>odmah pobjeđuje</em> bez obzira na glasove.</p></div>
+        <div class="rstep"><span class="rnum">5</span><p class="rtxt"><strong>Rezultati</strong> — Otkriva se tko je bio impostor i obje tajne riječi. Djele se bodovi i prelazi se na sljedeću rundu.</p></div>
       </div>
+
+      <!-- BODOVANJE — CITIZENS -->
       <div class="g16">
-        <span class="eyebrow g8">Bodovanje</span>
-        <div class="rstep"><span class="rnum" style="color:var(--cg);">✓</span><p class="rtxt"><strong>Citizens pobijede</strong>: svaki citizen koji je glasao ispravno dobiva <strong>+2 boda</strong>.</p></div>
-        <div class="rstep"><span class="rnum" style="color:var(--cr);">✗</span><p class="rtxt"><strong>Impostor preživi glasanje</strong>: <strong>+3 boda</strong> svakom impostoru.</p></div>
-        <div class="rstep"><span class="rnum" style="color:var(--ca);">★</span><p class="rtxt"><strong>Impostor pogodi pravu riječ</strong>: <strong>+4 boda</strong> pogađaču, <strong>+2</strong> ostalim impostorima.</p></div>
+        <span class="eyebrow g8">Bodovanje — Citizens</span>
+        <div class="card cg g8">
+          <p class="rtxt" style="margin-bottom:10px;">Citizen pobjeđuje ako glasanje otkrije impostora (tj. igrač s najviše glasova je impostor).</p>
+          <div style="display:flex;flex-direction:column;gap:6px;">
+            <div style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:var(--b3);border-radius:10px;">
+              <span style="font-family:var(--ff-serif);font-size:20px;color:var(--cg-dim);min-width:28px;text-align:center;">+2</span>
+              <p class="rtxt">Glasao si <strong>za impostora</strong> → osvajаš <strong>2 boda</strong>.</p>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:var(--b3);border-radius:10px;">
+              <span style="font-family:var(--ff-serif);font-size:20px;color:var(--t3);min-width:28px;text-align:center;">+0</span>
+              <p class="rtxt">Glasao si <strong>za krivog igrača</strong> (ciudan ili pogrešno) → <strong>0 bodova</strong>, čak i ako su citizens pobijedili.</p>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:var(--b3);border-radius:10px;">
+              <span style="font-family:var(--ff-serif);font-size:20px;color:var(--t3);min-width:28px;text-align:center;">+0</span>
+              <p class="rtxt">Impostor je <strong>preživio glasanje</strong> (pobijedio) → citizens <strong>ne dobivaju ništa</strong>.</p>
+            </div>
+          </div>
+        </div>
       </div>
+
+      <!-- BODOVANJE — IMPOSTORI -->
+      <div class="g16">
+        <span class="eyebrow g8">Bodovanje — Impostori</span>
+        <div class="card cr g8">
+          <p class="rtxt" style="margin-bottom:10px;">Impostor može pobijediti na dva načina — preživjeti glasanje ili pogoditi tajnu citizen riječ.</p>
+          <div style="display:flex;flex-direction:column;gap:6px;">
+            <div style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:var(--b3);border-radius:10px;">
+              <span style="font-family:var(--ff-serif);font-size:20px;color:var(--cr-dim);min-width:28px;text-align:center;">+3</span>
+              <p class="rtxt">Glasanje te <strong>nije otkrilo</strong> (preživio si) → <strong>3 boda</strong> svakom impostoru.</p>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:var(--b3);border-radius:10px;">
+              <span style="font-family:var(--ff-serif);font-size:20px;color:var(--ca-dim);min-width:28px;text-align:center;">+4</span>
+              <p class="rtxt">Ti si <strong>pogodio pravu citizen riječ</strong> → <strong>4 boda</strong> tebi kao pogađaču.</p>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:var(--b3);border-radius:10px;">
+              <span style="font-family:var(--ff-serif);font-size:20px;color:var(--ca-dim);min-width:28px;text-align:center;">+2</span>
+              <p class="rtxt">Drugi impostor je pogodio citizen riječ, a ti nisi pogađao → <strong>2 boda</strong> tebi kao suimpostoru.</p>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:var(--b3);border-radius:10px;">
+              <span style="font-family:var(--ff-serif);font-size:20px;color:var(--t3);min-width:28px;text-align:center;">+0</span>
+              <p class="rtxt">Citizens su te <strong>otkrili glasanjem</strong> i nitko nije pogodio → <strong>0 bodova</strong>.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TABLICA SVIH MOGUĆNOSTI -->
+      <div class="g16">
+        <span class="eyebrow g8">Sve moguće nagrade u jednoj rundi</span>
+        <div class="card g8" style="padding:14px;">
+          <div style="display:grid;grid-template-columns:1fr auto;gap:6px 12px;align-items:center;">
+            <p style="font-size:11px;color:var(--t3);letter-spacing:.3px;">Citizen — glasao za impostora, citizens pobijedili</p>
+            <span style="font-family:var(--ff-serif);font-size:18px;color:var(--cg-dim);text-align:right;">+2</span>
+            <div style="grid-column:1/-1;height:1px;background:var(--l1);"></div>
+            <p style="font-size:11px;color:var(--t3);letter-spacing:.3px;">Citizen — glasao krivo, citizens pobijedili</p>
+            <span style="font-family:var(--ff-serif);font-size:18px;color:var(--t4);text-align:right;">+0</span>
+            <div style="grid-column:1/-1;height:1px;background:var(--l1);"></div>
+            <p style="font-size:11px;color:var(--t3);letter-spacing:.3px;">Citizen — impostor preživio glasanje</p>
+            <span style="font-family:var(--ff-serif);font-size:18px;color:var(--t4);text-align:right;">+0</span>
+            <div style="grid-column:1/-1;height:1px;background:var(--l1);"></div>
+            <p style="font-size:11px;color:var(--t3);letter-spacing:.3px;">Impostor — preživio glasanje</p>
+            <span style="font-family:var(--ff-serif);font-size:18px;color:var(--cr-dim);text-align:right;">+3</span>
+            <div style="grid-column:1/-1;height:1px;background:var(--l1);"></div>
+            <p style="font-size:11px;color:var(--t3);letter-spacing:.3px;">Impostor — sam pogodio citizen riječ</p>
+            <span style="font-family:var(--ff-serif);font-size:18px;color:var(--ca-dim);text-align:right;">+4</span>
+            <div style="grid-column:1/-1;height:1px;background:var(--l1);"></div>
+            <p style="font-size:11px;color:var(--t3);letter-spacing:.3px;">Impostor — suimpostor pogodio citizen riječ</p>
+            <span style="font-family:var(--ff-serif);font-size:18px;color:var(--ca-dim);text-align:right;">+2</span>
+            <div style="grid-column:1/-1;height:1px;background:var(--l1);"></div>
+            <p style="font-size:11px;color:var(--t3);letter-spacing:.3px;">Impostor — otkriven glasanjem</p>
+            <span style="font-family:var(--ff-serif);font-size:18px;color:var(--t4);text-align:right;">+0</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- FAIR PLAY MOD -->
+      <div class="g16">
+        <span class="eyebrow g8">Fair Play mod (Custom riječi)</span>
+        <div class="card ca g14">
+          <p class="rtxt">Kad host postavi <strong>vlastite tajne riječi</strong>, automatski se uključuje <strong>Fair Play mod</strong>. Host postaje <strong>voditelj</strong> — zna obje tajne riječi, ali <strong>ne igra, ne glasuje i ne dobiva bodove</strong>. Njegova uloga je voditi raspravu i paziti da nitko ne izgovori tajnu riječ direktno. Igračima se u lobbyju prikazuje obavijest da host neće igrati u toj rundi.</p>
+        </div>
+      </div>
+
+      <!-- SAVJETI -->
+      <div class="g20">
+        <span class="eyebrow g8">Savjeti</span>
+        <div class="rstep"><span class="rnum" style="color:var(--ca-dim);">💡</span><p class="rtxt"><strong>Kao citizen:</strong> daj dovoljno opisa da svi znaju da znaš pravu riječ — ali ne toliko da impostor može lako blefirati koristeći tvoje opise.</p></div>
+        <div class="rstep"><span class="rnum" style="color:var(--cr-dim);">🎭</span><p class="rtxt"><strong>Kao impostor:</strong> slušaj pažljivo prve opise — oni ti daju naznake što je prava citizen riječ. Pokušaj opisivati dovoljno generički da prođeš nezapaženo.</p></div>
+        <div class="rstep"><span class="rnum" style="color:var(--cg-dim);">🗳</span><p class="rtxt"><strong>Glasanje:</strong> ne glasuj nasumično — igrač koji je davao nejasne, generičke opise ili koji nije bio siguran kad se raspitivalo vjerojatno je impostor.</p></div>
+      </div>
+
       <button class="btn bp" id="btn-rbk2">Razumijem — Igrajmo!</button>
     </div>
 
@@ -888,13 +991,26 @@ select{appearance:none;cursor:pointer;}
       </div>
     </div>
     <div class="obs" style="display:none;text-align:center;">
-      <div style="font-size:72px;margin-bottom:24px;">🏆</div>
-      <div style="font-size:11px;letter-spacing:3px;color:var(--t3);margin-bottom:14px;font-weight:400;text-transform:uppercase;">Bodovanje</div>
-      <div style="font-family:var(--ff-serif);font-size:42px;letter-spacing:.5px;line-height:1;margin-bottom:22px;font-weight:900;">Budi <span style="color:var(--cr);">pametan</span></div>
-      <div style="display:flex;flex-direction:column;gap:8px;max-width:320px;margin:0 auto 18px;">
-        <div style="background:var(--cg-bg);border:1px solid var(--cg-bd);border-radius:999px;padding:11px 20px;font-size:12px;color:var(--cg-dim);">Citizen uhvati impostora → <strong>+2 boda</strong></div>
-        <div style="background:var(--cr-bg);border:1px solid var(--cr-bd);border-radius:999px;padding:11px 20px;font-size:12px;color:var(--cr-dim);">Impostor preživi glasanje → <strong>+3 boda</strong></div>
-        <div style="background:var(--ca-bg);border:1px solid var(--ca-bd);border-radius:999px;padding:11px 20px;font-size:12px;color:var(--ca-dim);">Impostor pogodi pravu riječ → <strong>+4 boda</strong></div>
+      <div style="font-size:64px;margin-bottom:16px;">🏆</div>
+      <div style="font-size:11px;letter-spacing:3px;color:var(--t3);margin-bottom:10px;font-weight:400;text-transform:uppercase;">Bodovanje po rundi</div>
+      <div style="font-family:var(--ff-serif);font-size:36px;letter-spacing:.5px;line-height:1;margin-bottom:18px;font-weight:900;">Možeš dobiti<br><span style="color:var(--ca);">0, 2, 3 ili 4</span></div>
+      <div style="display:flex;flex-direction:column;gap:6px;max-width:340px;margin:0 auto 14px;text-align:left;">
+        <div style="background:var(--cg-bg);border:1px solid var(--cg-bd);border-radius:12px;padding:10px 14px;font-size:11px;color:var(--cg-dim);display:flex;align-items:center;gap:10px;">
+          <span style="font-family:var(--ff-serif);font-size:22px;min-width:32px;text-align:center;">+2</span>
+          <span>Citizen — glasao za impostora ✓</span>
+        </div>
+        <div style="background:var(--cr-bg);border:1px solid var(--cr-bd);border-radius:12px;padding:10px 14px;font-size:11px;color:var(--cr-dim);display:flex;align-items:center;gap:10px;">
+          <span style="font-family:var(--ff-serif);font-size:22px;min-width:32px;text-align:center;">+3</span>
+          <span>Impostor — preživio glasanje</span>
+        </div>
+        <div style="background:var(--ca-bg);border:1px solid var(--ca-bd);border-radius:12px;padding:10px 14px;font-size:11px;color:var(--ca-dim);display:flex;align-items:center;gap:10px;">
+          <span style="font-family:var(--ff-serif);font-size:22px;min-width:32px;text-align:center;">+4</span>
+          <span>Impostor — pogodio citizen riječ</span>
+        </div>
+        <div style="background:var(--b3);border:1px solid var(--l2);border-radius:12px;padding:10px 14px;font-size:11px;color:var(--t3);display:flex;align-items:center;gap:10px;">
+          <span style="font-family:var(--ff-serif);font-size:22px;min-width:32px;text-align:center;color:var(--t4);">+0</span>
+          <span>Glasao krivo / otkriven / impostor pobijedio</span>
+        </div>
       </div>
     </div>
   </div>
@@ -1260,9 +1376,25 @@ function renderLobby(){
   $('rcount').textContent=`${rc}/${G.players.length} spreman`;
   const isHost=me&&me.isHost;
   $('hcfg').style.display=isHost?'block':'none';
+  const hostFPNotice=$('host-fairplay-notice');
+  if(hostFPNotice) hostFPNotice.style.display=(isHost&&G.fairPlay)?'block':'none';
+  const readyBtn=$('btn-ready');
+  if(readyBtn) readyBtn.style.display=isHost?'none':'block';
   if($('custom-pair-card'))$('custom-pair-card').style.display=isHost?'block':'none';
   $('btn-manage').style.display=isHost&&G.players.length>1?'flex':'none';
   $('l-wait').style.display=isHost?'none':'block';
+  if(!isHost){
+    const waitText=$('l-wait-text');
+    const customNotice=$('l-custom-notice');
+    if(waitText){
+      if(G.hasCustomPair){
+        waitText.textContent='Host je postavio custom riječi — čekamo pokretanje...';
+      } else {
+        waitText.textContent='Čekanje na hosta...';
+      }
+    }
+    if(customNotice) customNotice.style.display=G.fairPlay?'block':'none';
+  }
   $('btn-start').style.display='none';
   if(isHost){
     if(!customActive)$('cfg-cat').value=G.category;
@@ -1541,7 +1673,12 @@ function makeICE(){
     {urls:'stun:stun1.l.google.com:19302'},
     {urls:'stun:stun2.l.google.com:19302'},
     {urls:'stun:stun.cloudflare.com:3478'},
-    {urls:'stun:stun4.l.google.com:19302'}
+    {urls:'stun:stun4.l.google.com:19302'},
+    // Besplatni TURN relay serveri (potrebni za korisnike na različitim mrežama/mobilnim)
+    {urls:'turn:openrelay.metered.ca:80',username:'openrelayproject',credential:'openrelayproject'},
+    {urls:'turn:openrelay.metered.ca:443',username:'openrelayproject',credential:'openrelayproject'},
+    {urls:'turn:openrelay.metered.ca:443?transport=tcp',username:'openrelayproject',credential:'openrelayproject'},
+    {urls:'turn:relay.metered.ca:80',username:'e1b3f1b3f1b3f1b3f1b3f1b3',credential:'openrelay2024'}
   ]};
 }
 
