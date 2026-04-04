@@ -1103,7 +1103,7 @@ async function handleOffer(from,offer){
   pc.onconnectionstatechange=()=>{if(['failed','disconnected','closed'].includes(pc.connectionState)){removeAudio(from);if(micWanted&&pc.connectionState!=='closed'){try{pc.close();}catch(e){}delete pcs[from];scheduleMicEnsure(700);}};};
   try{await pc.setRemoteDescription(offer);const ans=await pc.createAnswer();await pc.setLocalDescription(ans);socket.emit('rtc-answer',{to:from,answer:ans});}catch(e){}
 }
-socket.on('rtc-offer',({from,offer})=>{if(!hasLiveMic()){pendingOffers.push({from,offer});if(micWanted)initMic().catch(()={});}else handleOffer(from,offer);});
+socket.on('rtc-offer',({from,offer})=>{if(!hasLiveMic()){pendingOffers.push({from,offer});if(micWanted)initMic().catch(()=>{});}else handleOffer(from,offer);});
 socket.on('rtc-answer',({from,answer})=>pcs[from]?.setRemoteDescription(answer).catch(()=>{}));
 socket.on('rtc-ice',({from,candidate})=>pcs[from]?.addIceCandidate(candidate).catch(()=>{}));
 
