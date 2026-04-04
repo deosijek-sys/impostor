@@ -240,6 +240,12 @@ io.on('connection', (socket) => {
   socket.on('rtc-offer',   ({ to, offer })     => io.to(to).emit('rtc-offer',   { from: socket.id, offer }));
   socket.on('rtc-answer',  ({ to, answer })    => io.to(to).emit('rtc-answer',  { from: socket.id, answer }));
   socket.on('rtc-ice',     ({ to, candidate }) => io.to(to).emit('rtc-ice',     { from: socket.id, candidate }));
+  // Signal to all room members that this peer has mic ready — triggers peer re-linking
+  socket.on('peer-mic-ready', ({ code }) => {
+    const room = rooms.get((code||'').toUpperCase());
+    if (!room) return;
+    socket.to(room.code).emit('peer-mic-ready', { from: socket.id });
+  });
 
   socket.on('createRoom', ({ playerName }) => {
     const code = generateCode();
