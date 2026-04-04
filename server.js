@@ -499,7 +499,8 @@ io.on('connection', (socket) => {
         tally: {}
       };
       calcScores(room);
-      io.to(code).emit('gameEnded', buildResults(room));
+      const gr1 = buildResults(room);
+      room.players.forEach(p => io.to(p.id).emit('gameEnded', { ...gr1, myWord: p.word || null, myRole: p.role || null }));
     } else {
       socket.emit('impostorGuessFailed', { guess });
     }
@@ -533,7 +534,8 @@ io.on('connection', (socket) => {
       tally, reason: 'vote', impostorGuessedCorrectly: false
     };
     calcScores(room);
-    io.to(code).emit('gameEnded', buildResults(room));
+    const gr2 = buildResults(room);
+    room.players.forEach(p => io.to(p.id).emit('gameEnded', { ...gr2, myWord: p.word || null, myRole: p.role || null }));
   }
 
   function calcScores(room) {
@@ -575,7 +577,22 @@ io.on('connection', (socket) => {
   }
 
   function buildPlayerPayload(room, player) {
-    return { ...safeRoom(room), playerToken: player.playerToken, myWord: player.word || null, myRole: player.role || null };
+    const base = { ...safeRoom(room), playerToken: player.playerToken, myWord: player.word || null, myRole: player.role || null };
+    if (room.state === 'RESULTS') {
+      base.results = room.results;
+      base.words = room.words;
+      base.votes = room.votes;
+      base.scores = room.scores;
+      base.scoreDeltas = room.scoreDeltas || {};
+      base.players = room.players.map(p => ({
+        id: p.id, name: p.name, playerToken: p.playerToken,
+        isHost: p.isHost, role: p.role, word: p.word,
+        hasRevealed: p.hasRevealed, voted: p.voted,
+        isConnected: p.isConnected !== false,
+        score: room.scores?.[scoreKey(p)] || 0
+      }));
+    }
+    return base;
   }
 
   function buildResults(room) {
