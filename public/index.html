@@ -559,7 +559,7 @@ select{appearance:none;cursor:pointer;}
     <div class="bar-r">
 <button id="pwa-install-btn" class="ibtn" style="display:none;font-size:11px;letter-spacing:1px;width:auto;padding:0 10px;gap:4px;" title="Instaliraj app" onclick="installPWA()">⬇ App</button>
       <span class="rndbdg" id="rnd"></span>
-      <button class="ibtn" id="btn-stats-open" title="Statistike" onclick="openStatsModal()" style="font-size:13px;">📊</button>
+      <button class="ibtn" id="btn-stats-open" title="Statistike" style="font-size:13px;">📊</button>
       <button class="ibtn" id="btn-rules-icon" style="display:none;" title="Pravila">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
       </button>
@@ -1172,8 +1172,8 @@ select{appearance:none;cursor:pointer;}
     <div class="stats-header">
       <span class="stats-title">Povijest igara</span>
       <div style="display:flex;gap:8px;align-items:center;">
-        <button class="btn br bsm" style="width:auto;padding:8px 14px;" onclick="clearGameHistory()">Obriši sve</button>
-        <button class="ibtn" onclick="document.getElementById('stats-modal').classList.remove('on')" style="font-size:16px;">✕</button>
+        <button class="btn br bsm" id="btn-stats-clear" style="width:auto;padding:8px 14px;">Obriši sve</button>
+        <button class="ibtn" id="btn-stats-close" style="font-size:16px;">✕</button>
       </div>
     </div>
     <div class="stats-body">
@@ -1326,6 +1326,10 @@ function toggleSelfMute(){selfMuted=!selfMuted;saveAudioPrefs();applySelfMute();
 // ── RULES ─────────────────────────────────────────────────────────────────────
 $('btn-rules-join').onclick=()=>{rulesFrom='s-join';show('s-rules');};
 $('btn-rules-icon').onclick=()=>{rulesFrom=document.querySelector('.sc.on')?.id||'s-lobby';show('s-rules');};
+// Stats modal listeners
+$('btn-stats-open').onclick=()=>openStatsModal();
+$('btn-stats-close').onclick=()=>$('stats-modal').classList.remove('on');
+$('btn-stats-clear').onclick=()=>{clearGameHistory();toast('Povijest obrisana.');};
 $('btn-rbk').onclick=$('btn-rbk2').onclick=()=>show(rulesFrom);
 
 // ── LEAVE ─────────────────────────────────────────────────────────────────────
