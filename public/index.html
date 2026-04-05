@@ -475,14 +475,16 @@ select{appearance:none;cursor:pointer;}
 /* ─── ONBOARDING ─────────────────────────────────────────────────────────── */
 #ob{
   background:linear-gradient(180deg,#070712 0%,#04040A 100%);
-  /* Mobile: true full screen */
   position:fixed;inset:0;
   display:none;flex-direction:column;align-items:center;justify-content:space-between;
-  padding:env(safe-area-inset-top,52px) 24px calc(env(safe-area-inset-bottom,0px) + 44px);
-  /* Ensure it covers everything */
-  width:100%;height:100%;
-  overflow:hidden;
+  /* Safe padding for all devices — notch, home bar etc */
+  padding:max(52px,env(safe-area-inset-top,52px)) 24px max(44px,calc(env(safe-area-inset-bottom,0px) + 44px));
+  width:100%;height:100%;box-sizing:border-box;
+  overflow:hidden;z-index:9999;
 }
+/* All obs slides: constrained width, no overflow */
+.obs{width:100%;max-width:360px;box-sizing:border-box;overflow:hidden;}
+.obs *{max-width:100%;box-sizing:border-box;}
 #ob[style*="display: none"],#ob[style*="display:none"]{pointer-events:none !important;}
 
 /* ─── PC / WIDE SCREEN ───────────────────────────────────────────────────── */
@@ -516,7 +518,7 @@ select{appearance:none;cursor:pointer;}
     position:absolute;
     max-width:none;
   }
-  #ob{position:absolute;border-radius:28px;width:100%;height:100%;padding:52px 24px 44px;}
+  #ob{position:absolute;border-radius:28px;width:100%;height:100%;padding:52px 24px 44px;box-sizing:border-box;}
   /* on-screen toast re-anchor inside app */
   .toast{top:64px;width:calc(100% - 40px);left:20px;transform:none;max-width:none;}
 }
@@ -1046,19 +1048,19 @@ select{appearance:none;cursor:pointer;}
 <!-- ONBOARDING -->
   <div class="reveal-overlay" id="confetti-overlay"></div>
 
-  <div id="ob" style="display:none;position:fixed;inset:0;z-index:9999;flex-direction:column;align-items:center;justify-content:space-between;padding:52px 24px 44px;">
-  <div style="flex:1;width:100%;max-width:400px;display:flex;align-items:center;justify-content:center;">
+  <div id="ob" style="display:none;">
+  <div style="flex:1;width:100%;max-width:100%;display:flex;align-items:center;justify-content:center;overflow:hidden;">
     <div class="obs" style="text-align:center;">
       <div style="font-size:80px;margin-bottom:28px;">🎭</div>
       <div style="font-size:11px;letter-spacing:3px;color:var(--t3);margin-bottom:14px;font-weight:400;font-family:var(--ff-mono);text-transform:uppercase;">Dobrodošli u</div>
-      <div style="font-family:var(--ff-serif);font-size:58px;letter-spacing:2px;color:var(--ca);line-height:1;margin-bottom:22px;font-weight:900;font-style:italic;">Impostor</div>
+      <div style="font-family:var(--ff-serif);font-size:clamp(38px,12vw,58px);letter-spacing:2px;color:var(--ca);line-height:1;margin-bottom:22px;font-weight:900;font-style:italic;">Impostor</div>
       <p style="color:var(--t2);font-size:14px;line-height:1.8;max-width:300px;margin:0 auto;font-family:var(--ff-mono);">Party igra za <strong style="color:var(--t1);">3–20 igrača</strong> u kojoj jedan igrač skriva svoju tajnu i pokušava proći <strong style="color:var(--t1);">neopaženo</strong>.</p>
     </div>
     <div class="obs" style="display:none;text-align:center;">
       <div style="font-size:72px;margin-bottom:24px;">🎯</div>
       <div style="font-size:11px;letter-spacing:3px;color:var(--t3);margin-bottom:14px;font-weight:400;text-transform:uppercase;">Tajna misija</div>
       <div style="font-family:var(--ff-serif);font-size:42px;letter-spacing:.5px;color:var(--ca);line-height:1;margin-bottom:24px;font-weight:900;">Dvije različite<br>riječi</div>
-      <div style="display:flex;gap:14px;justify-content:center;margin-bottom:20px;">
+      <div style="display:flex;gap:10px;justify-content:center;margin-bottom:20px;width:100%;">
         <div style="background:var(--cg-bg);border:1px solid var(--cg-bd);border-radius:16px;padding:18px 24px;">
           <div style="font-size:11px;font-weight:400;letter-spacing:2px;color:var(--cg-dim);margin-bottom:10px;text-transform:uppercase;">Citizens</div>
           <div style="font-family:var(--ff-serif);font-size:30px;color:var(--cg-dim);font-weight:900;">Pizza</div>
@@ -1123,7 +1125,7 @@ select{appearance:none;cursor:pointer;}
     <div class="obd" style="width:6px;height:6px;border-radius:50%;background:var(--b5);transition:all .25s;cursor:pointer;" onclick="obGo(2)"></div>
     <div class="obd" style="width:6px;height:6px;border-radius:50%;background:var(--b5);transition:all .25s;cursor:pointer;" onclick="obGo(3)"></div>
   </div>
-  <div style="display:flex;gap:10px;width:100%;max-width:400px;">
+  <div style="display:flex;gap:10px;width:100%;max-width:100%;">
     <button onclick="obSkip()" style="padding:15px 18px;border-radius:14px;border:1px solid var(--l2);background:transparent;font-family:var(--ff-mono);font-size:11px;letter-spacing:1.5px;font-weight:400;color:var(--t3);cursor:pointer;text-transform:uppercase;">Preskoči</button>
     <button id="ob-next" onclick="obNext()" style="flex:1;padding:15px;border-radius:14px;border:none;font-family:var(--ff-mono);font-size:11px;letter-spacing:2.5px;font-weight:500;background:var(--ca);color:#04040A;cursor:pointer;text-transform:uppercase;">Dalje</button>
   </div>
