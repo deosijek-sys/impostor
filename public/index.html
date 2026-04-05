@@ -846,6 +846,61 @@ select{appearance:none;cursor:pointer;}
       <button class="btn bo" id="btn-quit">Izlaz</button>
     </div>
 
+
+    <!-- SPECTATOR (FAIR PLAY HOST) -->
+    <div class="sc" id="s-spectator">
+      <div style="margin-bottom:20px;">
+        <span class="eyebrow a g8">Fair Play · Voditelj</span>
+        <h2 class="title g8">Znaš obje<br><span style="color:var(--ca-dim);">riječi</span></h2>
+        <p class="subtitle">Vodi igru — ne odaj se 🤫</p>
+      </div>
+
+      <div class="card g16" style="border-color:rgba(196,152,48,.3);background:rgba(196,152,48,.05);text-align:center;margin-bottom:14px;">
+        <div>
+          <span class="eyebrow g g8">Građani vide</span>
+          <div id="spec-citizen" style="font-family:var(--ff-serif);font-size:42px;color:var(--cg-dim);font-weight:300;letter-spacing:-.5px;margin-top:4px;">—</div>
+        </div>
+        <div style="width:100%;height:1px;background:var(--l1);"></div>
+        <div>
+          <span class="eyebrow r g8">Impostor vidi</span>
+          <div id="spec-impostor" style="font-family:var(--ff-serif);font-size:42px;color:var(--cr-dim);font-weight:300;letter-spacing:-.5px;margin-top:4px;">—</div>
+        </div>
+      </div>
+
+      <div class="card g16" id="spec-status-card" style="text-align:center;padding:14px 16px;margin-bottom:14px;">
+        <span class="eyebrow g8" id="spec-phase">Igrači otkrivaju uloge...</span>
+        <div id="spec-reveal-progress" style="margin-top:8px;display:none;">
+          <div class="revprog-bar"><div class="revprog-fill" id="spec-rev-fill" style="width:0%"></div></div>
+        </div>
+      </div>
+
+      <!-- VOICE PANEL — host sluša igrače -->
+      <div class="vpanel g12" id="spec-voice-panel">
+        <div class="vhead">
+          <span class="vtitle">Glasovi igrača</span>
+          <div class="vactions">
+            <button class="vbtn" id="btn-spec-audio" onclick="unlockAudio()">Audio</button>
+          </div>
+        </div>
+        <div class="vlist-voice" id="spec-voice-list"></div>
+      </div>
+
+      <div class="hstrip" id="spec-hstrip" style="display:none;">
+        <div class="hstrip-lbl">Host kontrole</div>
+        <div class="hstrip-btns">
+          <button class="hbtn g" id="spec-nxt-spk">Sljedeći →</button>
+          <button class="hbtn a" id="spec-ext-disc">+30 sek</button>
+          <button class="hbtn r" id="spec-start-vote">Glasanje</button>
+          <button class="hbtn r" id="spec-kick-btn" style="display:none;">Izbaci igrača</button>
+        </div>
+      </div>
+
+      <div style="margin-top:16px;display:flex;flex-direction:column;gap:10px;">
+        <button class="btn bp mb" id="spec-next-round" style="display:none;">▶ Sljedeća runda</button>
+        <button class="btn bo" id="spec-leave" style="margin-top:0;">Napusti sobu</button>
+      </div>
+    </div>
+
     <!-- RULES -->
     <div class="sc" id="s-rules">
       <button class="btn bo bsm mb" id="btn-rbk" style="width:auto;padding:9px 16px;font-size:10px;">← Natrag</button>
@@ -1057,48 +1112,6 @@ select{appearance:none;cursor:pointer;}
   </div>
 </div>
 
-<!-- SPECTATOR (FAIR PLAY HOST) -->
-<div class="sc" id="s-spectator">
-  <div style="margin-bottom:20px;">
-    <span class="eyebrow a g8">Fair Play · Voditelj</span>
-    <h2 class="title g8">Znaš obje<br><span style="color:var(--ca-dim);">riječi</span></h2>
-    <p class="subtitle">Vodi igru — ne odaj se 🤫</p>
-  </div>
-
-  <div class="card g16" style="border-color:rgba(196,152,48,.3);background:rgba(196,152,48,.05);text-align:center;">
-    <div>
-      <span class="eyebrow g g8">Građani vide</span>
-      <div id="spec-citizen" style="font-family:var(--ff-serif);font-size:42px;color:var(--cg-dim);font-weight:300;letter-spacing:-.5px;margin-top:4px;">—</div>
-    </div>
-    <div style="width:100%;height:1px;background:var(--l1);"></div>
-    <div>
-      <span class="eyebrow r g8">Impostor vidi</span>
-      <div id="spec-impostor" style="font-family:var(--ff-serif);font-size:42px;color:var(--cr-dim);font-weight:300;letter-spacing:-.5px;margin-top:4px;">—</div>
-    </div>
-  </div>
-
-  <div class="card g16" id="spec-status-card" style="text-align:center;padding:14px 16px;">
-    <span class="eyebrow g8" id="spec-phase">Igrači otkrivaju uloge...</span>
-    <div id="spec-reveal-progress" style="margin-top:8px;display:none;">
-      <div class="revprog-bar"><div class="revprog-fill" id="spec-rev-fill" style="width:0%"></div></div>
-    </div>
-  </div>
-
-  <div class="hstrip" id="spec-hstrip" style="display:none;">
-    <div class="hstrip-lbl">Host kontrole</div>
-    <div class="hstrip-btns">
-      <button class="hbtn g" id="spec-nxt-spk">Sljedeći →</button>
-      <button class="hbtn a" id="spec-ext-disc">+30 sek</button>
-      <button class="hbtn r" id="spec-start-vote">Glasanje</button>
-      <button class="hbtn r" id="spec-kick-btn" style="display:none;">Izbaci igrača</button>
-    </div>
-  </div>
-
-  <div style="margin-top:16px;display:flex;flex-direction:column;gap:10px;">
-    <button class="btn bp mb" id="spec-next-round" style="display:none;">▶ Sljedeća runda</button>
-    <button class="btn bo" id="spec-leave" style="margin-top:0;">Napusti sobu</button>
-  </div>
-</div>
 
 <!-- TOAST -->
 <div class="toast" id="toast"></div>
@@ -1282,7 +1295,7 @@ function renderVoiceList(targetId){
   host.querySelectorAll('[data-peer-toggle]').forEach(btn=>btn.onclick=()=>toggleRemoteMute(btn.dataset.peerToggle));
   host.querySelectorAll('[data-self-toggle]').forEach(btn=>btn.onclick=()=>toggleSelfMute());
 }
-function renderAllVoiceLists(){renderVoiceList('voice-list');renderVoiceList('voice-list-res');}
+function renderAllVoiceLists(){renderVoiceList('voice-list');renderVoiceList('voice-list-res');renderVoiceList('spec-voice-list');}
 function applyRemoteMute(pid){const au=document.getElementById('au-'+pid);if(au)au.muted=!!remoteMuted[pid];renderAllVoiceLists();}
 function toggleRemoteMute(pid){remoteMuted[pid]=!remoteMuted[pid];saveAudioPrefs();applyRemoteMute(pid);}
 function toggleSelfMute(){selfMuted=!selfMuted;saveAudioPrefs();applySelfMute();renderAllVoiceLists();}
@@ -1861,6 +1874,11 @@ function ensurePeerLinks(){
 }
 
 socket.on('rtc-offer',({from,offer})=>{
+  // Spectator receives offers from players (listen-only)
+  if(myRole==='SPECTATOR'){
+    handleSpectatorOffer(from,offer);
+    return;
+  }
   if(!hasLiveMic()){
     pendingOffers=pendingOffers.filter(x=>x.from!==from);
     pendingOffers.push({from,offer});
@@ -1893,9 +1911,14 @@ socket.on('rtc-ice',async({from,candidate})=>{
 });
 
 socket.on('peer-mic-ready',({from})=>{
-  if(!hasLiveMic())return;
   const fromPlayer=G.players?.find(p=>p.id===from);
   if(!fromPlayer||fromPlayer.isSpectator)return;
+  // Spectator: create listen-only connection
+  if(myRole==='SPECTATOR'){
+    if(!spectatorPcs[from]) makeSpectatorPeer(from);
+    return;
+  }
+  if(!hasLiveMic())return;
   if(!pcs[from]){
     makePeer(from);
   } else {
@@ -2079,6 +2102,7 @@ socket.on('connect_error',()=>{
 });
 
 socket.on('roomUpdated',room=>{
+  if(room.state==='LOBBY'){teardownSpectatorPeers();}
   G=room;me=meNow();
   if(G.state==='LOBBY'&&me?.isHost){
     if(!G.hasCustomPair)$('cfg-cat').value=G.category;
@@ -2119,7 +2143,8 @@ socket.on('startDiscussion',room=>{
   discTotal=room.discussionTime||120;voteTotal=room.votingTime||60;
   if(myRole==='SPECTATOR'){
     updateSpectatorDiscScreen(room);
-    wantMic(false); // spectator never gets mic
+    // Spectator listens but doesn't send — receive-only peer connections
+    startSpectatorListening();
   } else {
     show('s-disc');setupDisc(room);
     if(room.firstSpeakerName)spinner(room.firstSpeakerName,null);
@@ -2184,6 +2209,83 @@ socket.on('error',msg=>{
   if(bj){bj.disabled=false;bj.textContent='Pridruži se';}
 });
 
+
+
+// ══════════════════════════════════════════════════════════
+// SPECTATOR LISTEN-ONLY AUDIO
+// ══════════════════════════════════════════════════════════
+let spectatorPcs = {}; // separate peer map for spectator — receive only
+
+function startSpectatorListening() {
+  if(myRole !== 'SPECTATOR') return;
+  // Signal to all players that we want to receive their audio
+  if(G?.code) socket.emit('peer-mic-ready', {code: G.code});
+  // Build receive-only peer connections to all active players
+  (G.players||[]).forEach(p => {
+    if(p.id === socket.id || p.isSpectator) return;
+    makeSpectatorPeer(p.id);
+  });
+}
+
+function makeSpectatorPeer(pid) {
+  if(spectatorPcs[pid]) return spectatorPcs[pid];
+  // Receive-only RTCPeerConnection (no local tracks added)
+  const pc = new RTCPeerConnection(makeICE());
+  spectatorPcs[pid] = pc;
+
+  pc.ontrack = e => {
+    const au = makeAudio(pid);
+    au.srcObject = e.streams[0];
+    au.play?.().catch(()=>{});
+    monitorRemoteStream(pid, e.streams[0]);
+    renderAllVoiceLists();
+  };
+
+  pc.onicecandidate = e => {
+    if(e.candidate) socket.emit('rtc-ice', {to: pid, candidate: e.candidate});
+  };
+
+  pc.onconnectionstatechange = () => {
+    const s = pc.connectionState;
+    if(s === 'failed' || s === 'closed') {
+      closeSpectatorPeer(pid);
+      setTimeout(() => { if(myRole==='SPECTATOR' && !spectatorPcs[pid]) makeSpectatorPeer(pid); }, 2000);
+    }
+    if(s === 'connected') renderAllVoiceLists();
+  };
+
+  return pc;
+}
+
+function closeSpectatorPeer(pid) {
+  const pc = spectatorPcs[pid];
+  if(!pc) return;
+  try { pc.close(); } catch(e) {}
+  delete spectatorPcs[pid];
+  removeAudio(pid);
+}
+
+function teardownSpectatorPeers() {
+  Object.keys(spectatorPcs).forEach(pid => closeSpectatorPeer(pid));
+  spectatorPcs = {};
+}
+
+// Spectator handles incoming offers from players
+// (players initiate because they have local tracks / are impolite)
+async function handleSpectatorOffer(from, offer) {
+  let pc = spectatorPcs[from];
+  if(!pc) pc = makeSpectatorPeer(from);
+  if(!pc) return;
+  try {
+    await pc.setRemoteDescription(offer);
+    if(offer.type === 'offer') {
+      await pc.setLocalDescription();
+      socket.emit('rtc-answer', {to: from, answer: pc.localDescription});
+    }
+  } catch(e) {
+    closeSpectatorPeer(from);
+  }
+}
 
 // ══════════════════════════════════════════════════════════
 // PWA INSTALL
