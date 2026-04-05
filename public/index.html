@@ -554,6 +554,7 @@ select{appearance:none;cursor:pointer;}
   padding:60px 28px 16px;
   box-sizing:border-box;
   overflow:hidden;
+  width:100%;
 }
 .obs{
   width:100%;
@@ -604,7 +605,7 @@ select{appearance:none;cursor:pointer;}
 .obd{width:6px;height:6px;border-radius:50%;background:var(--b5);cursor:pointer;transition:all .25s;flex-shrink:0;}
 .obd-active{width:22px;border-radius:4px;background:var(--ca);}
 /* Buttons */
-.ob-btns{display:flex;gap:10px;padding:0 24px 40px;box-sizing:border-box;}
+.ob-btns{display:flex;gap:10px;padding:0 24px 40px;box-sizing:border-box;width:100%;max-width:100%;}
 .ob-skip{padding:14px 16px;border-radius:13px;border:1px solid var(--l2);background:transparent;font-family:var(--ff-mono);font-size:10px;letter-spacing:1.5px;font-weight:400;color:var(--t3);cursor:pointer;text-transform:uppercase;flex-shrink:0;}
 .ob-next{flex:1;padding:14px;border-radius:13px;border:none;font-family:var(--ff-mono);font-size:10px;letter-spacing:2.5px;font-weight:500;background:var(--ca-dim);color:#04040A;cursor:pointer;text-transform:uppercase;}
 /* PC — inside app frame */
@@ -878,7 +879,7 @@ select{appearance:none;cursor:pointer;}
         <div class="cfm-name" id="vtname">—</div>
         <div class="cfm-actions">
           <button class="btn bo bsm" id="btn-cfm-cancel" style="color:var(--t3);">Odustani</button>
-          <button class="btn bp bsm" id="btn-cfm">Glasam za ovog</button>
+          <button class="btn bp bsm" id="btn-cfm">Potvrdi glas</button>
         </div>
       </div>
 
@@ -915,12 +916,13 @@ select{appearance:none;cursor:pointer;}
         </div>
         <div class="vlist-voice" id="voice-list-res"></div>
       </div>
-      <span class="eyebrow g10">Bodovnica</span>
+      <span class="eyebrow g10">Poredak</span>
       <div id="scoreboard" class="g14"></div>
       <span class="eyebrow g10">Debrief</span>
       <div id="rlist" class="g20"></div>
       <button class="btn bp mb" id="btn-again" style="display:none;">Nova runda</button>
       <button class="btn ba mb" id="btn-rst" style="display:none;">Resetiraj bodove</button>
+      <div id="wait-host-msg" style="display:none;text-align:center;padding:12px 0;font-size:11px;color:var(--t3);letter-spacing:1px;font-family:var(--ff-mono);">Čekaj da host pokrene novu rundu...</div>
       <button class="btn bo" id="btn-quit">Izlaz</button>
     </div>
 
@@ -2114,11 +2116,14 @@ function renderResults(){
     const isImp=p.role==='IMPOSTOR',vf=G.players.find(v=>v.id===G.votes?.[p.id]);
     const wordLabel=p.word?`<span style="font-family:var(--ff-serif);font-size:13px;letter-spacing:.5px;color:${isImp?'var(--cr-dim)':'var(--cg-dim)'};background:${isImp?'var(--cr-bg)':'var(--cg-bg)'};border:1px solid ${isImp?'var(--cr-bd)':'var(--cg-bd)'};border-radius:6px;padding:2px 8px;">${esc(p.word)}</span>`:'';
     const d=document.createElement('div');d.className=`rrow${isImp?' ir':''}`;
-    d.innerHTML=`<div class="av ${isImp?'r':'g'}">${ini(p.name)}</div><div class="pi"><div class="pn">${esc(p.name)} ${wordLabel}</div><div class="ps">Glasao za: ${vf?esc(vf.name):'—'}</div></div><span style="font-size:11px;font-weight:400;letter-spacing:2.5px;padding:3px 10px;border-radius:999px;background:${isImp?'var(--cr-bg)':'var(--cg-bg)'};border:1px solid ${isImp?'var(--cr-bd)':'var(--cg-bd)'};color:${isImp?'var(--cr-dim)':'var(--cg-dim)'};">${isImp?'IMPOSTOR':'CITIZEN'}</span>`;
+    d.innerHTML=`<div class="av ${isImp?'r':'g'}">${ini(p.name)}</div><div class="pi"><div class="pn">${esc(p.name)} ${wordLabel}</div><div class="ps">Glas: ${vf?esc(vf.name):'—'}</div></div><span style="font-size:11px;font-weight:400;letter-spacing:2.5px;padding:3px 10px;border-radius:999px;background:${isImp?'var(--cr-bg)':'var(--cg-bg)'};border:1px solid ${isImp?'var(--cr-bd)':'var(--cg-bd)'};color:${isImp?'var(--cr-dim)':'var(--cg-dim)'};">${isImp?'IMPOSTOR':'CITIZEN'}</span>`;
     rl.appendChild(d);
   });
-  $('btn-rst').style.display=me&&me.isHost?'flex':'none';
-  $('btn-again').style.display=me&&me.isHost?'flex':'none';
+  const isHostNow=me&&me.isHost;
+  $('btn-rst').style.display=isHostNow?'flex':'none';
+  $('btn-again').style.display=isHostNow?'flex':'none';
+  const waitMsg=$('wait-host-msg');
+  if(waitMsg)waitMsg.style.display=isHostNow?'none':'block';
   renderAllVoiceLists();updateVoiceButtons();
 }
 $('btn-again').onclick=()=>socket.emit('playAgain',{code:G.code});
@@ -2243,7 +2248,16 @@ socket.on('gameEnded',room=>{
       else if(res?.impostorGuessedCorrectly) phase.textContent='🧠 Impostor pogodio riječ!';
       else phase.textContent='💀 Impostor preživio!';
     }
-    show('s-spectator');
+    // Spectator (host) sees results too — update spectator screen with result
+    const specPhase=$('spec-phase');
+    if(specPhase){
+      if(res?.winner==='CITIZENS') specPhase.textContent='✅ Građani pobijedili!';
+      else if(res?.impostorGuessedCorrectly) specPhase.textContent='🧠 Impostor pogodio riječ!';
+      else specPhase.textContent='💀 Impostor preživio!';
+    }
+    // Also show full results screen for host
+    show('s-res');
+    renderResults();
     return;
   }
   myWord=room.myWord??myWord;myRole=room.myRole??myRole;
