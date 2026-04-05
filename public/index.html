@@ -1969,6 +1969,59 @@ function launchConfetti(isWin) {
   setTimeout(() => { overlay.innerHTML = ''; }, 4000);
 }
 
+
+// ── ONBOARDING ────────────────────────────────────────────────────────────────
+var obCur=0;
+var OB_KEY='impostor.onboarded.v3';
+function obShow(){
+  var s=document.querySelectorAll('.obs');
+  var d=document.querySelectorAll('.obd');
+  for(var i=0;i<s.length;i++) s[i].style.display=i===obCur?'flex':'none';
+  for(var i=0;i<d.length;i++){
+    if(i===obCur){d[i].style.width='22px';d[i].style.borderRadius='4px';d[i].style.background='var(--ca)';}
+    else{d[i].style.width='6px';d[i].style.borderRadius='50%';d[i].style.background='var(--b5)';}
+  }
+  var b=document.getElementById('ob-next');
+  if(b){b.textContent=obCur===3?'Igrajmo!':'Dalje';b.style.background=obCur===3?'var(--cg)':'var(--ca)';}
+}
+function obNext(){if(obCur<3){obCur++;obShow();}else{obSkip();}}
+function obGo(n){obCur=n;obShow();}
+function obSkip(){
+  var el=document.getElementById('ob');
+  if(el){el.style.display='none';el.style.pointerEvents='none';}
+  try{localStorage.setItem(OB_KEY,'1');}catch(e){}
+}
+(function(){
+  var el=document.getElementById('ob');
+  if(!el) return;
+  var seen=false;try{seen=!!localStorage.getItem(OB_KEY);}catch(e){}
+  if(seen){el.style.display='none';el.style.pointerEvents='none';return;}
+  el.style.display='flex';
+  obShow();
+  var startX=0,startY=0,dx=0,active=false,locked=false;
+  var THRESHOLD=50;
+  function dragStart(x,y){startX=x;startY=y;dx=0;active=true;locked=false;}
+  function dragMove(x,y){
+    if(!active)return;
+    var ddx=x-startX,ddy=y-startY;
+    if(!locked){if(Math.abs(ddy)>Math.abs(ddx)){active=false;return;}locked=true;}
+    dx=ddx;
+  }
+  function dragEnd(){
+    if(!active)return;active=false;
+    if(dx<-THRESHOLD&&obCur<3){obCur++;obShow();}
+    else if(dx>THRESHOLD&&obCur>0){obCur--;obShow();}
+    dx=0;
+  }
+  el.addEventListener('touchstart',function(e){dragStart(e.touches[0].clientX,e.touches[0].clientY);},{passive:true});
+  el.addEventListener('touchmove',function(e){dragMove(e.touches[0].clientX,e.touches[0].clientY);},{passive:true});
+  el.addEventListener('touchend',dragEnd);
+  el.addEventListener('mousedown',function(e){dragStart(e.clientX,e.clientY);});
+  el.addEventListener('mousemove',function(e){if(active)dragMove(e.clientX,e.clientY);});
+  el.addEventListener('mouseup',dragEnd);
+  el.addEventListener('mouseleave',dragEnd);
+})();
+
 // ══════════════════════════════════════════════════════════
 // TIE-BREAKER SOCKET HANDLER
 // ══════════════════════════════════════════════════════════
