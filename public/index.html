@@ -7,7 +7,6 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#04040A">
 <title>IMPOSTOR</title>
-<meta name="application-name" content="IMPOSTOR">
 <meta name="mobile-web-app-capable" content="yes">
 <link rel="manifest" href="/manifest.json">
 <script>
@@ -16,9 +15,8 @@ if('serviceWorker' in navigator){
     navigator.serviceWorker.register('/sw.js').catch(()=>{});
   });
 }
-// PWA install prompt
 let deferredPrompt=null;
-window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredPrompt=e;const btn=document.getElementById('pwa-install-btn');if(btn){btn.style.display='flex';}});
+window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredPrompt=e;const btn=document.getElementById('pwa-install-btn');if(btn)btn.style.display='flex';});
 window.addEventListener('appinstalled',()=>{deferredPrompt=null;const btn=document.getElementById('pwa-install-btn');if(btn)btn.style.display='none';});
 </script>
 
@@ -523,18 +521,16 @@ select{appearance:none;cursor:pointer;}
   }
 }
 
-/* ─── TIE-BREAKER BANNER ─────────────────────────────────────────────────────── */
+/* ─── DRAMATIC REVEAL ────────────────────────────────────────────────────────── */
+@keyframes revealDrop{from{opacity:0;transform:translateY(-30px) scale(.9);}to{opacity:1;transform:translateY(0) scale(1);}}
+@keyframes confettiDrop{from{transform:translateY(-100px) rotate(0deg);opacity:1;}to{transform:translateY(110vh) rotate(720deg);opacity:0;}}
+.reveal-overlay{position:fixed;inset:0;z-index:500;pointer-events:none;overflow:hidden;}
+.confetti-piece{position:absolute;animation:confettiDrop linear forwards;}
+.rbanner{animation:revealDrop .5s cubic-bezier(.16,1,.3,1);}
+/* ─── TIE-BREAKER BANNER ──────────────────────────────────────────────────────── */
 .tiebreak-banner{background:rgba(196,152,48,.08);border:1px solid rgba(196,152,48,.25);border-radius:var(--r);padding:14px 18px;margin-bottom:14px;animation:fadeUp .3s ease;}
 .tiebreak-title{font-family:var(--ff-serif);font-size:22px;color:var(--ca-dim);margin-bottom:6px;}
 .tiebreak-sub{font-size:11px;color:var(--t3);letter-spacing:.5px;}
-/* ─── DRAMATIC REVEAL ────────────────────────────────────────────────────────── */
-@keyframes revealDrop{from{opacity:0;transform:translateY(-30px) scale(.9);}to{opacity:1;transform:translateY(0) scale(1);}}
-@keyframes revealPulse{0%,100%{box-shadow:0 0 0 0 rgba(232,53,79,0);}50%{box-shadow:0 0 40px 10px rgba(232,53,79,.15);}}
-@keyframes confettiDrop{from{transform:translateY(-100px) rotate(0deg);opacity:1;}to{transform:translateY(110vh) rotate(720deg);opacity:0;}}
-.reveal-overlay{position:fixed;inset:0;z-index:500;pointer-events:none;overflow:hidden;}
-.confetti-piece{position:absolute;width:8px;height:8px;border-radius:2px;animation:confettiDrop linear forwards;}
-.rbanner{animation:revealDrop .5s cubic-bezier(.16,1,.3,1);}
-.rbanner.win .remoji{animation:revealPulse 2s ease infinite;}
 
 </style>
 </head>
@@ -543,8 +539,8 @@ select{appearance:none;cursor:pointer;}
   <div class="bar">
     <div class="logo">Impostor</div>
     <div class="bar-r">
-<button id="pwa-install-btn" class="ibtn" style="display:none;font-size:11px;letter-spacing:1px;width:auto;padding:0 10px;gap:4px;" title="Instaliraj app" onclick="installPWA()">⬇ App</button>
       <span class="rndbdg" id="rnd"></span>
+      <button id="pwa-install-btn" class="ibtn" style="display:none;font-size:11px;letter-spacing:1px;width:auto;padding:0 10px;" title="Instaliraj app">⬇ App</button>
       <button class="ibtn" id="btn-rules-icon" style="display:none;" title="Pravila">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
       </button>
@@ -760,13 +756,7 @@ select{appearance:none;cursor:pointer;}
 
     <!-- VOTING -->
     <div class="sc" id="s-vote">
-
-    <!-- TIEBREAKER HINT (shown inside voting screen) -->
-    <div id="tiebreak-notice" style="display:none;" class="tiebreak-banner">
-      <div class="tiebreak-title">⚖️ Drugi krug glasanja</div>
-      <div class="tiebreak-sub">Glasanje je izjednačeno — nitko nije izbačen. Lista igrača je sužena. Glasajte ponovo!</div>
-    </div>
-
+    <div id="tiebreak-notice" style="display:none;" class="tiebreak-banner"><div class="tiebreak-title">⚖️ Drugi krug glasanja</div><div class="tiebreak-sub">Glasanje je izjednačeno — glasajte ponovo!</div></div>
       <div style="margin-bottom:20px;">
         <div class="vote-phase-label">
           <div class="vote-phase-dot"></div>
@@ -980,7 +970,9 @@ select{appearance:none;cursor:pointer;}
 </div>
 
 <!-- ONBOARDING -->
-<div id="ob" style="display:none;position:fixed;inset:0;z-index:9999;flex-direction:column;align-items:center;justify-content:space-between;padding:52px 24px 44px;">
+  <div class="reveal-overlay" id="confetti-overlay"></div>
+
+   id="ob" style="display:none;position:fixed;inset:0;z-index:9999;flex-direction:column;align-items:center;justify-content:space-between;padding:52px 24px 44px;">
   <div style="flex:1;width:100%;max-width:400px;display:flex;align-items:center;justify-content:center;">
     <div class="obs" style="text-align:center;">
       <div style="font-size:80px;margin-bottom:28px;">🎭</div>
@@ -1151,17 +1143,6 @@ select{appearance:none;cursor:pointer;}
     <button class="btn br mb" id="btn-leave-confirm">Da, napusti sobu</button>
     <button class="btn bo" id="btn-leave-cancel">Ostani</button>
   </div>
-    </div>
-    <div class="stats-body">
-      <div class="stats-summary" id="stats-summary"></div>
-      <span class="eyebrow" style="margin-bottom:10px;display:block;">Zadnje igre</span>
-      <div id="stats-list"></div>
-    </div>
-  </div>
-
-  <!-- ═══ CONFETTI OVERLAY ════════════════════════════════════ -->
-  <div class="reveal-overlay" id="confetti-overlay"></div>
-
 </div>
 
 <script>
@@ -1302,7 +1283,6 @@ function toggleSelfMute(){selfMuted=!selfMuted;saveAudioPrefs();applySelfMute();
 // ── RULES ─────────────────────────────────────────────────────────────────────
 $('btn-rules-join').onclick=()=>{rulesFrom='s-join';show('s-rules');};
 $('btn-rules-icon').onclick=()=>{rulesFrom=document.querySelector('.sc.on')?.id||'s-lobby';show('s-rules');};
-
 $('btn-rbk').onclick=$('btn-rbk2').onclick=()=>show(rulesFrom);
 
 // ── LEAVE ─────────────────────────────────────────────────────────────────────
@@ -1678,8 +1658,8 @@ async function initMic({force=false}={}){
 
 function wantMic(enabled){
   micWanted=enabled;
-  if(enabled){initMic({force:!hasLiveMic()}).catch(()=>{});startPeerHealthCheck();}
-  else{stopMic({fullStop:true});stopPeerHealthCheck();}
+  if(enabled){initMic({force:!hasLiveMic()}).catch(()=>{});_startPeerHealth();}
+  else{stopMic({fullStop:true});clearInterval(_peerHealthInterval);}
 }
 
 // Force mic restart + full peer reconnect (used between rounds)
@@ -1709,9 +1689,28 @@ function monitorMic(){
   }catch(e){}
 }
 
-// ══════════════════════════════════════════════════════════
-// WEBRTC PEER MESH  —  full reconnect on failure/disconnect
-// ══════════════════════════════════════════════════════════
+// ══════════════════════════════════════════════════════════════
+// WebRTC — FULL MESH
+// Perfect negotiation pattern: impolite = larger socket.id sends offer
+// ICE candidates buffered until remote description is set
+// ══════════════════════════════════════════════════════════════
+// iceQueues: pid → [candidate, ...] (declared above with other globals)
+
+function makeICE(){
+  return {iceServers:[
+    {urls:'stun:stun.l.google.com:19302'},
+    {urls:'stun:stun1.l.google.com:19302'},
+    {urls:'stun:stun2.l.google.com:19302'},
+    {urls:'stun:stun.cloudflare.com:3478'},
+    {urls:'stun:stun4.l.google.com:19302'},
+    // Besplatni TURN relay serveri (potrebni za korisnike na različitim mrežama/mobilnim)
+    {urls:'turn:openrelay.metered.ca:80',username:'openrelayproject',credential:'openrelayproject'},
+    {urls:'turn:openrelay.metered.ca:443',username:'openrelayproject',credential:'openrelayproject'},
+    {urls:'turn:openrelay.metered.ca:443?transport=tcp',username:'openrelayproject',credential:'openrelayproject'},
+    {urls:'turn:relay.metered.ca:80',username:'e1b3f1b3f1b3f1b3f1b3f1b3',credential:'openrelay2024'}
+  ]};
+}
+
 function amImpolite(pid){ return socket.id > pid; }
 
 function closePeer(pid){
@@ -1729,8 +1728,9 @@ function makePeer(pid){
   const pc=new RTCPeerConnection(makeICE());
   pcs[pid]=pc;
   iceQueues[pid]=[];
-  let makingOffer=false,ignoreOffer=false,remoteDescSet=false;
-  let reconnectTimer=null;
+  let makingOffer=false;
+  let ignoreOffer=false;
+  let remoteDescSet=false;
 
   micStream.getTracks().forEach(t=>pc.addTrack(t,micStream));
 
@@ -1748,27 +1748,14 @@ function makePeer(pid){
 
   pc.onconnectionstatechange=()=>{
     const s=pc.connectionState;
-    if(s==='connected'){
-      clearTimeout(reconnectTimer);
-      renderAllVoiceLists();
-    }
+    if(s==='connected'){renderAllVoiceLists();}
     if(s==='failed'||s==='closed'){
-      clearTimeout(reconnectTimer);
       closePeer(pid);
-      // Attempt full reconnect after short delay
-      if(micWanted){
-        reconnectTimer=setTimeout(()=>{
-          if(micWanted&&!pcs[pid]&&hasLiveMic()){
-            makePeer(pid);
-            // Signal the other side to re-link too
-            if(G?.code)socket.emit('peer-mic-ready',{code:G.code});
-          }
-        },2000);
-      }
+      if(micWanted)setTimeout(()=>{if(micWanted&&!pcs[pid]&&hasLiveMic())makePeer(pid);},2500);
     }
     if(s==='disconnected'){
-      // Give 5s to self-recover (network blip), then force reconnect
-      reconnectTimer=setTimeout(()=>{
+      // Give 5s to self-recover, then force reconnect and signal other side
+      setTimeout(()=>{
         const cur=pcs[pid];
         if(cur&&(cur.connectionState==='disconnected'||cur.connectionState==='failed')){
           closePeer(pid);
@@ -1778,6 +1765,17 @@ function makePeer(pid){
           }
         }
       },5000);
+    }
+    if(s==='failed'||s==='closed'){
+      closePeer(pid);
+      if(micWanted){
+        setTimeout(()=>{
+          if(micWanted&&!pcs[pid]&&hasLiveMic()){
+            makePeer(pid);
+            if(G?.code)socket.emit('peer-mic-ready',{code:G.code});
+          }
+        },2000);
+      }
     }
   };
 
@@ -1790,6 +1788,7 @@ function makePeer(pid){
     }catch(e){}finally{makingOffer=false;}
   };
 
+  // Expose state for handleOffer
   pc._makingOffer=()=>makingOffer;
   pc._setIgnore=(v)=>{ignoreOffer=v;};
   pc._ignoreOffer=()=>ignoreOffer;
@@ -1801,9 +1800,13 @@ function makePeer(pid){
 }
 
 async function drainIceQueue(pid){
-  const pc=pcs[pid],q=iceQueues[pid];
+  const pc=pcs[pid];
+  const q=iceQueues[pid];
   if(!pc||!q)return;
-  while(q.length){const c=q.shift();try{await pc.addIceCandidate(c);}catch(e){}}
+  while(q.length){
+    const c=q.shift();
+    try{await pc.addIceCandidate(c);}catch(e){}
+  }
 }
 
 async function handleOffer(from,offer){
@@ -1813,16 +1816,22 @@ async function handleOffer(from,offer){
     if(micWanted)initMic({force:false}).catch(()=>{});
     return;
   }
+
   let pc=pcs[from];
   if(!pc)pc=makePeer(from);
   if(!pc)return;
+
   const offerCollision=(offer.type==='offer')&&(pc._makingOffer()||pc.signalingState!=='stable');
   const ignore=!pc._amImpolite()&&offerCollision;
   pc._setIgnore(ignore);
   if(ignore)return;
+
   try{
     if(offerCollision){
-      await Promise.all([pc.setLocalDescription({type:'rollback'}),pc.setRemoteDescription(offer)]);
+      await Promise.all([
+        pc.setLocalDescription({type:'rollback'}),
+        pc.setRemoteDescription(offer)
+      ]);
     } else {
       await pc.setRemoteDescription(offer);
     }
@@ -1847,37 +1856,8 @@ function ensurePeerLinks(){
     const s=pc.connectionState;
     if(s==='failed'||s==='closed'){closePeer(p.id);makePeer(p.id);}
   });
-  // Also close stale peers (players who left)
-  const activeIds=new Set((G.players||[]).map(p=>p.id));
-  Object.keys(pcs).forEach(pid=>{if(!activeIds.has(pid))closePeer(pid);});
 }
 
-// Periodic health check — every 8s, verify all peer connections are alive
-let peerHealthInterval=null;
-function startPeerHealthCheck(){
-  stopPeerHealthCheck();
-  peerHealthInterval=setInterval(()=>{
-    if(!micWanted||!hasLiveMic())return;
-    (G.players||[]).filter(p=>!p.isSpectator&&p.id!==socket.id).forEach(p=>{
-      const pc=pcs[p.id];
-      if(!pc){
-        // Missing connection — create it
-        makePeer(p.id);
-      } else if(pc.connectionState==='failed'||pc.connectionState==='closed'){
-        closePeer(p.id);
-        makePeer(p.id);
-      }
-      // iceConnectionState disconnected check
-      if(pc&&pc.iceConnectionState==='disconnected'){
-        // Restart ICE
-        try{pc.restartIce();}catch(e){}
-      }
-    });
-  },8000);
-}
-function stopPeerHealthCheck(){ clearInterval(peerHealthInterval); peerHealthInterval=null; }
-
-// Socket: WebRTC signalling
 socket.on('rtc-offer',({from,offer})=>{
   if(!hasLiveMic()){
     pendingOffers=pendingOffers.filter(x=>x.from!==from);
@@ -1887,14 +1867,21 @@ socket.on('rtc-offer',({from,offer})=>{
     handleOffer(from,offer);
   }
 });
+
 socket.on('rtc-answer',async({from,answer})=>{
   const pc=pcs[from];
   if(!pc)return;
-  try{await pc.setRemoteDescription(answer);pc._setRemoteDescSet(true);await drainIceQueue(from);}catch(e){}
+  try{
+    await pc.setRemoteDescription(answer);
+    pc._setRemoteDescSet(true);
+    await drainIceQueue(from);
+  }catch(e){}
 });
+
 socket.on('rtc-ice',async({from,candidate})=>{
   const pc=pcs[from];
   if(!pc)return;
+  // Buffer ICE candidates until remote description is set
   if(!pc._remoteDescSet()){
     if(!iceQueues[from])iceQueues[from]=[];
     iceQueues[from].push(candidate);
@@ -1902,6 +1889,7 @@ socket.on('rtc-ice',async({from,candidate})=>{
   }
   try{await pc.addIceCandidate(candidate);}catch(e){}
 });
+
 socket.on('peer-mic-ready',({from})=>{
   if(!hasLiveMic())return;
   const fromPlayer=G.players?.find(p=>p.id===from);
@@ -1914,15 +1902,13 @@ socket.on('peer-mic-ready',({from})=>{
   }
 });
 
-// When a player reconnects after network loss, rebuild their peer link
-// Mobile/tab visibility — resume mic and peer links when coming back
 function safeMobileResume(){
-  if(mobileResumeLock)return; mobileResumeLock=true;
+  if(mobileResumeLock)return;mobileResumeLock=true;
   setTimeout(()=>{
     if(socket.disconnected){try{socket.connect();}catch(e){}}
     if(micWanted){
       if(!hasLiveMic()){initMic({force:true}).catch(()=>{});}
-      else{setTimeout(()=>{ensurePeerLinks();startPeerHealthCheck();},300);}
+      else{setTimeout(()=>ensurePeerLinks(),300);}
     }
     mobileResumeLock=false;
   },900);
@@ -1931,45 +1917,339 @@ window.addEventListener('focus',safeMobileResume);
 window.addEventListener('pageshow',safeMobileResume);
 document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')safeMobileResume();});
 if(navigator.mediaDevices?.addEventListener)navigator.mediaDevices.addEventListener('devicechange',()=>{if(micWanted)safeMobileResume();});
-window.addEventListener('online',()=>{if(micWanted){safeMobileResume();}});
+window.addEventListener('online',()=>{if(micWanted)safeMobileResume();});
+
+// ── TIMER ─────────────────────────────────────────────────────────────────────
+socket.on('timer',({phase,remaining})=>{
+  if(phase==='discussion'){
+    const pct=Math.max(0,remaining/discTotal*100);
+    const bar=$('disc-tf'),val=$('disc-tv');
+    if(bar){bar.style.width=pct+'%';bar.style.background=pct<25?'var(--cr)':pct<50?'var(--ca)':'var(--cg)';}
+    if(val){val.textContent=fmt(remaining);val.style.color=remaining<=10?'var(--cr)':remaining<=30?'var(--ca)':'var(--t1)';}
+    if(remaining===30||remaining===10)SFX.warn();
+    if(remaining>0&&remaining<=5)SFX.tick();
+  } else if(phase==='voting'){
+    const pct=Math.max(0,remaining/voteTotal*100);
+    const bar=$('vote-tf'),val=$('vote-tv');
+    if(bar){bar.style.width=pct+'%';bar.style.background=pct<25?'var(--cr)':pct<50?'var(--ca)':'var(--cr)';}
+    if(val){val.textContent=fmt(remaining);val.style.color=remaining<=10?'var(--cr)':'var(--t1)';}
+    if(remaining===10)SFX.warn();
+    if(remaining>0&&remaining<=5){SFX.tick();toast(`⚠ Glasanje završava za ${remaining}s`);}
+  }
+});
+
+// ── VOTING ────────────────────────────────────────────────────────────────────
+let myVoteSubmitted=false;
+function renderVoting(){
+  myVoteSubmitted=false;selVote=null;
+  $('cfm').classList.remove('on');
+  $('vsent').classList.remove('on');$('vsent').style.display='';
+  $('vwaiting').classList.remove('on');
+  $('vgrid').style.opacity='1';$('vgrid').style.pointerEvents='auto';
+  $('igbox').style.display='';
+  const isImp=myRole==='IMPOSTOR';
+  $('igbox').className=`igbox${isImp?' on':''}`;
+  const dotsEl=$('vote-dots');
+  if(dotsEl){
+    dotsEl.innerHTML='';
+    G.players.forEach(()=>{const d=document.createElement('div');d.className='vote-dot';dotsEl.appendChild(d);});
+  }
+  const cntEl=$('vcnt-display');if(cntEl)cntEl.textContent=`0 / ${G.players.length}`;
+  const grid=$('vgrid');grid.innerHTML='';
+  G.players.forEach(p=>{
+    if(p.id===socket.id)return;
+    const c=document.createElement('div');c.className='vcard';c.id='vc-'+p.id;
+    c.innerHTML=`<div class="vcav">${ini(p.name)}</div>
+      <div class="vcard-info">
+        <div class="vcard-name">${esc(p.name)}</div>
+        <div class="vcard-sub">Operative</div>
+      </div>
+      <div class="vcard-check">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>`;
+    c.onclick=()=>{
+      if(myVoteSubmitted)return;
+      document.querySelectorAll('.vcard').forEach(x=>x.classList.remove('sel'));
+      c.classList.add('sel');
+      selVote=p.id;$('vtname').textContent=p.name;$('cfm').classList.add('on');SFX.vote();
+    };
+    grid.appendChild(c);
+  });
+}
+$('btn-cfm').onclick=()=>{
+  if(!selVote||myVoteSubmitted)return;
+  myVoteSubmitted=true;
+  socket.emit('castVote',{code:G.code,targetId:selVote});
+  $('cfm').classList.remove('on');
+  $('vgrid').style.opacity='.3';$('vgrid').style.pointerEvents='none';
+  $('igbox').style.display='none';
+  $('vsent').style.display='block';$('vsent').classList.add('on');
+};
+$('btn-cfm-cancel').onclick=()=>{
+  $('cfm').classList.remove('on');
+  selVote=null;
+  document.querySelectorAll('.vcard').forEach(x=>x.classList.remove('sel'));
+};
+$('ig-sub').onclick=()=>{const g=$('ig-in').value.trim();if(!g)return;socket.emit('impostorGuess',{code:G.code,guess:g});$('ig-in').value='';toast('Pogodak poslan...');};
+socket.on('impostorGuessFailed',({guess})=>{toast(`❌ "${guess}" nije točno!`);SFX.warn();});
+socket.on('voteCast',data=>{
+  const sub=$('vcnt');if(sub)sub.textContent=`${data.total} od ${data.max} glasova`;
+  const disp=$('vcnt-display');if(disp)disp.textContent=`${data.total} / ${data.max}`;
+  const dots=document.querySelectorAll('#vote-dots .vote-dot');
+  dots.forEach((d,i)=>{d.classList.toggle('cast',i<data.total);});
+  if(data.total>=data.max&&!myVoteSubmitted){$('vwaiting').classList.add('on');}
+});
+
+// ── RESULTS ───────────────────────────────────────────────────────────────────
+function renderResults(){
+  const isWin=(G.results?.winner==='CITIZENS'&&myRole==='CITIZEN')||(G.results?.winner==='IMPOSTORS'&&myRole==='IMPOSTOR');
+  setTimeout(()=>launchConfetti(isWin),300);
+  const res=G.results,b=$('rbanner');
+  if(res.isTie){b.className='rbanner tie';$('rtitle').textContent='Neriješeno!';$('remoji').textContent='🤝';$('rsub').textContent='Nitko nije izbačen — impostor pobijedio.';SFX.warn();}
+  else if(res.winner==='CITIZENS'){b.className='rbanner win';$('rtitle').textContent='Impostor uhvaćen!';$('remoji').textContent='✅';$('rsub').textContent=`${esc(res.votedOutName)} je bio impostor.`;SFX.win();}
+  else if(res.impostorGuessedCorrectly){b.className='rbanner lose';$('rtitle').textContent='Impostor pobijedio!';$('remoji').textContent='🧠';$('rsub').textContent='Pogodio je pravu riječ!';SFX.lose();}
+  else{b.className='rbanner lose';$('rtitle').textContent='Misija kompromitirana!';$('remoji').textContent='💀';$('rsub').textContent=`${esc(res.votedOutName||'?')} nije bio impostor.`;SFX.lose();}
+  $('rw-r').textContent=G.words?.citizen||'—';
+  $('rw-i').textContent=G.words?.impostor||'—';
+  const sb=$('scoreboard');sb.innerHTML='';
+  const sorted=[...G.players].sort((a,b)=>(b.score||0)-(a.score||0));
+  sorted.forEach((p,i)=>{
+    const pts=p.score||0,isImp=p.role==='IMPOSTOR';
+    const delta=G.scoreDeltas?.[p.playerToken||p.id]??G.scoreDeltas?.[p.id]??0;
+    const rk=i===0?'gold':i===1?'silver':i===2?'bronze':'';
+    const d=document.createElement('div');d.className='srow';
+    d.innerHTML=`<span class="srk ${rk}">${i+1}</span><div class="av ${isImp?'r':'g'}">${ini(p.name)}</div><div class="pi"><div class="pn">${esc(p.name)}</div><div class="ps">${isImp?'IMPOSTOR':'CITIZEN'}</div></div><div class="spt">${pts}<span class="sdelta ${delta>0?'up':'z'}">+${delta}</span></div>`;
+    sb.appendChild(d);
+  });
+  const rl=$('rlist');rl.innerHTML='';
+  G.players.forEach(p=>{
+    const isImp=p.role==='IMPOSTOR',vf=G.players.find(v=>v.id===G.votes?.[p.id]);
+    const wordLabel=p.word?`<span style="font-family:var(--ff-serif);font-size:13px;letter-spacing:.5px;color:${isImp?'var(--cr-dim)':'var(--cg-dim)'};background:${isImp?'var(--cr-bg)':'var(--cg-bg)'};border:1px solid ${isImp?'var(--cr-bd)':'var(--cg-bd)'};border-radius:6px;padding:2px 8px;">${esc(p.word)}</span>`:'';
+    const d=document.createElement('div');d.className=`rrow${isImp?' ir':''}`;
+    d.innerHTML=`<div class="av ${isImp?'r':'g'}">${ini(p.name)}</div><div class="pi"><div class="pn">${esc(p.name)} ${wordLabel}</div><div class="ps">Glasao za: ${vf?esc(vf.name):'—'}</div></div><span style="font-size:11px;font-weight:400;letter-spacing:2.5px;padding:3px 10px;border-radius:999px;background:${isImp?'var(--cr-bg)':'var(--cg-bg)'};border:1px solid ${isImp?'var(--cr-bd)':'var(--cg-bd)'};color:${isImp?'var(--cr-dim)':'var(--cg-dim)'};">${isImp?'IMPOSTOR':'CITIZEN'}</span>`;
+    rl.appendChild(d);
+  });
+  $('btn-rst').style.display=me&&me.isHost?'flex':'none';
+  renderAllVoiceLists();updateVoiceButtons();
+}
+$('btn-again').onclick=()=>socket.emit('playAgain',{code:G.code});
+$('btn-quit').onclick=()=>{clearSession();location.reload();};
+$('btn-rst').onclick=()=>{socket.emit('resetScores',{code:G.code});toast('Bodovi resetirani');};
+['btn-self-mute','btn-self-mute-res'].forEach(id=>{const el=$(id);if(el)el.onclick=()=>toggleSelfMute();});
+['btn-audio-unlock','btn-audio-unlock-res'].forEach(id=>{const el=$(id);if(el)el.onclick=()=>unlockAudio();});
+
+// ── SOCKET EVENTS ─────────────────────────────────────────────────────────────
+socket.on('roomCreated',room=>{
+  const btn=$('btn-create');if(btn){btn.disabled=false;btn.textContent='Kreiraj novu sobu';}
+  G=room;me=room.players[0];
+  saveSession({code:room.code,name:me?.name,playerToken:room.playerToken});
+  badge();show('s-lobby');renderLobby();SFX.join();
+});
+socket.on('roomJoined',room=>{
+  const btn=$('btn-join');if(btn){btn.disabled=false;btn.textContent='Pridruži se';}
+  G=room;me=meNow();
+  saveSession({code:room.code,name:me?.name||$('j-name').value.trim(),playerToken:room.playerToken});
+  badge();show('s-lobby');renderLobby();SFX.join();
+});
+socket.on('sessionResumed',room=>{
+  G=room;me=meNow();myWord=room.myWord;myRole=room.myRole;
+  saveSession({code:room.code,name:me?.name||$('j-name').value.trim(),playerToken:room.playerToken});
+  badge();
+  if(G.state==='LOBBY'){show('s-lobby');renderLobby();}
+  else if(G.state==='REVEAL'){show('s-reveal');setupReveal();}
+  else if(G.state==='DISCUSSION'){show('s-disc');setupDisc(room);wantMic(true);setTimeout(()=>ensurePeerLinks(),400);}
+  else if(G.state==='VOTING'){show('s-vote');renderVoting();}
+  else if(G.state==='RESULTS'){show('s-res');renderResults();wantMic(true);unlockAudio();}
+  toast('✅ Veza obnovljena');
+});
+socket.on('resumeFailed',()=>{clearSession();});
+socket.on('connect',()=>{loadAudioPrefs();updateVoiceButtons();maybeResumeSession();$('j-err').textContent='';});
+socket.on('connect_error',()=>{
+  const err=$('j-err');if(err&&!err.textContent)err.textContent='Server nedostupan. Provjerite vezu.';
+  const bc=$('btn-create'),bj=$('btn-join');
+  if(bc&&bc.disabled){bc.disabled=false;bc.textContent='Kreiraj novu sobu';}
+  if(bj&&bj.disabled){bj.disabled=false;bj.textContent='Pridruži se';}
+});
+
+socket.on('roomUpdated',room=>{
+  G=room;me=meNow();
+  if(G.state==='LOBBY'&&me?.isHost){
+    if(!G.hasCustomPair)$('cfg-cat').value=G.category;
+    $('cfg-disc').value=G.discussionTime||120;
+    $('cfg-vote').value=G.votingTime||60;
+    impCount=G.impostorCount||1;
+    $('imp-v').textContent=impCount;
+  }
+  saveSession({code:G.code,name:me?.name||getSession().name||$('j-name').value.trim()});
+  if((G.state==='DISCUSSION'||G.state==='RESULTS')&&micWanted&&hasLiveMic()){setTimeout(()=>ensurePeerLinks(),350);}
+  renderAllVoiceLists();
+  if(G.state==='LOBBY'){wantMic(false);if(!$('s-lobby').classList.contains('on'))show('s-lobby');renderLobby();}
+  if(G.state==='DISCUSSION'&&me?.isHost){
+    const kickBtn=$('btn-kick-disc');
+    if(kickBtn)kickBtn.style.display=(G.players||[]).length>2?'inline-flex':'none';
+  }
+});
+
+socket.on('gameStarted',room=>{
+  myWord=room.myWord;myRole=room.myRole;G=room;me=meNow();
+  if(me){me.word=myWord;me.role=myRole;}
+  $('rnd').textContent=`R${G.roundNumber}`;
+  wantMic(false);
+  if(myRole==='SPECTATOR'){
+    showSpectatorScreen(room.words);
+  } else {
+    show('s-reveal');setupReveal();
+  }
+});
+socket.on('revealProgress',({readyCount,total})=>{
+  updateRevealProgress(readyCount,total);
+  updateSpectatorRevealProgress(readyCount,total);
+  if(readyCount===total)toast('Svi su potvrdili — počinjemo!');
+});
+socket.on('startDiscussion',room=>{
+  G=room;me=meNow();if(me){me.word=myWord;me.role=myRole;}
+  discTotal=room.discussionTime||120;voteTotal=room.votingTime||60;
+  if(myRole==='SPECTATOR'){
+    updateSpectatorDiscScreen(room);
+  } else {
+    show('s-disc');setupDisc(room);
+    if(room.firstSpeakerName)spinner(room.firstSpeakerName,null);
+    restartMicAndReconnect();
+  }
+});
+socket.on('votingStarted',room=>{
+  G=room;me=meNow();if(me){me.word=myWord;me.role=myRole;}
+  voteTotal=room.votingTime||60;
+  // Keep mic alive through voting so results screen audio works immediately
+  if(myRole==='SPECTATOR'){
+    updateSpectatorDiscScreen(room);
+    toast('Glasanje u tijeku — vi gledate');
+  } else {
+    show('s-vote');renderVoting();
+  }
+});
+socket.on('gameEnded',room=>{
+  if(myRole==='SPECTATOR'){
+    G=room;me=meNow();
+    const btn=$('spec-next-round');
+    if(btn)btn.style.display='flex';
+    const hs=$('spec-hstrip');
+    if(hs)hs.style.display='none';
+    const phase=$('spec-phase');
+    const res=room.results;
+    if(phase){
+      if(res?.winner==='CITIZENS') phase.textContent='✅ Građani pobijedili!';
+      else if(res?.impostorGuessedCorrectly) phase.textContent='🧠 Impostor pogodio riječ!';
+      else phase.textContent='💀 Impostor preživio!';
+    }
+    show('s-spectator');
+    return;
+  }
+  myWord=room.myWord??myWord;myRole=room.myRole??myRole;
+  G=room;me=meNow();if(me){me.word=myWord;me.role=myRole;}
+  show('s-res');renderResults();
+  // Mic kept alive from discussion — just ensure all peer links are intact
+  micWanted=true;
+  if(hasLiveMic()){setTimeout(()=>ensurePeerLinks(),300);}
+  else{restartMicAndReconnect();}
+  unlockAudio();
+});
+socket.on('playerKickedMidGame',({kickedId,kickedName})=>{
+  if(kickedId===socket.id){
+    clearSession();show('s-join');G={};me=null;myWord=null;myRole=null;
+    $('pb').classList.remove('on');$('btn-leave-icon').style.display='none';
+    wantMic(false);toast(`⚠ Host te uklonio iz igre.`,4000);
+  } else {
+    G.players=(G.players||[]).filter(p=>p.id!==kickedId);
+    toast(`${kickedName} je uklonjen iz igre.`);
+    renderAllVoiceLists();
+    if($('s-disc').classList.contains('on')&&me?.isHost){
+      const kickBtn=$('btn-kick-disc');
+      if(kickBtn)kickBtn.style.display=(G.players||[]).length>2?'inline-flex':'none';
+    }
+  }
+});
+socket.on('error',msg=>{
+  $('j-err').textContent=msg;$('l-err').textContent=msg;toast('⚠ '+msg);
+  const bc=$('btn-create'),bj=$('btn-join');
+  if(bc){bc.disabled=false;bc.textContent='Kreiraj novu sobu';}
+  if(bj){bj.disabled=false;bj.textContent='Pridruži se';}
+});
+
 
 // ══════════════════════════════════════════════════════════
 // PWA INSTALL
 // ══════════════════════════════════════════════════════════
-function installPWA() {
-  if (deferredPrompt) {
-    deferredPrompt.prompt();
-    deferredPrompt.userChoice.then(() => { deferredPrompt = null; });
-  }
+function installPWA(){
+  if(deferredPrompt){deferredPrompt.prompt();deferredPrompt.userChoice.then(()=>{deferredPrompt=null;});}
 }
+(function(){
+  const btn=document.getElementById('pwa-install-btn');
+  if(btn)btn.onclick=installPWA;
+})();
 
 // ══════════════════════════════════════════════════════════
-// DRAMATIC REVEAL ANIMATION
+// CONFETTI
 // ══════════════════════════════════════════════════════════
-function launchConfetti(isWin) {
-  const overlay = $('confetti-overlay');
-  if (!overlay) return;
-  overlay.innerHTML = '';
-  const colors = isWin
-    ? ['#E8B84B','#3DD68C','#F2EEFF','#22A86A','#C49830']
-    : ['#E8354F','#FF6B82','#A0A0C8','#606080'];
-  const count = isWin ? 60 : 20;
-  for (let i = 0; i < count; i++) {
-    const el = document.createElement('div');
-    el.className = 'confetti-piece';
-    el.style.left = Math.random() * 100 + '%';
-    el.style.top = '-20px';
-    el.style.background = colors[Math.floor(Math.random() * colors.length)];
-    el.style.animationDuration = (1.5 + Math.random() * 2) + 's';
-    el.style.animationDelay = Math.random() * 1 + 's';
-    el.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
-    el.style.width = el.style.height = (5 + Math.random() * 8) + 'px';
+function launchConfetti(isWin){
+  const overlay=document.getElementById('confetti-overlay');
+  if(!overlay)return;
+  overlay.innerHTML='';
+  const colors=isWin?['#E8B84B','#3DD68C','#F2EEFF','#22A86A','#C49830']:['#E8354F','#FF6B82','#A0A0C8','#606080'];
+  for(let i=0;i<(isWin?60:20);i++){
+    const el=document.createElement('div');
+    el.className='confetti-piece';
+    el.style.left=Math.random()*100+'%';
+    el.style.top='-20px';
+    el.style.background=colors[Math.floor(Math.random()*colors.length)];
+    el.style.animationDuration=(1.5+Math.random()*2)+'s';
+    el.style.animationDelay=Math.random()+'s';
+    el.style.borderRadius=Math.random()>.5?'50%':'2px';
+    el.style.width=el.style.height=(5+Math.random()*8)+'px';
     overlay.appendChild(el);
   }
-  setTimeout(() => { overlay.innerHTML = ''; }, 4000);
+  setTimeout(()=>{overlay.innerHTML='';},4000);
 }
 
+// ══════════════════════════════════════════════════════════
+// TIE-BREAKER
+// ══════════════════════════════════════════════════════════
+socket.on('tieBreakerStarted',(room)=>{
+  G=room;me=meNow();if(me){me.word=myWord;me.role=myRole;}
+  voteTotal=room.duration||40;
+  myVoteSubmitted=false;
+  const notice=document.getElementById('tiebreak-notice');
+  if(notice)notice.style.display='block';
+  show('s-vote');renderVoting();
+  toast('⚖️ Izjednačeno! Glasajte ponovo.');
+});
+socket.on('votingStarted',room=>{
+  G=room;me=meNow();if(me){me.word=myWord;me.role=myRole;}
+  voteTotal=room.votingTime||60;
+  const notice=document.getElementById('tiebreak-notice');
+  if(notice)notice.style.display='none';
+  if(myRole==='SPECTATOR'){updateSpectatorDiscScreen(room);toast('Glasanje u tijeku — vi gledate');}
+  else{show('s-vote');renderVoting();}
+});
 
+
+// Peer health check every 8s
+let _peerHealthInterval=null;
+function _startPeerHealth(){
+  clearInterval(_peerHealthInterval);
+  _peerHealthInterval=setInterval(()=>{
+    if(!micWanted||!hasLiveMic())return;
+    (G.players||[]).filter(p=>!p.isSpectator&&p.id!==socket.id).forEach(p=>{
+      const pc=pcs[p.id];
+      if(!pc){makePeer(p.id);}
+      else if(pc.connectionState==='failed'||pc.connectionState==='closed'){closePeer(p.id);makePeer(p.id);}
+      else if(pc.iceConnectionState==='disconnected'){try{pc.restartIce();}catch(e){}}
+    });
+    // Clean stale peers
+    const ids=new Set((G.players||[]).map(p=>p.id));
+    Object.keys(pcs).forEach(pid=>{if(!ids.has(pid))closePeer(pid);});
+  },8000);
+}
 // ── ONBOARDING ────────────────────────────────────────────────────────────────
 var obCur=0;
 var OB_KEY='impostor.onboarded.v3';
@@ -2022,21 +2302,57 @@ function obSkip(){
   el.addEventListener('mouseleave',dragEnd);
 })();
 
-// ══════════════════════════════════════════════════════════
-// TIE-BREAKER SOCKET HANDLER
-// ══════════════════════════════════════════════════════════
-socket.on('tieBreakerStarted', (room) => {
-  G = room; me = meNow(); if (me) { me.word = myWord; me.role = myRole; }
-  voteTotal = room.duration || 40;
-  myVoteSubmitted = false;
-  // Show neutral notice — full player list, no hints
-  const notice = $('tiebreak-notice');
-  if (notice) notice.style.display = 'block';
-  show('s-vote');
-  renderVoting(); // full list, no filtering — fair for all group sizes
-  toast('⚖️ Izjednačeno! Glasajte ponovo.');
-});
+maybeResumeSession();
 
+// ── SPECTATOR (FAIR PLAY HOST) ────────────────────────────────────────────────
+document.addEventListener('click', e => {
+  if(e.target.id==='spec-next-round') socket.emit('startGame',{code:G.code});
+  if(e.target.id==='spec-leave') socket.emit('leaveRoom',{code:G.code});
+  if(e.target.id==='spec-nxt-spk'){SFX.next();socket.emit('nextSpeaker',{code:G.code});}
+  if(e.target.id==='spec-ext-disc'){socket.emit('extendDiscussion',{code:G.code,seconds:30});toast('+30 sekundi dodano');SFX.next();}
+  if(e.target.id==='spec-start-vote') socket.emit('startVoting',{code:G.code});
+  if(e.target.id==='spec-kick-btn'){renderKickDiscModal();$('modal-kick-disc').classList.add('on');}
+});
+let spectatorWords=null;
+function showSpectatorScreen(words){
+  spectatorWords=words;
+  const el=$('s-spectator');
+  if(!el)return;
+  el.querySelector('#spec-citizen').textContent=words?.citizen||'?';
+  el.querySelector('#spec-impostor').textContent=words?.impostor||'?';
+  el.querySelector('#spec-phase').textContent='Igrači otkrivaju uloge...';
+  const rp=el.querySelector('#spec-reveal-progress');
+  if(rp){rp.style.display='block';}
+  const nb=el.querySelector('#spec-next-round');
+  if(nb)nb.style.display='none';
+  const hs=el.querySelector('#spec-hstrip');
+  if(hs)hs.style.display='none';
+  show('s-spectator');
+}
+function updateSpectatorDiscScreen(room){
+  const el=$('s-spectator');
+  if(!el)return;
+  const phase=el.querySelector('#spec-phase');
+  const rp=el.querySelector('#spec-reveal-progress');
+  const hs=el.querySelector('#spec-hstrip');
+  const kb=el.querySelector('#spec-kick-btn');
+  if(room.state==='VOTING'){
+    if(phase)phase.textContent='⚡ Glasanje u tijeku';
+    if(hs)hs.style.display='none';
+  } else {
+    if(phase)phase.textContent='🗣️ Rasprava u tijeku';
+    if(hs)hs.style.display='block';
+    if(kb)kb.style.display=(G.players||[]).length>2?'inline-flex':'none';
+  }
+  if(rp)rp.style.display='none';
+  show('s-spectator');
+}
+function updateSpectatorRevealProgress(done,total){
+  const fill=$('spec-rev-fill');
+  const phase=$('spec-phase');
+  if(fill)fill.style.width=`${total>0?(done/total*100):0}%`;
+  if(phase)phase.textContent=`Otkrivanje uloga — ${done}/${total}`;
+}
 </script>
 </body>
 </html>
