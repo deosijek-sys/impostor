@@ -473,20 +473,8 @@ select{appearance:none;cursor:pointer;}
 .modal-note{font-size:11px;color:var(--t3);letter-spacing:.3px;line-height:1.6;}
 
 /* ─── ONBOARDING ─────────────────────────────────────────────────────────── */
-#ob{
-  background:linear-gradient(180deg,#070712 0%,#04040A 100%);
-  position:fixed;inset:0;
-  display:none;flex-direction:column;align-items:center;justify-content:space-between;
-  /* Safe padding for all devices — notch, home bar etc */
-  padding:max(52px,env(safe-area-inset-top,52px)) 24px max(44px,calc(env(safe-area-inset-bottom,0px) + 44px));
-  width:100%;height:100%;box-sizing:border-box;
-  overflow:hidden;z-index:9999;
-}
-/* All obs slides: constrained width, no overflow */
-.obs{width:100%;max-width:360px;box-sizing:border-box;overflow:hidden;}
-.obs *{max-width:100%;box-sizing:border-box;}
-#ob[style*="display: none"],#ob[style*="display:none"]{pointer-events:none !important;}
 
+#ob[style*="display: none"],
 /* ─── PC / WIDE SCREEN ───────────────────────────────────────────────────── */
 @media (min-width:768px){
   body{
@@ -518,8 +506,7 @@ select{appearance:none;cursor:pointer;}
     position:absolute;
     max-width:none;
   }
-  #ob{position:absolute;border-radius:28px;width:100%;height:100%;padding:52px 24px 44px;box-sizing:border-box;}
-  /* on-screen toast re-anchor inside app */
+    /* on-screen toast re-anchor inside app */
   .toast{top:64px;width:calc(100% - 40px);left:20px;transform:none;max-width:none;}
 }
 @media (min-width:1100px){
@@ -545,6 +532,86 @@ select{appearance:none;cursor:pointer;}
 .tiebreak-title{font-family:var(--ff-serif);font-size:22px;color:var(--ca-dim);margin-bottom:6px;}
 .tiebreak-sub{font-size:11px;color:var(--t3);letter-spacing:.5px;}
 
+
+/* ═══════════════════════════════════════════════════
+   ONBOARDING — clean, self-contained, works everywhere
+═══════════════════════════════════════════════════ */
+#ob{
+  position:fixed;inset:0;z-index:9999;
+  background:#070712;
+  display:none;
+  flex-direction:column;
+  align-items:stretch;
+  justify-content:space-between;
+  box-sizing:border-box;
+  overflow:hidden;
+}
+.ob-slides{
+  flex:1;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:60px 28px 16px;
+  box-sizing:border-box;
+  overflow:hidden;
+}
+.obs{
+  width:100%;
+  max-width:360px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  text-align:center;
+  box-sizing:border-box;
+}
+.ob-hide{display:none;}
+.ob-icon{font-size:64px;line-height:1;margin-bottom:20px;}
+.ob-label{font-size:10px;letter-spacing:3px;color:var(--t3);margin-bottom:10px;font-family:var(--ff-mono);text-transform:uppercase;font-weight:400;}
+.ob-title{font-family:var(--ff-serif);font-size:46px;color:var(--ca-dim);line-height:1.05;margin-bottom:16px;font-weight:300;font-style:italic;letter-spacing:-.5px;}
+.ob-title-g{color:var(--cg-dim);}
+.ob-text{font-size:13px;color:var(--t2);line-height:1.75;font-family:var(--ff-mono);font-weight:300;max-width:280px;}
+.ob-text strong{color:var(--t1);font-weight:500;}
+/* Word cards */
+.ob-words{display:flex;gap:10px;width:100%;margin-bottom:16px;}
+.ob-word{flex:1;border-radius:14px;padding:16px 12px;text-align:center;}
+.ob-word-g{background:var(--cg-bg);border:1px solid var(--cg-bd);}
+.ob-word-r{background:var(--cr-bg);border:1px solid var(--cr-bd);}
+.ob-word-lbl{font-size:9px;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;font-family:var(--ff-mono);}
+.ob-word-g .ob-word-lbl{color:var(--cg-dim);}
+.ob-word-r .ob-word-lbl{color:var(--cr-dim);}
+.ob-word-val{font-family:var(--ff-serif);font-size:26px;font-weight:400;}
+.ob-word-g .ob-word-val{color:var(--cg-dim);}
+.ob-word-r .ob-word-val{color:var(--cr-dim);}
+/* Steps */
+.ob-steps{display:flex;flex-direction:column;gap:8px;width:100%;}
+.ob-step{display:flex;align-items:center;gap:12px;background:var(--b2);border:1px solid var(--l1);border-radius:12px;padding:11px 14px;text-align:left;}
+.ob-step-n{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:var(--ff-serif);font-size:14px;font-weight:400;}
+.ob-step-r{background:var(--cr-bg);color:var(--cr-dim);}
+.ob-step-a{background:var(--ca-bg);color:var(--ca-dim);}
+.ob-step-g{background:var(--cg-bg);color:var(--cg-dim);}
+.ob-step-t{font-size:12px;color:var(--t2);line-height:1.5;font-family:var(--ff-mono);font-weight:300;}
+.ob-step-t strong{color:var(--t1);font-weight:400;}
+/* Scores */
+.ob-scores{display:flex;flex-direction:column;gap:6px;width:100%;}
+.ob-score{display:flex;align-items:center;gap:12px;border-radius:11px;padding:10px 14px;font-size:11px;font-family:var(--ff-mono);font-weight:300;text-align:left;}
+.ob-score-g{background:var(--cg-bg);border:1px solid var(--cg-bd);color:var(--cg-dim);}
+.ob-score-r{background:var(--cr-bg);border:1px solid var(--cr-bd);color:var(--cr-dim);}
+.ob-score-a{background:var(--ca-bg);border:1px solid var(--ca-bd);color:var(--ca-dim);}
+.ob-score-0{background:var(--b2);border:1px solid var(--l1);color:var(--t3);}
+.ob-score-pts{font-family:var(--ff-serif);font-size:20px;min-width:36px;text-align:center;flex-shrink:0;font-weight:300;}
+/* Dots */
+.ob-dots{display:flex;gap:6px;align-items:center;justify-content:center;padding:12px 0;}
+.obd{width:6px;height:6px;border-radius:50%;background:var(--b5);cursor:pointer;transition:all .25s;flex-shrink:0;}
+.obd-active{width:22px;border-radius:4px;background:var(--ca);}
+/* Buttons */
+.ob-btns{display:flex;gap:10px;padding:0 24px 40px;box-sizing:border-box;}
+.ob-skip{padding:14px 16px;border-radius:13px;border:1px solid var(--l2);background:transparent;font-family:var(--ff-mono);font-size:10px;letter-spacing:1.5px;font-weight:400;color:var(--t3);cursor:pointer;text-transform:uppercase;flex-shrink:0;}
+.ob-next{flex:1;padding:14px;border-radius:13px;border:none;font-family:var(--ff-mono);font-size:10px;letter-spacing:2.5px;font-weight:500;background:var(--ca-dim);color:#04040A;cursor:pointer;text-transform:uppercase;}
+/* PC — inside app frame */
+@media(min-width:768px){
+  #ob{position:absolute;border-radius:28px;}
+  .ob-btns{padding-bottom:28px;}
+}
 </style>
 </head>
 <body>
@@ -1048,89 +1115,68 @@ select{appearance:none;cursor:pointer;}
 <!-- ONBOARDING -->
   <div class="reveal-overlay" id="confetti-overlay"></div>
 
-  <div id="ob" style="display:none;">
-  <div style="flex:1;width:100%;max-width:100%;display:flex;align-items:center;justify-content:center;overflow:hidden;">
-    <div class="obs" style="text-align:center;">
-      <div style="font-size:80px;margin-bottom:28px;">🎭</div>
-      <div style="font-size:11px;letter-spacing:3px;color:var(--t3);margin-bottom:14px;font-weight:400;font-family:var(--ff-mono);text-transform:uppercase;">Dobrodošli u</div>
-      <div style="font-family:var(--ff-serif);font-size:clamp(38px,12vw,58px);letter-spacing:2px;color:var(--ca);line-height:1;margin-bottom:22px;font-weight:900;font-style:italic;">Impostor</div>
-      <p style="color:var(--t2);font-size:14px;line-height:1.8;max-width:300px;margin:0 auto;font-family:var(--ff-mono);">Party igra za <strong style="color:var(--t1);">3–20 igrača</strong> u kojoj jedan igrač skriva svoju tajnu i pokušava proći <strong style="color:var(--t1);">neopaženo</strong>.</p>
-    </div>
-    <div class="obs" style="display:none;text-align:center;">
-      <div style="font-size:72px;margin-bottom:24px;">🎯</div>
-      <div style="font-size:11px;letter-spacing:3px;color:var(--t3);margin-bottom:14px;font-weight:400;text-transform:uppercase;">Tajna misija</div>
-      <div style="font-family:var(--ff-serif);font-size:42px;letter-spacing:.5px;color:var(--ca);line-height:1;margin-bottom:24px;font-weight:900;">Dvije različite<br>riječi</div>
-      <div style="display:flex;gap:10px;justify-content:center;margin-bottom:20px;width:100%;">
-        <div style="background:var(--cg-bg);border:1px solid var(--cg-bd);border-radius:16px;padding:18px 24px;">
-          <div style="font-size:11px;font-weight:400;letter-spacing:2px;color:var(--cg-dim);margin-bottom:10px;text-transform:uppercase;">Citizens</div>
-          <div style="font-family:var(--ff-serif);font-size:30px;color:var(--cg-dim);font-weight:900;">Pizza</div>
+  <div id="ob">
+    <div class="ob-slides">
+      <!-- Slide 1 -->
+      <div class="obs">
+        <div class="ob-icon">🎭</div>
+        <div class="ob-label">Dobrodošli u</div>
+        <div class="ob-title">Impostor</div>
+        <div class="ob-text">Party igra za <strong>3–20 igrača</strong> u kojoj jedan igrač skriva svoju tajnu i pokušava proći <strong>neopaženo</strong>.</div>
+      </div>
+      <!-- Slide 2 -->
+      <div class="obs ob-hide">
+        <div class="ob-icon">🎯</div>
+        <div class="ob-label">Tajna misija</div>
+        <div class="ob-title ob-title-g">Dvije različite<br>riječi</div>
+        <div class="ob-words">
+          <div class="ob-word ob-word-g">
+            <div class="ob-word-lbl">Citizens</div>
+            <div class="ob-word-val">Pizza</div>
+          </div>
+          <div class="ob-word ob-word-r">
+            <div class="ob-word-lbl">Impostor</div>
+            <div class="ob-word-val">Burek</div>
+          </div>
         </div>
-        <div style="background:var(--cr-bg);border:1px solid var(--cr-bd);border-radius:16px;padding:18px 24px;">
-          <div style="font-size:11px;font-weight:400;letter-spacing:2px;color:var(--cr-dim);margin-bottom:10px;text-transform:uppercase;">Impostor</div>
-          <div style="font-family:var(--ff-serif);font-size:30px;color:var(--cr);font-weight:900;">Burek</div>
+        <div class="ob-text">Svi citizens dobiju <strong>istu</strong> riječ. Impostor dobije <strong>srodnu, ali drugu</strong>.</div>
+      </div>
+      <!-- Slide 3 -->
+      <div class="obs ob-hide">
+        <div class="ob-icon">🔍</div>
+        <div class="ob-label">Kako se igra</div>
+        <div class="ob-title ob-title-g">4 koraka</div>
+        <div class="ob-steps">
+          <div class="ob-step"><div class="ob-step-n ob-step-r">1</div><div class="ob-step-t"><strong>Otkrivanje</strong> — tapni kartu, vidi svoju ulogu</div></div>
+          <div class="ob-step"><div class="ob-step-n ob-step-a">2</div><div class="ob-step-t"><strong>Rasprava</strong> — opisuj svoju riječ, ali je ne reci</div></div>
+          <div class="ob-step"><div class="ob-step-n ob-step-g">3</div><div class="ob-step-t"><strong>Glasanje</strong> — tko je impostor?</div></div>
+          <div class="ob-step"><div class="ob-step-n ob-step-a">4</div><div class="ob-step-t"><strong>Rezultati</strong> — otkriva se tko je bio impostor</div></div>
         </div>
       </div>
-      <p style="color:var(--t2);font-size:13px;line-height:1.7;max-width:300px;margin:0 auto;">Svi citizens dobiju <strong style="color:var(--t1);">istu</strong> riječ. Impostor dobije <strong style="color:var(--t1);">srodnu, ali drugu</strong>.</p>
-    </div>
-    <div class="obs" style="display:none;text-align:center;width:100%;">
-      <div style="font-size:62px;margin-bottom:18px;">🔍</div>
-      <div style="font-size:11px;letter-spacing:3px;color:var(--t3);margin-bottom:14px;font-weight:400;text-transform:uppercase;">Kako se igra</div>
-      <div style="font-family:var(--ff-serif);font-size:42px;letter-spacing:.5px;color:var(--cg-dim);line-height:1;margin-bottom:22px;font-weight:900;">4 koraka</div>
-      <div style="display:flex;flex-direction:column;gap:8px;max-width:320px;margin:0 auto;">
-        <div style="display:flex;align-items:center;gap:14px;background:var(--b3);border:1px solid var(--l1);border-radius:14px;padding:12px 16px;">
-          <div style="width:30px;height:30px;border-radius:50%;background:var(--cr-bg);color:var(--cr-dim);font-family:var(--ff-serif);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:16px;font-weight:700;">1</div>
-          <div style="font-size:13px;color:var(--t2);line-height:1.5;text-align:left;"><strong style="color:var(--t1);">Otkrivanje</strong> — tapni kartu, vidi svoju ulogu</div>
-        </div>
-        <div style="display:flex;align-items:center;gap:14px;background:var(--b3);border:1px solid var(--l1);border-radius:14px;padding:12px 16px;">
-          <div style="width:30px;height:30px;border-radius:50%;background:var(--ca-bg);color:var(--ca-dim);font-family:var(--ff-serif);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:16px;font-weight:700;">2</div>
-          <div style="font-size:13px;color:var(--t2);line-height:1.5;text-align:left;"><strong style="color:var(--t1);">Rasprava</strong> — opisuj svoju riječ, ali je ne reci</div>
-        </div>
-        <div style="display:flex;align-items:center;gap:14px;background:var(--b3);border:1px solid var(--l1);border-radius:14px;padding:12px 16px;">
-          <div style="width:30px;height:30px;border-radius:50%;background:var(--cg-bg);color:var(--cg-dim);font-family:var(--ff-serif);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:16px;font-weight:700;">3</div>
-          <div style="font-size:13px;color:var(--t2);line-height:1.5;text-align:left;"><strong style="color:var(--t1);">Glasanje</strong> — tko je impostor?</div>
-        </div>
-        <div style="display:flex;align-items:center;gap:14px;background:var(--b3);border:1px solid var(--l1);border-radius:14px;padding:12px 16px;">
-          <div style="width:30px;height:30px;border-radius:50%;background:var(--ca-bg);color:var(--ca-dim);font-family:var(--ff-serif);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:16px;font-weight:700;">4</div>
-          <div style="font-size:13px;color:var(--t2);line-height:1.5;text-align:left;"><strong style="color:var(--t1);">Rezultati</strong> — otkriva se tko je bio impostor</div>
-        </div>
-      </div>
-    </div>
-    <div class="obs" style="display:none;text-align:center;">
-      <div style="font-size:64px;margin-bottom:16px;">🏆</div>
-      <div style="font-size:11px;letter-spacing:3px;color:var(--t3);margin-bottom:10px;font-weight:400;text-transform:uppercase;">Bodovanje po rundi</div>
-      <div style="font-family:var(--ff-serif);font-size:36px;letter-spacing:.5px;line-height:1;margin-bottom:18px;font-weight:900;">Možeš dobiti<br><span style="color:var(--ca);">0, 2, 3 ili 4</span></div>
-      <div style="display:flex;flex-direction:column;gap:6px;max-width:340px;margin:0 auto 14px;text-align:left;">
-        <div style="background:var(--cg-bg);border:1px solid var(--cg-bd);border-radius:12px;padding:10px 14px;font-size:11px;color:var(--cg-dim);display:flex;align-items:center;gap:10px;">
-          <span style="font-family:var(--ff-serif);font-size:22px;min-width:32px;text-align:center;">+2</span>
-          <span>Citizen — glasao za impostora ✓</span>
-        </div>
-        <div style="background:var(--cr-bg);border:1px solid var(--cr-bd);border-radius:12px;padding:10px 14px;font-size:11px;color:var(--cr-dim);display:flex;align-items:center;gap:10px;">
-          <span style="font-family:var(--ff-serif);font-size:22px;min-width:32px;text-align:center;">+3</span>
-          <span>Impostor — preživio glasanje</span>
-        </div>
-        <div style="background:var(--ca-bg);border:1px solid var(--ca-bd);border-radius:12px;padding:10px 14px;font-size:11px;color:var(--ca-dim);display:flex;align-items:center;gap:10px;">
-          <span style="font-family:var(--ff-serif);font-size:22px;min-width:32px;text-align:center;">+4</span>
-          <span>Impostor — pogodio citizen riječ</span>
-        </div>
-        <div style="background:var(--b3);border:1px solid var(--l2);border-radius:12px;padding:10px 14px;font-size:11px;color:var(--t3);display:flex;align-items:center;gap:10px;">
-          <span style="font-family:var(--ff-serif);font-size:22px;min-width:32px;text-align:center;color:var(--t4);">+0</span>
-          <span>Glasao krivo / otkriven / impostor pobijedio</span>
+      <!-- Slide 4 -->
+      <div class="obs ob-hide">
+        <div class="ob-icon">🏆</div>
+        <div class="ob-label">Bodovanje po rundi</div>
+        <div class="ob-title">0, 2, 3 ili 4</div>
+        <div class="ob-scores">
+          <div class="ob-score ob-score-g"><span class="ob-score-pts">+2</span><span>Citizen — glasao za impostora ✓</span></div>
+          <div class="ob-score ob-score-r"><span class="ob-score-pts">+3</span><span>Impostor — preživio glasanje</span></div>
+          <div class="ob-score ob-score-a"><span class="ob-score-pts">+4</span><span>Impostor — pogodio citizen riječ</span></div>
+          <div class="ob-score ob-score-0"><span class="ob-score-pts">+0</span><span>Glasao krivo ili otkriven</span></div>
         </div>
       </div>
     </div>
+    <div class="ob-dots" id="ob-dots">
+      <div class="obd obd-active" onclick="obGo(0)"></div>
+      <div class="obd" onclick="obGo(1)"></div>
+      <div class="obd" onclick="obGo(2)"></div>
+      <div class="obd" onclick="obGo(3)"></div>
+    </div>
+    <div class="ob-btns">
+      <button class="ob-skip" onclick="obSkip()">Preskoči</button>
+      <button class="ob-next" id="ob-next" onclick="obNext()">Dalje</button>
+    </div>
   </div>
-  <div id="ob-dots" style="display:flex;gap:8px;align-items:center;margin-bottom:24px;">
-    <div class="obd" style="width:22px;height:6px;border-radius:4px;background:var(--ca);transition:all .25s;cursor:pointer;" onclick="obGo(0)"></div>
-    <div class="obd" style="width:6px;height:6px;border-radius:50%;background:var(--b5);transition:all .25s;cursor:pointer;" onclick="obGo(1)"></div>
-    <div class="obd" style="width:6px;height:6px;border-radius:50%;background:var(--b5);transition:all .25s;cursor:pointer;" onclick="obGo(2)"></div>
-    <div class="obd" style="width:6px;height:6px;border-radius:50%;background:var(--b5);transition:all .25s;cursor:pointer;" onclick="obGo(3)"></div>
-  </div>
-  <div style="display:flex;gap:10px;width:100%;max-width:100%;">
-    <button onclick="obSkip()" style="padding:15px 18px;border-radius:14px;border:1px solid var(--l2);background:transparent;font-family:var(--ff-mono);font-size:11px;letter-spacing:1.5px;font-weight:400;color:var(--t3);cursor:pointer;text-transform:uppercase;">Preskoči</button>
-    <button id="ob-next" onclick="obNext()" style="flex:1;padding:15px;border-radius:14px;border:none;font-family:var(--ff-mono);font-size:11px;letter-spacing:2.5px;font-weight:500;background:var(--ca);color:#04040A;cursor:pointer;text-transform:uppercase;">Dalje</button>
-  </div>
-</div>
-
 
 <!-- TOAST -->
 <div class="toast" id="toast"></div>
@@ -2311,13 +2357,16 @@ var OB_KEY='impostor.onboarded.v3';
 function obShow(){
   var s=document.querySelectorAll('.obs');
   var d=document.querySelectorAll('.obd');
-  for(var i=0;i<s.length;i++) s[i].style.display=i===obCur?'flex':'none';
-  for(var i=0;i<d.length;i++){
-    if(i===obCur){d[i].style.width='22px';d[i].style.borderRadius='4px';d[i].style.background='var(--ca)';}
-    else{d[i].style.width='6px';d[i].style.borderRadius='50%';d[i].style.background='var(--b5)';}
+  for(var i=0;i<s.length;i++){
+    s[i].style.display=i===obCur?'flex':'none';
+    s[i].classList.toggle('ob-hide',i!==obCur);
   }
+  d.forEach(function(el,i){el.classList.toggle('obd-active',i===obCur);});
   var b=document.getElementById('ob-next');
-  if(b){b.textContent=obCur===3?'Igrajmo!':'Dalje';b.style.background=obCur===3?'var(--cg)':'var(--ca)';}
+  if(b){
+    b.textContent=obCur===3?'Igrajmo!':'Dalje';
+    b.style.background=obCur===3?'var(--cg-dim)':'var(--ca-dim)';
+  }
 }
 function obNext(){if(obCur<3){obCur++;obShow();}else{obSkip();}}
 function obGo(n){obCur=n;obShow();}
