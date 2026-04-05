@@ -1215,8 +1215,13 @@ function clearSession(){localStorage.removeItem(SESSION_KEY);}
 function maybeResumeSession(){
   if(resumeTried)return;resumeTried=true;
   const ss=getSession();
-  if(ss.code&&ss.name&&ss.playerToken){$('j-name').value=ss.name;$('j-code').value=ss.code;socket.emit('resumeSession',ss);}
-  else{if(ss.name)$('j-name').value=ss.name;if(ss.code)$('j-code').value=ss.code;}
+  if(ss.code&&ss.name&&ss.playerToken){
+    $('j-name').value=ss.name;$('j-code').value=ss.code;
+    socket.emit('resumeSession',{code:ss.code,playerName:ss.name,playerToken:ss.playerToken});
+  } else {
+    if(ss.name)$('j-name').value=ss.name;
+    if(ss.code)$('j-code').value=ss.code;
+  }
 }
 function getAudioPrefs(){try{return JSON.parse(localStorage.getItem(AUDIO_PREFS_KEY)||'{}');}catch{return {};}}
 function saveAudioPrefs(){localStorage.setItem(AUDIO_PREFS_KEY,JSON.stringify({selfMuted,remoteMuted}));}
@@ -2062,7 +2067,12 @@ socket.on('sessionResumed',room=>{
   else if(G.state==='RESULTS'){show('s-res');renderResults();wantMic(true);unlockAudio();}
   toast('✅ Veza obnovljena');
 });
-socket.on('resumeFailed',()=>{clearSession();});
+socket.on('resumeFailed',()=>{
+  // Session stale — clear and show join screen fresh
+  clearSession();
+  show('s-join');
+  toast('Sesija istekla, prijavite se ponovo.');
+});
 socket.on('connect',()=>{loadAudioPrefs();updateVoiceButtons();maybeResumeSession();$('j-err').textContent='';});
 socket.on('connect_error',()=>{
   const err=$('j-err');if(err&&!err.textContent)err.textContent='Server nedostupan. Provjerite vezu.';
@@ -2302,7 +2312,9 @@ function obSkip(){
   el.addEventListener('mouseleave',dragEnd);
 })();
 
-maybeResumeSession();
+// If socket already connected by the time script runs, fire resume now
+if(socket.connected){maybeResumeSession();}
+// Otherwise it fires via socket.on('connect')
 
 // ── SPECTATOR (FAIR PLAY HOST) ────────────────────────────────────────────────
 document.addEventListener('click', e => {

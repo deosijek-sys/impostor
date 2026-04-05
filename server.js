@@ -241,6 +241,14 @@ function safeRoom(room) {
 }
 
 io.on('connection', (socket) => {
+
+function isRoomHost(room, socket, playerToken) {
+  // Match by socket.id (normal) OR by playerToken (after reconnect before socket.id update)
+  return room.players.find(p =>
+    p.isHost && (p.id === socket.id || (playerToken && p.playerToken === playerToken))
+  );
+}
+
   socket.on('rtc-offer',   ({ to, offer })     => io.to(to).emit('rtc-offer',   { from: socket.id, offer }));
   socket.on('rtc-answer',  ({ to, answer })    => io.to(to).emit('rtc-answer',  { from: socket.id, answer }));
   socket.on('rtc-ice',     ({ to, candidate }) => io.to(to).emit('rtc-ice',     { from: socket.id, candidate }));
@@ -323,7 +331,7 @@ io.on('connection', (socket) => {
 
   socket.on('updateConfig', ({ code, category, impostors, discussionTime, votingTime, customPair, fairPlay }) => {
     const room = rooms.get((code || '').toUpperCase());
-    if (!room || room.state !== 'LOBBY' || !room.players.find(p => p.id === socket.id && p.isHost)) return;
+    if (!room || room.state !== 'LOBBY' || !isRoomHost(room, socket)) return;
 
     if (customPair === null) {
       room.customPair = null;
@@ -359,7 +367,7 @@ io.on('connection', (socket) => {
 
   socket.on('kickPlayer', ({ code, targetId }) => {
     const room = rooms.get(code);
-    if (!room || !room.players.find(p => p.id === socket.id && p.isHost)) return;
+    if (!room || !isRoomHost(room, socket)) return;
     if (room.state !== 'LOBBY') return;
     const idx = room.players.findIndex(p => p.id === targetId);
     if (idx === -1) return;
@@ -372,7 +380,7 @@ io.on('connection', (socket) => {
 
   socket.on('kickPlayerMidGame', ({ code, targetId }) => {
     const room = rooms.get(code);
-    if (!room || !room.players.find(p => p.id === socket.id && p.isHost)) return;
+    if (!room || !isRoomHost(room, socket)) return;
     if (room.state !== 'DISCUSSION' && room.state !== 'VOTING') return;
     const idx = room.players.findIndex(p => p.id === targetId);
     if (idx === -1) return;
@@ -386,7 +394,7 @@ io.on('connection', (socket) => {
 
   socket.on('transferHost', ({ code, targetId }) => {
     const room = rooms.get(code);
-    if (!room || !room.players.find(p => p.id === socket.id && p.isHost)) return;
+    if (!room || !isRoomHost(room, socket)) return;
     if (room.state !== 'LOBBY') return;
     room.players.forEach(p => { p.isHost = p.id === targetId; if (p.isHost) p.isReady = true; });
     io.to(code).emit('roomUpdated', safeRoom(room));
@@ -396,7 +404,7 @@ io.on('connection', (socket) => {
   socket.on('extendDiscussion', ({ code, seconds }) => {
     const room = rooms.get(code);
     if (!room || room.state !== 'DISCUSSION') return;
-    if (!room.players.find(p => p.id === socket.id && p.isHost)) return;
+    if (!isRoomHost(room, socket)) return;
     const add = Math.min(60, Math.max(10, parseInt(seconds) || 30));
     io.to(code).emit('timerExtended', { phase: 'discussion', added: add });
     clearTimer(code);
@@ -427,7 +435,7 @@ io.on('connection', (socket) => {
   socket.on('startGame', ({ code }) => {
     const room = rooms.get(code);
     if (!room) return socket.emit('error', 'Soba nije pronađena.');
-    if (!room.players.find(p => p.id === socket.id && p.isHost))
+    if (!isRoomHost(room, socket))
       return socket.emit('error', 'Samo host može pokrenuti igru.');
     const minPlayers = room.fairPlay ? 4 : 3;
     if (room.players.length < minPlayers)
@@ -510,7 +518,7 @@ io.on('connection', (socket) => {
   socket.on('rerollWord', ({ code }) => {
     const room = rooms.get(code);
     if (!room || room.state !== 'REVEAL') return;
-    if (!room.players.find(p => p.id === socket.id && p.isHost)) return;
+    if (!isRoomHost(room, socket)) return;
     if (room.customPair) {
       room.words = Math.random() > 0.5
         ? { citizen: room.customPair.citizen, impostor: room.customPair.impostor }
@@ -525,7 +533,7 @@ io.on('connection', (socket) => {
 
   socket.on('startVoting', ({ code }) => {
     const room = rooms.get(code);
-    if (!room || !room.players.find(p => p.id === socket.id && p.isHost)) return;
+    if (!room || !isRoomHost(room, socket)) return;
     if (room.state !== 'DISCUSSION') return;
     startVotingPhase(code);
   });
@@ -728,7 +736,7 @@ io.on('connection', (socket) => {
 
   socket.on('resetScores', ({ code }) => {
     const room = rooms.get(code);
-    if (!room || !room.players.find(p => p.id === socket.id && p.isHost)) return;
+    if (!room || !isRoomHost(room, socket)) return;
     room.scores = {}; room.roundNumber = 0;
     room.players.forEach(p => { room.scores[scoreKey(p)] = 0; });
     io.to(code).emit('roomUpdated', safeRoom(room));
@@ -737,7 +745,7 @@ io.on('connection', (socket) => {
   socket.on('nextSpeaker', ({ code }) => {
     const room = rooms.get(code);
     if (!room || room.state !== 'DISCUSSION') return;
-    if (!room.players.find(p => p.id === socket.id && p.isHost)) return;
+    if (!isRoomHost(room, socket)) return;
     room.currentSpeakerIdx = (room.currentSpeakerIdx + 1) % room.speakOrder.length;
     const nextId = room.speakOrder[room.currentSpeakerIdx];
     const next = room.players.find(p => p.id === nextId);
