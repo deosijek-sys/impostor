@@ -610,8 +610,9 @@ select{appearance:none;cursor:pointer;}
 .ob-next{flex:1;padding:14px;border-radius:13px;border:none;font-family:var(--ff-mono);font-size:10px;letter-spacing:2.5px;font-weight:500;background:var(--ca-dim);color:#04040A;cursor:pointer;text-transform:uppercase;}
 /* PC — inside app frame */
 @media(min-width:768px){
-  #ob{position:absolute;border-radius:28px;}
+  #ob{position:absolute;border-radius:28px;inset:0;width:100%;height:100%;}
   .ob-btns{padding-bottom:28px;}
+  .ob-slides{max-width:100%;}
 }
 </style>
 </head>
@@ -1485,6 +1486,9 @@ function renderLobby(){
   // User controls the toggle manually; server state is source of truth only on initial load
   if(G.hasCustomPair&&me&&me.isHost&&!customActive){
     setCustomActive(true);
+    // Pre-fill from server if fields empty
+    if($('cfg-citizen')&&!$('cfg-citizen').value) $('cfg-citizen').value=G.customPairCitizen||'';
+    if($('cfg-impostor')&&!$('cfg-impostor').value) $('cfg-impostor').value=G.customPairImpostor||'';
   }
   $('l-imps').textContent=G.impostorCount;
   $('rnd').textContent=G.roundNumber>0?`R${G.roundNumber}`:'';
@@ -1518,11 +1522,14 @@ function renderLobby(){
     // Show visual confirmation when server has accepted the custom pair
     const confirmEl=$('custom-pair-confirm');
     if(confirmEl){
-      if(G.hasCustomPair&&customActive){
-        const c=$('cfg-citizen').value.trim();
-        const imp=$('cfg-impostor').value.trim();
-        confirmEl.textContent=`✓ Postavljeno: ${c||'?'} / ${imp||'?'}`;
+      if(G.hasCustomPair){
+        const c=G.words?.citizen||$('cfg-citizen').value.trim();
+        const imp=G.words?.impostor||$('cfg-impostor').value.trim();
+        confirmEl.textContent=`✓ Aktivno: "${c||'?'}" / "${imp||'?'}" — promijeni u poljima gore`;
         confirmEl.style.display='block';
+        // Pre-fill fields with current custom pair so host can edit
+        if($('cfg-citizen')&&!$('cfg-citizen').value&&c) $('cfg-citizen').value=c;
+        if($('cfg-impostor')&&!$('cfg-impostor').value&&imp) $('cfg-impostor').value=imp;
       } else {
         confirmEl.style.display='none';
       }
@@ -2183,7 +2190,11 @@ socket.on('roomUpdated',room=>{
   saveSession({code:G.code,name:me?.name||getSession().name||$('j-name').value.trim()});
   if((G.state==='DISCUSSION'||G.state==='RESULTS')&&micWanted&&hasLiveMic()){setTimeout(()=>ensurePeerLinks(),100);}
   renderAllVoiceLists();
-  if(G.state==='LOBBY'){wantMic(false);if(!$('s-lobby').classList.contains('on'))show('s-lobby');renderLobby();}
+  if(G.state==='LOBBY'){
+    wantMic(false);
+    if(!$('s-lobby').classList.contains('on'))show('s-lobby');
+    renderLobby();
+  }
   if(G.state==='DISCUSSION'&&me?.isHost){
     const kickBtn=$('btn-kick-disc');
     if(kickBtn)kickBtn.style.display=(G.players||[]).length>2?'inline-flex':'none';

@@ -223,7 +223,10 @@ function safeRoom(room) {
     ...room,
     fairPlay: !!room.fairPlay,
     hasCustomPair: !!room.customPair,
-    customPair: undefined, // never expose words to client via safeRoom
+    customPair: undefined, // never expose during game
+    // Expose custom pair labels in lobby so host can see/edit them
+    customPairCitizen: (room.state === 'LOBBY' && room.customPair) ? room.customPair.citizen : undefined,
+    customPairImpostor: (room.state === 'LOBBY' && room.customPair) ? room.customPair.impostor : undefined,
     words: undefined,
     players: room.players.map(p => ({
       id: p.id,
