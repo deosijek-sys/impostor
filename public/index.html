@@ -473,7 +473,16 @@ select{appearance:none;cursor:pointer;}
 .modal-note{font-size:11px;color:var(--t3);letter-spacing:.3px;line-height:1.6;}
 
 /* ─── ONBOARDING ─────────────────────────────────────────────────────────── */
-#ob{background:linear-gradient(180deg,#070712 0%,#04040A 100%);}
+#ob{
+  background:linear-gradient(180deg,#070712 0%,#04040A 100%);
+  /* Mobile: true full screen */
+  position:fixed;inset:0;
+  display:none;flex-direction:column;align-items:center;justify-content:space-between;
+  padding:env(safe-area-inset-top,52px) 24px calc(env(safe-area-inset-bottom,0px) + 44px);
+  /* Ensure it covers everything */
+  width:100%;height:100%;
+  overflow:hidden;
+}
 #ob[style*="display: none"],#ob[style*="display:none"]{pointer-events:none !important;}
 
 /* ─── PC / WIDE SCREEN ───────────────────────────────────────────────────── */
@@ -507,7 +516,7 @@ select{appearance:none;cursor:pointer;}
     position:absolute;
     max-width:none;
   }
-  #ob{position:absolute;border-radius:28px;}
+  #ob{position:absolute;border-radius:28px;width:100%;height:100%;padding:52px 24px 44px;}
   /* on-screen toast re-anchor inside app */
   .toast{top:64px;width:calc(100% - 40px);left:20px;transform:none;max-width:none;}
 }
@@ -841,7 +850,7 @@ select{appearance:none;cursor:pointer;}
       <div id="scoreboard" class="g14"></div>
       <span class="eyebrow g10">Debrief</span>
       <div id="rlist" class="g20"></div>
-      <button class="btn bp mb" id="btn-again">Nova runda</button>
+      <button class="btn bp mb" id="btn-again" style="display:none;">Nova runda</button>
       <button class="btn ba mb" id="btn-rst" style="display:none;">Resetiraj bodove</button>
       <button class="btn bo" id="btn-quit">Izlaz</button>
     </div>
@@ -1667,9 +1676,11 @@ async function initMic({force=false}={}){
       if(!selfMuted)setMicUi('live','Mikrofon aktivan · Svi se čuju');
       monitorMic();
       renderAllVoiceLists();
-      // Signal all peers, then build connections
+      // Signal and connect immediately — no extra delay
       if(G?.code)socket.emit('peer-mic-ready',{code:G.code});
       ensurePeerLinks();
+      // Second pass after 1s to catch any peers that missed the signal
+      setTimeout(()=>{if(micWanted&&hasLiveMic()){ensurePeerLinks();if(G?.code)socket.emit('peer-mic-ready',{code:G.code});}},1000);
       // Process any offers that arrived while mic was initializing
       const queued=[...pendingOffers];
       pendingOffers=[];
@@ -1774,7 +1785,7 @@ function makePeer(pid){
     if(s==='connected'){renderAllVoiceLists();}
     if(s==='failed'||s==='closed'){
       closePeer(pid);
-      if(micWanted)setTimeout(()=>{if(micWanted&&!pcs[pid]&&hasLiveMic())makePeer(pid);},2500);
+      if(micWanted)setTimeout(()=>{if(micWanted&&!pcs[pid]&&hasLiveMic())makePeer(pid);},1000);
     }
     if(s==='disconnected'){
       // Give 5s to self-recover, then force reconnect and signal other side
@@ -1787,7 +1798,7 @@ function makePeer(pid){
             if(G?.code)socket.emit('peer-mic-ready',{code:G.code});
           }
         }
-      },5000);
+      },3000);
     }
     if(s==='failed'||s==='closed'){
       closePeer(pid);
@@ -1866,7 +1877,7 @@ async function handleOffer(from,offer){
     }
   }catch(e){
     closePeer(from);
-    if(micWanted)setTimeout(()=>{if(micWanted&&!pcs[from]&&hasLiveMic())makePeer(from);},1500);
+    if(micWanted)setTimeout(()=>{if(micWanted&&!pcs[from]&&hasLiveMic())makePeer(from);},800);
   }
 }
 
@@ -1916,7 +1927,13 @@ socket.on('rtc-ice',async({from,candidate})=>{
 socket.on('peer-mic-ready',({from})=>{
   const fromPlayer=G.players?.find(p=>p.id===from);
   if(!fromPlayer)return;
-  if(!hasLiveMic())return;
+  if(!hasLiveMic()){
+    // We don't have mic yet — queue a connect attempt for when we do
+    if(micWanted) initMic({force:false}).then(()=>{
+      if(!pcs[from]&&hasLiveMic()) makePeer(from);
+    }).catch(()=>{});
+    return;
+  }
   if(!pcs[from]){
     makePeer(from);
   } else {
@@ -2053,6 +2070,7 @@ function renderResults(){
     rl.appendChild(d);
   });
   $('btn-rst').style.display=me&&me.isHost?'flex':'none';
+  $('btn-again').style.display=me&&me.isHost?'flex':'none';
   renderAllVoiceLists();updateVoiceButtons();
 }
 $('btn-again').onclick=()=>socket.emit('playAgain',{code:G.code});
@@ -2110,7 +2128,7 @@ socket.on('roomUpdated',room=>{
     $('imp-v').textContent=impCount;
   }
   saveSession({code:G.code,name:me?.name||getSession().name||$('j-name').value.trim()});
-  if((G.state==='DISCUSSION'||G.state==='RESULTS')&&micWanted&&hasLiveMic()){setTimeout(()=>ensurePeerLinks(),350);}
+  if((G.state==='DISCUSSION'||G.state==='RESULTS')&&micWanted&&hasLiveMic()){setTimeout(()=>ensurePeerLinks(),100);}
   renderAllVoiceLists();
   if(G.state==='LOBBY'){wantMic(false);if(!$('s-lobby').classList.contains('on'))show('s-lobby');renderLobby();}
   if(G.state==='DISCUSSION'&&me?.isHost){
@@ -2141,10 +2159,14 @@ socket.on('startDiscussion',room=>{
   discTotal=room.discussionTime||120;voteTotal=room.votingTime||60;
   if(myRole==='SPECTATOR'){
     updateSpectatorDiscScreen(room);
-    restartMicAndReconnect(); // spectator has mic too — can speak and hear
+    // Signal immediately so others know to connect
+    if(G?.code)socket.emit('peer-mic-ready',{code:G.code});
+    restartMicAndReconnect();
   } else {
     show('s-disc');setupDisc(room);
     if(room.firstSpeakerName)spinner(room.firstSpeakerName,null);
+    // Signal immediately before mic is ready — peers start ICE early
+    if(G?.code)socket.emit('peer-mic-ready',{code:G.code});
     restartMicAndReconnect();
   }
 });
@@ -2279,7 +2301,7 @@ function _startPeerHealth(){
     // Clean stale peers
     const ids=new Set((G.players||[]).map(p=>p.id));
     Object.keys(pcs).forEach(pid=>{if(!ids.has(pid))closePeer(pid);});
-  },8000);
+  },5000);
 }
 // ── ONBOARDING ────────────────────────────────────────────────────────────────
 var obCur=0;
@@ -2300,13 +2322,11 @@ function obGo(n){obCur=n;obShow();}
 function obSkip(){
   var el=document.getElementById('ob');
   if(el){el.style.display='none';el.style.pointerEvents='none';}
-  try{localStorage.setItem(OB_KEY,'1');}catch(e){}
 }
 (function(){
   var el=document.getElementById('ob');
   if(!el) return;
-  var seen=false;try{seen=!!localStorage.getItem(OB_KEY);}catch(e){}
-  if(seen){el.style.display='none';el.style.pointerEvents='none';return;}
+  // Always show welcome screen on every visit
   el.style.display='flex';
   obShow();
   var startX=0,startY=0,dx=0,active=false,locked=false;
