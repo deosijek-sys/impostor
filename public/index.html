@@ -874,12 +874,20 @@ select{appearance:none;cursor:pointer;}
         </div>
       </div>
 
-      <!-- VOICE PANEL — host sluša igrače -->
+      <!-- VOICE PANEL — host govori i sluša -->
       <div class="vpanel g12" id="spec-voice-panel">
-        <div class="vhead">
+        <div class="mic" id="spec-mic-row">
+          <div class="mled" id="spec-mled"></div>
+          <span class="mtxt" id="spec-mtxt">Mikrofon neaktivan</span>
+          <div class="mwaves" id="spec-mwaves" style="display:none">
+            <span></span><span></span><span></span><span></span><span></span>
+          </div>
+        </div>
+        <div class="vhead" style="margin-top:8px;">
           <span class="vtitle">Glasovi igrača</span>
           <div class="vactions">
-            <button class="vbtn" id="btn-spec-audio" onclick="unlockAudio()">Audio</button>
+            <button class="vbtn" id="btn-spec-self-mute">Mic On</button>
+            <button class="vbtn" id="btn-spec-audio-unlock">Audio</button>
           </div>
         </div>
         <div class="vlist-voice" id="spec-voice-list"></div>
@@ -1874,11 +1882,6 @@ function ensurePeerLinks(){
 }
 
 socket.on('rtc-offer',({from,offer})=>{
-  // Spectator receives offers from players (listen-only)
-  if(myRole==='SPECTATOR'){
-    handleSpectatorOffer(from,offer);
-    return;
-  }
   if(!hasLiveMic()){
     pendingOffers=pendingOffers.filter(x=>x.from!==from);
     pendingOffers.push({from,offer});
@@ -1912,12 +1915,7 @@ socket.on('rtc-ice',async({from,candidate})=>{
 
 socket.on('peer-mic-ready',({from})=>{
   const fromPlayer=G.players?.find(p=>p.id===from);
-  if(!fromPlayer||fromPlayer.isSpectator)return;
-  // Spectator: create listen-only connection
-  if(myRole==='SPECTATOR'){
-    if(!spectatorPcs[from]) makeSpectatorPeer(from);
-    return;
-  }
+  if(!fromPlayer)return;
   if(!hasLiveMic())return;
   if(!pcs[from]){
     makePeer(from);
@@ -2060,8 +2058,9 @@ function renderResults(){
 $('btn-again').onclick=()=>socket.emit('playAgain',{code:G.code});
 $('btn-quit').onclick=()=>{clearSession();location.reload();};
 $('btn-rst').onclick=()=>{socket.emit('resetScores',{code:G.code});toast('Bodovi resetirani');};
-['btn-self-mute','btn-self-mute-res'].forEach(id=>{const el=$(id);if(el)el.onclick=()=>toggleSelfMute();});
-['btn-audio-unlock','btn-audio-unlock-res'].forEach(id=>{const el=$(id);if(el)el.onclick=()=>unlockAudio();});
+['btn-self-mute','btn-self-mute-res','btn-spec-self-mute'].forEach(id=>{const el=$(id);if(el)el.onclick=()=>toggleSelfMute();});
+['btn-audio-unlock','btn-audio-unlock-res','btn-spec-audio-unlock'].forEach(id=>{const el=$(id);if(el)el.onclick=()=>unlockAudio();});
+
 
 // ── SOCKET EVENTS ─────────────────────────────────────────────────────────────
 socket.on('roomCreated',room=>{
@@ -2102,7 +2101,6 @@ socket.on('connect_error',()=>{
 });
 
 socket.on('roomUpdated',room=>{
-  if(room.state==='LOBBY'){teardownSpectatorPeers();}
   G=room;me=meNow();
   if(G.state==='LOBBY'&&me?.isHost){
     if(!G.hasCustomPair)$('cfg-cat').value=G.category;
@@ -2143,8 +2141,7 @@ socket.on('startDiscussion',room=>{
   discTotal=room.discussionTime||120;voteTotal=room.votingTime||60;
   if(myRole==='SPECTATOR'){
     updateSpectatorDiscScreen(room);
-    // Spectator listens but doesn't send — receive-only peer connections
-    startSpectatorListening();
+    restartMicAndReconnect(); // spectator has mic too — can speak and hear
   } else {
     show('s-disc');setupDisc(room);
     if(room.firstSpeakerName)spinner(room.firstSpeakerName,null);
@@ -2210,82 +2207,6 @@ socket.on('error',msg=>{
 });
 
 
-
-// ══════════════════════════════════════════════════════════
-// SPECTATOR LISTEN-ONLY AUDIO
-// ══════════════════════════════════════════════════════════
-let spectatorPcs = {}; // separate peer map for spectator — receive only
-
-function startSpectatorListening() {
-  if(myRole !== 'SPECTATOR') return;
-  // Signal to all players that we want to receive their audio
-  if(G?.code) socket.emit('peer-mic-ready', {code: G.code});
-  // Build receive-only peer connections to all active players
-  (G.players||[]).forEach(p => {
-    if(p.id === socket.id || p.isSpectator) return;
-    makeSpectatorPeer(p.id);
-  });
-}
-
-function makeSpectatorPeer(pid) {
-  if(spectatorPcs[pid]) return spectatorPcs[pid];
-  // Receive-only RTCPeerConnection (no local tracks added)
-  const pc = new RTCPeerConnection(makeICE());
-  spectatorPcs[pid] = pc;
-
-  pc.ontrack = e => {
-    const au = makeAudio(pid);
-    au.srcObject = e.streams[0];
-    au.play?.().catch(()=>{});
-    monitorRemoteStream(pid, e.streams[0]);
-    renderAllVoiceLists();
-  };
-
-  pc.onicecandidate = e => {
-    if(e.candidate) socket.emit('rtc-ice', {to: pid, candidate: e.candidate});
-  };
-
-  pc.onconnectionstatechange = () => {
-    const s = pc.connectionState;
-    if(s === 'failed' || s === 'closed') {
-      closeSpectatorPeer(pid);
-      setTimeout(() => { if(myRole==='SPECTATOR' && !spectatorPcs[pid]) makeSpectatorPeer(pid); }, 2000);
-    }
-    if(s === 'connected') renderAllVoiceLists();
-  };
-
-  return pc;
-}
-
-function closeSpectatorPeer(pid) {
-  const pc = spectatorPcs[pid];
-  if(!pc) return;
-  try { pc.close(); } catch(e) {}
-  delete spectatorPcs[pid];
-  removeAudio(pid);
-}
-
-function teardownSpectatorPeers() {
-  Object.keys(spectatorPcs).forEach(pid => closeSpectatorPeer(pid));
-  spectatorPcs = {};
-}
-
-// Spectator handles incoming offers from players
-// (players initiate because they have local tracks / are impolite)
-async function handleSpectatorOffer(from, offer) {
-  let pc = spectatorPcs[from];
-  if(!pc) pc = makeSpectatorPeer(from);
-  if(!pc) return;
-  try {
-    await pc.setRemoteDescription(offer);
-    if(offer.type === 'offer') {
-      await pc.setLocalDescription();
-      socket.emit('rtc-answer', {to: from, answer: pc.localDescription});
-    }
-  } catch(e) {
-    closeSpectatorPeer(from);
-  }
-}
 
 // ══════════════════════════════════════════════════════════
 // PWA INSTALL
