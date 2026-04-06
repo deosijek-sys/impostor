@@ -165,7 +165,7 @@ const WORDS = {
 
 const recentWords = new Map();
 const disconnectTimers = new Map();
-const RECONNECT_GRACE_MS = 90_000;
+const RECONNECT_GRACE_MS = 5 * 60_000; // 5 minuta — daje vremena kad Android suspendira app
 
 function scoreKey(player) { return player?.playerToken || player?.id; }
 function makePlayerToken() { return Math.random().toString(36).slice(2) + Math.random().toString(36).slice(2); }
