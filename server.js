@@ -792,13 +792,14 @@ app.get('/ping', (req, res) => res.send('pong'));
 
 // TWA / Play Store verificacija domene
 app.get('/.well-known/assetlinks.json', (req, res) => {
-  const fingerprint = process.env.APK_FINGERPRINT || 'FINGERPRINT_OVDJE';
   res.json([{
     relation: ['delegate_permission/common.handle_all_urls'],
     target: {
       namespace: 'android_app',
-      package_name: process.env.PACKAGE_NAME || 'com.impostor.game',
-      sha256_cert_fingerprints: [fingerprint]
+      package_name: 'com.impostor.game',
+      sha256_cert_fingerprints: [
+        '65:D6:EC:49:58:40:37:A8:28:68:22:7D:F5:C5:49:4E:E9:59:A9:9F:20:8B:B3:1C:5F:86:0C:B5:9B:27:DD:AF'
+      ]
     }
   }]);
 });
