@@ -786,5 +786,38 @@ function isRoomHost(room, socket, playerToken) {
 });
 
 app.use(express.static(path.join(__dirname, 'public')));
+
+// Keep-alive endpoint (Render free tier zaspi nakon 15min neaktivnosti)
+app.get('/ping', (req, res) => res.send('pong'));
+
+// TWA / Play Store verificacija domene
+app.get('/.well-known/assetlinks.json', (req, res) => {
+  const fingerprint = process.env.APK_FINGERPRINT || 'FINGERPRINT_OVDJE';
+  res.json([{
+    relation: ['delegate_permission/common.handle_all_urls'],
+    target: {
+      namespace: 'android_app',
+      package_name: process.env.PACKAGE_NAME || 'com.impostor.game',
+      sha256_cert_fingerprints: [fingerprint]
+    }
+  }]);
+});
+
 app.get('*', (req, res) => res.sendFile(path.join(__dirname, 'public', 'index.html')));
-httpServer.listen(PORT, '0.0.0.0', () => console.log(`✓ Impostor server on port ${PORT}`));
+
+httpServer.listen(PORT, '0.0.0.0', () => {
+  console.log(`✓ Impostor server on port ${PORT}`);
+
+  // Self-ping svakih 10 minuta da Render ne zaspi
+  const APP_URL = process.env.RENDER_EXTERNAL_URL;
+  if (APP_URL) {
+    setInterval(async () => {
+      try {
+        await fetch(`${APP_URL}/ping`);
+        console.log('keep-alive ping ✓');
+      } catch (e) {
+        console.warn('keep-alive ping failed:', e.message);
+      }
+    }, 10 * 60 * 1000); // svakih 10 minuta
+  }
+});
